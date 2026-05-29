@@ -2102,3 +2102,58 @@ main {
     animation: none;
   }
 }
+
+/* Height-Based Responsive Scaling for Hero Section */
+@media (max-height: 850px) {
+  .hero-shell {
+    min-height: calc(100svh - var(--header-height));
+    padding-block: clamp(var(--space-3), 3vh, var(--space-5)) var(--space-4);
+    gap: var(--space-4);
+  }
+
+  .hero-title {
+    font-size: clamp(3rem, 10.5vh, 6.5rem);
+    line-height: 0.88;
+  }
+
+  .hero-line {
+    margin-top: var(--space-3);
+    font-size: var(--type-base);
+  }
+
+  .hero-actions {
+    margin-top: var(--space-4);
+  }
+
+  .portrait-frame {
+    height: clamp(300px, 46svh, 400px);
+  }
+}
+
+@media (max-height: 720px) {
+  .hero-shell {
+    padding-block: var(--space-3);
+    gap: var(--space-3);
+  }
+
+  .hero-title {
+    font-size: clamp(2.5rem, 10vh, 5rem);
+  }
+
+  .hero-line {
+    font-size: var(--type-sm);
+    margin-top: var(--space-2);
+  }
+
+  .hero-actions {
+    margin-top: var(--space-3);
+  }
+
+  .portrait-frame {
+    height: clamp(260px, 42svh, 320px);
+  }
+  
+  .portrait-ledger {
+    display: none;
+  }
+}
