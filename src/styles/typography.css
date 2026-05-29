@@ -342,6 +342,8 @@ body {
   color: var(--accent-secondary);
   opacity: 0.42;
   transform: rotate(-10deg);
+  z-index: 10;
+  pointer-events: none;
 }
 
 .path-text-badge text {
