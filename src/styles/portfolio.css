@@ -1,17 +1,5 @@
 @import "./portrait.css";
 
-@property --theme-sweep-x {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 18%;
-}
-
-@property --theme-sweep-y {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 78%;
-}
-
 .hero-shell.no-portrait {
   grid-template-columns: 1fr;
   grid-template-areas:
@@ -485,17 +473,35 @@ button {
   z-index: 250;
   pointer-events: none;
   opacity: 0;
-  background:
-    radial-gradient(circle at var(--theme-sweep-x, 18%) var(--theme-sweep-y, 78%), color-mix(in srgb, var(--accent-secondary) 24%, transparent), transparent 28%),
-    linear-gradient(115deg, transparent 0 28%, color-mix(in srgb, var(--accent-secondary) 10%, transparent) 46%, transparent 66%),
-    color-mix(in srgb, var(--surface-base) 18%, transparent);
-  filter: blur(0.4px);
-  mix-blend-mode: screen;
+  background: color-mix(in srgb, var(--surface-base) 18%, transparent);
   transition: opacity var(--theme-transition-duration, var(--duration-slow)) var(--ease-standard);
+  overflow: hidden;
+}
+
+.theme-transition-layer::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120vmax;
+  height: 120vmax;
+  margin-top: -60vmax;
+  margin-left: -60vmax;
+  background:
+    radial-gradient(circle at center, color-mix(in srgb, var(--accent-secondary) 24%, transparent) 0%, transparent 40%),
+    linear-gradient(115deg, transparent 40%, color-mix(in srgb, var(--accent-secondary) 10%, transparent) 50%, transparent 60%);
+  mix-blend-mode: screen;
+  filter: blur(8px);
+  transform: translate3d(-80vw, 80vh, 0) scale(0.9);
+  will-change: transform;
+  opacity: 0;
 }
 
 .theme-transition-layer.is-visible {
   opacity: 1;
+}
+
+.theme-transition-layer.is-visible::before {
   animation: themeTraceSweep var(--theme-transition-duration, 460ms) cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
@@ -1712,21 +1718,18 @@ main {
 
 @keyframes themeTraceSweep {
   0% {
+    transform: translate3d(-60vw, 60vh, 0) scale(0.9);
     opacity: 0;
-    --theme-sweep-x: 10%;
-    --theme-sweep-y: 84%;
-    transform: translate3d(-4vw, 3vh, 0) scale(1.02);
   }
-
-  34% {
-    opacity: 0.55;
+  30% {
+    opacity: 1;
   }
-
+  70% {
+    opacity: 1;
+  }
   100% {
+    transform: translate3d(60vw, -60vh, 0) scale(1.1);
     opacity: 0;
-    --theme-sweep-x: 88%;
-    --theme-sweep-y: 16%;
-    transform: translate3d(5vw, -4vh, 0) scale(1.04);
   }
 }
 

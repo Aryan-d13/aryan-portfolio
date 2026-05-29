@@ -220,7 +220,8 @@ export function applyTheme(theme: ThemeDefinition, options: ApplyThemeOptions = 
   }
 
   startThemeTransition(duration, style);
-  if (typeof document.startViewTransition === 'function') {
+  const inIframe = typeof window !== 'undefined' && window.self !== window.top;
+  if (!inIframe && typeof document.startViewTransition === 'function') {
     document.startViewTransition(apply).finished.catch(() => undefined);
     return true;
   }
