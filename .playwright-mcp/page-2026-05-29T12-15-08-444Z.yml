@@ -1,0 +1,697 @@
+- generic [ref=e13]:
+  - banner [ref=e14]:
+    - generic [ref=e15]:
+      - generic [ref=e16]: CR
+      - generic [ref=e17]: Control Room
+      - generic [ref=e18]: synced
+    - generic [ref=e19]:
+      - button "save draft" [ref=e20] [cursor=pointer]
+      - button "apply to site" [ref=e21] [cursor=pointer]
+      - button "export" [ref=e22] [cursor=pointer]
+      - button "import" [ref=e23] [cursor=pointer]
+      - button "reset" [ref=e24] [cursor=pointer]
+      - link "view site ↗" [ref=e25] [cursor=pointer]:
+        - /url: /
+  - generic [ref=e26]:
+    - complementary [ref=e28]:
+      - textbox "search controls..." [ref=e30]
+      - navigation "Control Room navigation" [ref=e31]:
+        - generic [ref=e32]:
+          - button "▸ Content" [ref=e33] [cursor=pointer]
+          - generic [ref=e34]:
+            - button "01 Global Identity" [ref=e35] [cursor=pointer]:
+              - generic [ref=e36]: "01"
+              - text: Global Identity
+            - button "02 Sections" [ref=e37] [cursor=pointer]:
+              - generic [ref=e38]: "02"
+              - text: Sections
+            - button "03 Projects / Case Files" [ref=e39] [cursor=pointer]:
+              - generic [ref=e40]: "03"
+              - text: Projects / Case Files
+            - button "04 Proof Cards" [ref=e41] [cursor=pointer]:
+              - generic [ref=e42]: "04"
+              - text: Proof Cards
+            - button "05 Skills / Stack" [ref=e43] [cursor=pointer]:
+              - generic [ref=e44]: "05"
+              - text: Skills / Stack
+            - button "06 Philosophy" [ref=e45] [cursor=pointer]:
+              - generic [ref=e46]: "06"
+              - text: Philosophy
+            - button "07 Human Layer" [ref=e47] [cursor=pointer]:
+              - generic [ref=e48]: "07"
+              - text: Human Layer
+            - button "08 Timeline / Build Log" [ref=e49] [cursor=pointer]:
+              - generic [ref=e50]: "08"
+              - text: Timeline / Build Log
+            - button "09 Contact / Links" [ref=e51] [cursor=pointer]:
+              - generic [ref=e52]: "09"
+              - text: Contact / Links
+        - generic [ref=e53]:
+          - button "▸ Design" [ref=e54] [cursor=pointer]
+          - generic [ref=e55]:
+            - button "10 Theme Engine" [ref=e56] [cursor=pointer]:
+              - generic [ref=e57]: "10"
+              - text: Theme Engine
+            - button "11 Portrait System" [ref=e58] [cursor=pointer]:
+              - generic [ref=e59]: "11"
+              - text: Portrait System
+            - button "12 Typography Lab" [ref=e60] [cursor=pointer]:
+              - generic [ref=e61]: "12"
+              - text: Typography Lab
+            - button "13 Colors" [ref=e62] [cursor=pointer]:
+              - generic [ref=e63]: "13"
+              - text: Colors
+            - button "14 Background / Trace Grid" [ref=e64] [cursor=pointer]:
+              - generic [ref=e65]: "14"
+              - text: Background / Trace Grid
+            - button "15 Motion / Animation" [ref=e66] [cursor=pointer]:
+              - generic [ref=e67]: "15"
+              - text: Motion / Animation
+            - button "16 Layout / Spacing" [ref=e68] [cursor=pointer]:
+              - generic [ref=e69]: "16"
+              - text: Layout / Spacing
+        - generic [ref=e70]:
+          - button "▸ System" [ref=e71] [cursor=pointer]
+          - generic [ref=e72]:
+            - button "17 SEO / Meta" [ref=e73] [cursor=pointer]:
+              - generic [ref=e74]: "17"
+              - text: SEO / Meta
+            - button "18 Assets" [ref=e75] [cursor=pointer]:
+              - generic [ref=e76]: "18"
+              - text: Assets
+            - button "19 Advanced JSON" [ref=e77] [cursor=pointer]:
+              - generic [ref=e78]: "19"
+              - text: Advanced JSON
+    - main [ref=e79]:
+      - generic [ref=e81]:
+        - generic [ref=e82]:
+          - heading "Theme Engine" [level=2] [ref=e83]
+          - paragraph [ref=e84]: Saved visual identity systems. Default themes stay immutable; custom variants hold your edits.
+          - generic [ref=e85]:
+            - generic [ref=e86]: built-in source preset
+            - generic [ref=e87]: "cloud: offline-cache"
+            - generic [ref=e88]: "source: cache"
+            - generic [ref=e89]: "last sync: 5/29/2026, 5:40:37 PM"
+          - generic [ref=e91]: Firebase environment variables are not configured
+        - generic [ref=e92]:
+          - generic [ref=e93]:
+            - button "save theme globally" [ref=e94] [cursor=pointer]
+            - button "reload from cloud" [ref=e95] [cursor=pointer]
+            - button "export cloud config" [ref=e96] [cursor=pointer]
+            - button "import and upload config" [ref=e97] [cursor=pointer]
+            - button "reset cloud theme" [ref=e98] [cursor=pointer]
+          - generic [ref=e99]:
+            - generic [ref=e100]:
+              - generic [ref=e101]: Active theme
+              - combobox "Active theme" [ref=e102] [cursor=pointer]:
+                - option "Nocturnal Signal - Original signal"
+                - option "Soft Trace Luxury - Recruiter-safe luxury"
+                - option "Quantum Rain - Cosmic rain" [selected]
+                - option "Noir Operating System - Evidence OS"
+                - option "Skyline Terminal - Night builder"
+                - option "Editorial Cybernetic - Magazine cybernetics"
+                - option "Obsidian Lab - Private AI lab"
+                - option "Blue Hour Cinema - Human cinema"
+                - option "Proof Archive - Receipt archive"
+                - option "Cosmic Debug - Reality debugger"
+            - button "duplicate theme" [ref=e103] [cursor=pointer]
+            - button "reset active theme" [ref=e104] [cursor=pointer]
+            - button "export themes JSON" [ref=e105] [cursor=pointer]
+            - button "import themes JSON" [ref=e106] [cursor=pointer]
+          - generic [ref=e107]:
+            - checkbox "Enable hidden public theme dropdown" [ref=e108]
+            - generic [ref=e109]: Enable hidden public theme dropdown
+        - generic [ref=e111]:
+          - button "Aa Nocturnal Signal default Midnight systems interface with cold blue trace light. Dark, precise, restrained, technical, premium. Cinematic Slow reveal" [ref=e112] [cursor=pointer]:
+            - generic [ref=e118]: Aa
+            - generic [ref=e119]:
+              - generic [ref=e120]:
+                - strong [ref=e121]: Nocturnal Signal
+                - generic [ref=e122]: default
+              - generic [ref=e123]: Midnight systems interface with cold blue trace light.
+              - generic [ref=e124]: Dark, precise, restrained, technical, premium.
+            - generic [ref=e131]:
+              - generic [ref=e132]: Cinematic
+              - generic [ref=e133]: Slow reveal
+          - button "Aa Soft Trace Luxury default Editorial luxury restraint with pearl-blue engineering traces. Expensive, quiet, spacious, controlled. Spacious Minimal fade" [ref=e134] [cursor=pointer]:
+            - generic [ref=e140]: Aa
+            - generic [ref=e141]:
+              - generic [ref=e142]:
+                - strong [ref=e143]: Soft Trace Luxury
+                - generic [ref=e144]: default
+              - generic [ref=e145]: Editorial luxury restraint with pearl-blue engineering traces.
+              - generic [ref=e146]: Expensive, quiet, spacious, controlled.
+            - generic [ref=e153]:
+              - generic [ref=e154]: Spacious
+              - generic [ref=e155]: Minimal fade
+          - button "Aa Quantum Rain default Cosmic rain field with cyan-violet scientific atmosphere. Cosmic, scientific, poetic, atmospheric. Cinematic Slow parallax" [pressed] [ref=e156] [cursor=pointer]:
+            - generic [ref=e162]: Aa
+            - generic [ref=e163]:
+              - generic [ref=e164]:
+                - strong [ref=e165]: Quantum Rain
+                - generic [ref=e166]: default
+              - generic [ref=e167]: Cosmic rain field with cyan-violet scientific atmosphere.
+              - generic [ref=e168]: Cosmic, scientific, poetic, atmospheric.
+            - generic [ref=e175]:
+              - generic [ref=e176]: Cinematic
+              - generic [ref=e177]: Slow parallax
+          - button "Aa Noir Operating System default Monochrome evidence OS with red proof markers. Investigative, sharp, monochrome, serious, cinematic noir. Balanced Sharp cuts" [ref=e178] [cursor=pointer]:
+            - generic [ref=e184]: Aa
+            - generic [ref=e185]:
+              - generic [ref=e186]:
+                - strong [ref=e187]: Noir Operating System
+                - generic [ref=e188]: default
+              - generic [ref=e189]: Monochrome evidence OS with red proof markers.
+              - generic [ref=e190]: Investigative, sharp, monochrome, serious, cinematic noir.
+            - generic [ref=e197]:
+              - generic [ref=e198]: Balanced
+              - generic [ref=e199]: Sharp cuts
+          - button "Aa Skyline Terminal default Late-night city terminal with electric blue ambition lines. Urban, ambitious, lonely-but-focused, modern. Balanced Scanline glow" [ref=e200] [cursor=pointer]:
+            - generic [ref=e206]: Aa
+            - generic [ref=e207]:
+              - generic [ref=e208]:
+                - strong [ref=e209]: Skyline Terminal
+                - generic [ref=e210]: default
+              - generic [ref=e211]: Late-night city terminal with electric blue ambition lines.
+              - generic [ref=e212]: Urban, ambitious, lonely-but-focused, modern.
+            - generic [ref=e219]:
+              - generic [ref=e220]: Balanced
+              - generic [ref=e221]: Scanline glow
+          - button "Aa Editorial Cybernetic default High-fashion editorial layout fused with engineering diagrams. Bold, stylish, sharp, magazine-like, futuristic. Editorial Type-led reveal" [ref=e222] [cursor=pointer]:
+            - generic [ref=e228]: Aa
+            - generic [ref=e229]:
+              - generic [ref=e230]:
+                - strong [ref=e231]: Editorial Cybernetic
+                - generic [ref=e232]: default
+              - generic [ref=e233]: High-fashion editorial layout fused with engineering diagrams.
+              - generic [ref=e234]: Bold, stylish, sharp, magazine-like, futuristic.
+            - generic [ref=e241]:
+              - generic [ref=e242]: Editorial
+              - generic [ref=e243]: Type-led reveal
+          - button "Aa Obsidian Lab default Private AI lab interface with modular dense surfaces. Experimental, technical, dense, powerful. Dense Fast controls" [ref=e244] [cursor=pointer]:
+            - generic [ref=e250]: Aa
+            - generic [ref=e251]:
+              - generic [ref=e252]:
+                - strong [ref=e253]: Obsidian Lab
+                - generic [ref=e254]: default
+              - generic [ref=e255]: Private AI lab interface with modular dense surfaces.
+              - generic [ref=e256]: Experimental, technical, dense, powerful.
+            - generic [ref=e263]:
+              - generic [ref=e264]: Dense
+              - generic [ref=e265]: Fast controls
+          - button "Aa Blue Hour Cinema default Human cinematic twilight between day and night. Melancholic, beautiful, calm, premium. Cinematic Slow atmospheric" [ref=e266] [cursor=pointer]:
+            - generic [ref=e272]: Aa
+            - generic [ref=e273]:
+              - generic [ref=e274]:
+                - strong [ref=e275]: Blue Hour Cinema
+                - generic [ref=e276]: default
+              - generic [ref=e277]: Human cinematic twilight between day and night.
+              - generic [ref=e278]: Melancholic, beautiful, calm, premium.
+            - generic [ref=e285]:
+              - generic [ref=e286]: Cinematic
+              - generic [ref=e287]: Slow atmospheric
+          - button "Aa Proof Archive default Structured archive of receipts, logs, tags, and indexed systems. Structured, archival, trustworthy, exact. Indexed Minimal" [ref=e288] [cursor=pointer]:
+            - generic [ref=e294]: Aa
+            - generic [ref=e295]:
+              - generic [ref=e296]:
+                - strong [ref=e297]: Proof Archive
+                - generic [ref=e298]: default
+              - generic [ref=e299]: Structured archive of receipts, logs, tags, and indexed systems.
+              - generic [ref=e300]: Structured, archival, trustworthy, exact.
+            - generic [ref=e307]:
+              - generic [ref=e308]: Indexed
+              - generic [ref=e309]: Minimal
+          - button "Aa Cosmic Debug default Debugging reality from a cosmic control room. Mysterious, futuristic, slightly strange, intelligent. Cinematic Trace drift" [ref=e310] [cursor=pointer]:
+            - generic [ref=e316]: Aa
+            - generic [ref=e317]:
+              - generic [ref=e318]:
+                - strong [ref=e319]: Cosmic Debug
+                - generic [ref=e320]: default
+              - generic [ref=e321]: Debugging reality from a cosmic control room.
+              - generic [ref=e322]: Mysterious, futuristic, slightly strange, intelligent.
+            - generic [ref=e329]:
+              - generic [ref=e330]: Cinematic
+              - generic [ref=e331]: Trace drift
+        - generic [ref=e333]:
+          - generic [ref=e334]:
+            - generic [ref=e335]: Theme name
+            - textbox "Theme name" [ref=e336]: Quantum Rain
+          - button "rename custom theme" [ref=e337] [cursor=pointer]
+          - button "save custom theme" [disabled] [ref=e338]
+          - button "delete custom theme" [disabled] [ref=e339]
+        - group [ref=e340]:
+          - generic "Edit current theme" [ref=e341] [cursor=pointer]
+          - generic [ref=e342]:
+            - heading "Identity" [level=3] [ref=e343]
+            - generic [ref=e344]:
+              - generic [ref=e345]: Short description
+              - textbox "Short description" [ref=e346]: Cosmic rain field with cyan-violet scientific atmosphere.
+            - generic [ref=e347]:
+              - generic [ref=e348]: Emotional tone
+              - textbox "Emotional tone" [ref=e349]: Cosmic, scientific, poetic, atmospheric.
+          - generic [ref=e350]:
+            - heading "Color System" [level=3] [ref=e351]
+            - generic [ref=e352]:
+              - generic [ref=e353]:
+                - generic [ref=e354]: bg
+                - textbox "bg" [ref=e355] [cursor=pointer]: "#020615"
+              - generic [ref=e356]:
+                - generic [ref=e357]: bgSecondary
+                - textbox "bgSecondary" [ref=e358] [cursor=pointer]: "#071022"
+              - generic [ref=e359]:
+                - generic [ref=e360]: surface
+                - textbox "surface" [ref=e361] [cursor=pointer]: "#0a162b"
+              - generic [ref=e362]:
+                - generic [ref=e363]: surfaceElevated
+                - textbox "surfaceElevated" [ref=e364] [cursor=pointer]: "#0e1c35"
+              - generic [ref=e365]:
+                - generic [ref=e366]: text
+                - textbox "text" [ref=e367] [cursor=pointer]: "#ecf5ff"
+              - generic [ref=e368]:
+                - generic [ref=e369]: textSecondary
+                - textbox "textSecondary" [ref=e370] [cursor=pointer]: "#a8bad4"
+              - generic [ref=e371]:
+                - generic [ref=e372]: textMuted
+                - textbox "textMuted" [ref=e373] [cursor=pointer]: "#6f82a2"
+              - generic [ref=e374]:
+                - generic [ref=e375]: accent
+                - textbox "accent" [ref=e376] [cursor=pointer]: "#34a4ff"
+              - generic [ref=e377]:
+                - generic [ref=e378]: accentSecondary
+                - textbox "accentSecondary" [ref=e379] [cursor=pointer]: "#73f7ff"
+              - generic [ref=e380]:
+                - generic [ref=e381]: accentEmotional
+                - textbox "accentEmotional" [ref=e382] [cursor=pointer]: "#9b7cff"
+              - generic [ref=e383]:
+                - generic [ref=e384]: accentProof
+                - textbox "accentProof" [ref=e385] [cursor=pointer]: "#ff5c9a"
+              - generic [ref=e386]:
+                - generic [ref=e387]: border
+                - textbox "border" [ref=e388] [cursor=pointer]: "#1a3151"
+              - generic [ref=e389]:
+                - generic [ref=e390]: borderSubtle
+                - textbox "borderSubtle" [ref=e391] [cursor=pointer]: "#10233d"
+              - generic [ref=e392]:
+                - generic [ref=e393]: borderStrong
+                - textbox "borderStrong" [ref=e394] [cursor=pointer]: "#2f5f91"
+              - generic [ref=e395]:
+                - generic [ref=e396]: glow
+                - textbox "glow" [ref=e397] [cursor=pointer]: "#73f7ff"
+          - generic [ref=e398]:
+            - heading "Typography" [level=3] [ref=e399]
+            - generic [ref=e400]:
+              - generic [ref=e401]: Display font
+              - textbox "Display font" [ref=e402]: "\"Space Grotesk\", \"Inter\", \"Segoe UI\", sans-serif"
+            - generic [ref=e403]:
+              - generic [ref=e404]: Body font
+              - textbox "Body font" [ref=e405]: "\"Inter\", \"Geist\", \"Segoe UI\", sans-serif"
+            - generic [ref=e406]:
+              - generic [ref=e407]:
+                - generic [ref=e408]: Heading weight
+                - spinbutton "Heading weight" [ref=e409]: "650"
+              - generic [ref=e410]:
+                - generic [ref=e411]: Line height
+                - spinbutton "Line height" [ref=e412]: "1.66"
+              - generic [ref=e413]:
+                - generic [ref=e414]: Display size
+                - textbox "Display size" [ref=e415]: clamp(4rem, 10.8vw, 8.8rem)
+          - generic [ref=e416]:
+            - heading "Atmosphere" [level=3] [ref=e417]
+            - generic [ref=e418]:
+              - generic [ref=e419]:
+                - generic [ref=e420]: Background type
+                - combobox "Background type" [ref=e421] [cursor=pointer]:
+                  - option "trace-grid"
+                  - option "soft-luxury"
+                  - option "starfield" [selected]
+                  - option "noir-document"
+                  - option "skyline"
+                  - option "diagram"
+                  - option "lab-grid"
+                  - option "blue-hour"
+                  - option "archive"
+                  - option "cosmic-debug"
+              - generic [ref=e422]:
+                - generic [ref=e423]: Dot spacing
+                - spinbutton "Dot spacing" [ref=e424]: "28"
+              - generic [ref=e425]:
+                - generic [ref=e426]: Dot opacity
+                - spinbutton "Dot opacity" [ref=e427]: "0.1"
+              - generic [ref=e428]:
+                - generic [ref=e429]: Vignette
+                - spinbutton "Vignette" [ref=e430]: "0.84"
+          - generic [ref=e431]:
+            - heading "Motion and Layout" [level=3] [ref=e432]
+            - generic [ref=e433]:
+              - generic [ref=e434]:
+                - generic [ref=e435]: Motion personality
+                - combobox "Motion personality" [ref=e436] [cursor=pointer]:
+                  - option "restrained"
+                  - option "minimal"
+                  - option "atmospheric" [selected]
+                  - option "sharp"
+                  - option "scanline"
+                  - option "editorial"
+                  - option "dense"
+                  - option "cinematic"
+                  - option "archival"
+                  - option "cosmic"
+              - generic [ref=e437]:
+                - generic [ref=e438]: Transition style
+                - combobox "Transition style" [ref=e439] [cursor=pointer]:
+                  - option "crossfade"
+                  - option "scale-fade"
+                  - option "soft-wipe"
+                  - option "cover-reveal"
+                  - option "trace-sweep"
+                  - option "glow-shift" [selected]
+              - generic [ref=e440]:
+                - generic [ref=e441]: Transition ms
+                - spinbutton "Transition ms" [ref=e442]: "340"
+              - generic [ref=e443]:
+                - generic [ref=e444]: Density
+                - combobox "Density" [ref=e445] [cursor=pointer]:
+                  - option "compact"
+                  - option "balanced"
+                  - option "cinematic" [selected]
+                  - option "editorial"
+                  - option "dense"
+              - generic [ref=e446]:
+                - generic [ref=e447]: Section Y
+                - textbox "Section Y" [ref=e448]: 136px
+              - generic [ref=e449]:
+                - generic [ref=e450]: Card radius
+                - textbox "Card radius" [ref=e451]: 8px
+    - complementary [ref=e452]:
+      - generic [ref=e453]:
+        - generic [ref=e454]: live preview
+        - generic [ref=e455]:
+          - button "desktop" [ref=e456] [cursor=pointer]
+          - button "tablet" [ref=e457] [cursor=pointer]
+          - button "mobile" [ref=e458] [cursor=pointer]
+      - iframe [ref=e460]:
+        - generic [ref=f1e2]:
+          - link "Skip to content" [ref=f1e3] [cursor=pointer]:
+            - /url: "#main"
+          - banner [ref=f1e4]:
+            - link "Aryan Sharma home" [ref=f1e5] [cursor=pointer]:
+              - /url: "#trace-begins"
+              - generic [ref=f1e6]: AS
+            - generic [ref=f1e7]:
+              - button "cinematic no-fluff" [ref=f1e8] [cursor=pointer]:
+                - generic [ref=f1e9]: cinematic
+                - generic [ref=f1e10]: no-fluff
+              - button "command" [ref=f1e11] [cursor=pointer]:
+                - generic [ref=f1e12]: /
+                - text: command
+          - main [ref=f1e13]:
+            - generic [ref=f1e14]:
+              - generic [ref=f1e15]:
+                - paragraph [ref=f1e16]:
+                  - generic [ref=f1e17]: THE PROOF OF WORK INTERFACE
+                - heading "Aryan Sharma" [level=1] [ref=f1e18]:
+                  - generic "Aryan Sharma" [ref=f1e19]:
+                    - text: Aryan Sharma
+                    - generic [ref=f1e20]: Aryan
+                    - generic [ref=f1e21]: Sharma
+                - paragraph [ref=f1e22]: I build systems where media, AI, infrastructure, and taste stop being separate departments.
+                - generic "Primary actions" [ref=f1e23]:
+                  - link "Inspect Work" [ref=f1e24] [cursor=pointer]:
+                    - /url: "#systems-built"
+                  - link "Open Channel" [ref=f1e25] [cursor=pointer]:
+                    - /url: "#open-channel"
+              - complementary "Identity portrait and trace metadata" [ref=f1e26]:
+                - generic [ref=f1e27]:
+                  - generic [ref=f1e28]:
+                    - generic [ref=f1e29]: identity.trace_file
+                    - generic [ref=f1e32]: live
+                  - generic [ref=f1e33]:
+                    - img "Aryan Sharma in cold outdoor light wearing winter layers and sunglasses." [ref=f1e34]
+                    - generic [ref=f1e35]: aryan.sharma
+                  - generic [ref=f1e36]:
+                    - generic [ref=f1e37]:
+                      - term [ref=f1e38]: trace_id
+                      - definition [ref=f1e39]: aryan.sharma
+                    - generic [ref=f1e40]:
+                      - term [ref=f1e41]: mode
+                      - definition [ref=f1e42]: nocturnal_builder
+                    - generic [ref=f1e43]:
+                      - term [ref=f1e44]: origin
+                      - definition [ref=f1e45]: india
+                    - generic [ref=f1e46]:
+                      - term [ref=f1e47]: signal
+                      - definition [ref=f1e48]: proof_over_vibes
+              - generic "Core operating roles" [ref=f1e49]:
+                - generic [ref=f1e50]: AI-native media systems builder
+                - generic [ref=f1e51]: Full Stack Developer
+                - generic [ref=f1e52]: AI & Automation Engineer
+            - generic [ref=f1e53]:
+              - generic [ref=f1e54]:
+                - paragraph [ref=f1e55]:
+                  - generic [ref=f1e56]: IDENTITY
+                - generic [ref=f1e58]: not_a_template_developer
+              - paragraph [ref=f1e60]: I'm not interested in looking like another startup landing page wearing a developer badge. I build from first principles, chase traceability, and care about whether the thing survives contact with production.
+            - generic [ref=f1e61]:
+              - generic [ref=f1e62]:
+                - paragraph [ref=f1e63]:
+                  - generic [ref=f1e64]: SYSTEMS BUILT
+                - generic [ref=f1e66]: case_files
+              - generic [ref=f1e67]:
+                - generic [ref=f1e68]:
+                  - text: CASE FILES
+                  - heading "Work as dossiers, not tiles." [level=2] [ref=f1e69]
+                  - paragraph [ref=f1e72]: "Each project opens as a system record: problem, machinery, stack, proof themes, and what the build demonstrates under pressure."
+                - generic "Project case files" [ref=f1e73]:
+                  - article [ref=f1e74]:
+                    - button "01 SEONE SEONE / case_file AI-native media automation pipeline" [expanded] [ref=f1e75] [cursor=pointer]:
+                      - generic [ref=f1e77]: "01"
+                      - generic [ref=f1e79]: SEONE SEONE / case_file
+                      - generic [ref=f1e81]: AI-native media automation pipeline
+                      - generic [ref=f1e83]: open
+                    - generic [ref=f1e85]:
+                      - generic [ref=f1e86]:
+                        - group "SEONE project mode" [ref=f1e87]:
+                          - button "Story Mode" [ref=f1e88] [cursor=pointer]
+                          - button "System Mode" [ref=f1e89] [cursor=pointer]
+                        - generic [ref=f1e90]:
+                          - paragraph [ref=f1e91]: SEONE turns long-form video into short-form, social-ready output without pretending media automation is just a prompt and a progress spinner.
+                          - paragraph [ref=f1e92]: The system preserves a job trail across download, transcription, analysis, rendering, workers, queues, storage, and final assets.
+                      - generic [ref=f1e93]:
+                        - tablist "SEONE dossier tabs" [ref=f1e94]:
+                          - tab "Problem" [selected] [ref=f1e95] [cursor=pointer]
+                          - tab "System" [ref=f1e96] [cursor=pointer]
+                          - tab "Stack" [ref=f1e97] [cursor=pointer]
+                          - tab "Proof" [ref=f1e98] [cursor=pointer]
+                          - tab "Shows" [ref=f1e99] [cursor=pointer]
+                        - tabpanel [ref=f1e100]: Long-form video workflows break when every step is treated as a manual edit instead of a traceable, recoverable pipeline.
+                  - article [ref=f1e101]:
+                    - button "02 CONTENT LAB CONTENT LAB / case_file AI-native creative production system" [ref=f1e102] [cursor=pointer]:
+                      - generic [ref=f1e104]: "02"
+                      - generic [ref=f1e106]: CONTENT LAB CONTENT LAB / case_file
+                      - generic [ref=f1e108]: AI-native creative production system
+                      - generic [ref=f1e110]: closed
+                    - generic [ref=f1e112]:
+                      - generic [ref=f1e113]:
+                        - group "CONTENT LAB project mode" [ref=f1e114]:
+                          - button "Story Mode" [ref=f1e115] [cursor=pointer]
+                          - button "System Mode" [ref=f1e116] [cursor=pointer]
+                        - generic [ref=f1e117]:
+                          - paragraph [ref=f1e118]: Content Lab treats creative generation like a production system, not a prompt window. It plans, respects brand constraints, verifies output, and prepares assets for review and export.
+                          - paragraph [ref=f1e119]: The point is not "AI made an image." The point is controlled variation, layout accuracy, and a system that can keep a brand intact under repeated generation.
+                      - generic [ref=f1e120]:
+                        - tablist "CONTENT LAB dossier tabs" [ref=f1e121]:
+                          - tab "Problem" [selected] [ref=f1e122] [cursor=pointer]
+                          - tab "System" [ref=f1e123] [cursor=pointer]
+                          - tab "Stack" [ref=f1e124] [cursor=pointer]
+                          - tab "Proof" [ref=f1e125] [cursor=pointer]
+                          - tab "Shows" [ref=f1e126] [cursor=pointer]
+                        - tabpanel [ref=f1e127]: AI creative output often collapses under brand consistency, multi-page sequencing, and production review requirements.
+            - generic [ref=f1e128]:
+              - generic [ref=f1e129]:
+                - paragraph [ref=f1e130]:
+                  - generic [ref=f1e131]: PROOF LAYER
+                - generic [ref=f1e133]: receipts_not_vibes
+              - generic [ref=f1e134]:
+                - generic [ref=f1e135]:
+                  - text: RECEIPTS NOT VIBES
+                  - heading "A black-box inspection panel." [level=2] [ref=f1e136]
+                  - paragraph [ref=f1e139]: The rules Aryan trusts when production stops behaving politely.
+                - generic [ref=f1e140]:
+                  - article [ref=f1e141]:
+                    - generic [ref=f1e143]: "01"
+                    - heading "idempotency" [level=3] [ref=f1e144]
+                    - paragraph [ref=f1e145]: Because retries should not become duplicates.
+                  - article [ref=f1e146]:
+                    - generic [ref=f1e148]: "02"
+                    - heading "observability" [level=3] [ref=f1e149]
+                    - paragraph [ref=f1e150]: Because production lies unless logs, metrics, and health checks testify.
+                  - article [ref=f1e151]:
+                    - generic [ref=f1e153]: "03"
+                    - heading "render parity" [level=3] [ref=f1e154]
+                    - paragraph [ref=f1e155]: Because preview and final output must not live in different realities.
+                  - article [ref=f1e156]:
+                    - generic [ref=f1e158]: "04"
+                    - heading "state machines" [level=3] [ref=f1e159]
+                    - paragraph [ref=f1e160]: Because vibes are not a valid transition rule.
+                  - article [ref=f1e161]:
+                    - generic [ref=f1e163]: "05"
+                    - heading "golden threads" [level=3] [ref=f1e164]
+                    - paragraph [ref=f1e165]: Because every job needs a trail.
+                  - article [ref=f1e166]:
+                    - generic [ref=f1e168]: "06"
+                    - heading "tests before code" [level=3] [ref=f1e169]
+                    - paragraph [ref=f1e170]: Correctness first. Implementation second.
+            - generic [ref=f1e171]:
+              - generic [ref=f1e172]:
+                - paragraph [ref=f1e173]:
+                  - generic [ref=f1e174]: STACK
+                - generic [ref=f1e176]: tools_i_think_with
+              - generic [ref=f1e177]:
+                - generic [ref=f1e178]:
+                  - text: TOOLS I THINK WITH
+                  - heading "No progress bars. Working surfaces." [level=2] [ref=f1e179]
+                  - paragraph [ref=f1e182]: Tools are grouped by the kind of system pressure they help Aryan reason through.
+                - generic "System skill clusters" [ref=f1e183]:
+                  - article [ref=f1e184]:
+                    - heading "Interface" [level=3] [ref=f1e185]
+                    - paragraph [ref=f1e186]: React, React Native, responsive UI, visual editors, clean hierarchy
+                  - article [ref=f1e187]:
+                    - heading "Backend" [level=3] [ref=f1e188]
+                    - paragraph [ref=f1e189]: Java, Spring Boot, Python, APIs, Pydantic, validation
+                  - article [ref=f1e190]:
+                    - heading "Cloud/Infra" [level=3] [ref=f1e191]
+                    - paragraph [ref=f1e192]: Azure, Azure Container Apps, Blob Storage, Redis, KEDA, Vercel
+                  - article [ref=f1e193]:
+                    - heading "Media Systems" [level=3] [ref=f1e194]
+                    - paragraph [ref=f1e195]: FFmpeg, overlays, rendering, VFR/CFR handling, preview/render parity
+                  - article [ref=f1e196]:
+                    - heading "AI Systems" [level=3] [ref=f1e197]
+                    - paragraph [ref=f1e198]: Gemini, Google Nano Banana Pro, AI orchestration, provider abstraction, prompt control
+                  - article [ref=f1e199]:
+                    - heading "Reliability" [level=3] [ref=f1e200]
+                    - paragraph [ref=f1e201]: queues, lease tokens, heartbeats, idempotency, structured logs, Prometheus, health probes
+            - generic [ref=f1e202]:
+              - generic [ref=f1e203]:
+                - paragraph [ref=f1e204]:
+                  - generic [ref=f1e205]: PHILOSOPHY
+                - generic [ref=f1e207]: operating_principles
+              - list "Operating principles" [ref=f1e208]:
+                - listitem [ref=f1e209]:
+                  - generic "Proof over vibes." [ref=f1e210]:
+                    - generic [ref=f1e212]: Proof
+                    - generic [ref=f1e214]: over
+                    - generic [ref=f1e216]: vibes.
+                - listitem [ref=f1e217]:
+                  - generic "First principles before frameworks." [ref=f1e218]:
+                    - generic [ref=f1e220]: First
+                    - generic [ref=f1e222]: principles
+                    - generic [ref=f1e224]: before
+                    - generic [ref=f1e226]: frameworks.
+                - listitem [ref=f1e227]:
+                  - generic "Systems should be traceable, editable, recoverable." [ref=f1e228]:
+                    - generic [ref=f1e230]: Systems
+                    - generic [ref=f1e232]: should
+                    - generic [ref=f1e234]: be
+                    - generic [ref=f1e236]: traceable,
+                    - generic [ref=f1e238]: editable,
+                    - generic [ref=f1e240]: recoverable.
+                - listitem [ref=f1e241]:
+                  - generic "Tests before code when correctness matters." [ref=f1e242]:
+                    - generic [ref=f1e244]: Tests
+                    - generic [ref=f1e246]: before
+                    - generic [ref=f1e248]: code
+                    - generic [ref=f1e250]: when
+                    - generic [ref=f1e252]: correctness
+                    - generic [ref=f1e254]: matters.
+                - listitem [ref=f1e255]:
+                  - generic "Agents are backstage. Products win on stage." [ref=f1e256]:
+                    - generic [ref=f1e258]: Agents
+                    - generic [ref=f1e260]: are
+                    - generic [ref=f1e262]: backstage.
+                    - generic [ref=f1e264]: Products
+                    - generic [ref=f1e266]: win
+                    - generic [ref=f1e268]: "on"
+                    - generic [ref=f1e270]: stage.
+                - listitem [ref=f1e271]:
+                  - generic "Cloud is convenience. Ownership is power." [ref=f1e272]:
+                    - generic [ref=f1e274]: Cloud
+                    - generic [ref=f1e276]: is
+                    - generic [ref=f1e278]: convenience.
+                    - generic [ref=f1e280]: Ownership
+                    - generic [ref=f1e282]: is
+                    - generic [ref=f1e284]: power.
+                - listitem [ref=f1e285]:
+                  - generic "No corporate fog. No fake certainty." [ref=f1e286]:
+                    - generic [ref=f1e288]: "No"
+                    - generic [ref=f1e290]: corporate
+                    - generic [ref=f1e292]: fog.
+                    - generic [ref=f1e294]: "No"
+                    - generic [ref=f1e296]: fake
+                    - generic [ref=f1e298]: certainty.
+            - generic [ref=f1e299]:
+              - generic [ref=f1e300]:
+                - paragraph [ref=f1e301]:
+                  - generic [ref=f1e302]: HUMAN LAYER
+                - generic [ref=f1e304]: weather_inside_machine
+              - generic [ref=f1e305]:
+                - generic [ref=f1e306]:
+                  - text: WEATHER INSIDE MACHINE
+                  - heading "Cold weather. Blue light. A little silence." [level=2] [ref=f1e307]
+                  - paragraph [ref=f1e310]: I like systems because chaos gets quieter when it has shape. I like night because everything fake loses volume.
+                - generic "Personal motifs" [ref=f1e311]:
+                  - generic [ref=f1e312]: rain
+                  - generic [ref=f1e313]: night
+                  - generic [ref=f1e314]: blue
+                  - generic [ref=f1e315]: cold weather
+                  - generic [ref=f1e316]: neon
+                  - generic [ref=f1e317]: space
+                  - generic [ref=f1e318]: mysteries
+                  - generic [ref=f1e319]: skylines
+                  - generic [ref=f1e320]: basketball
+                  - generic [ref=f1e321]: gymnastics
+                  - generic [ref=f1e322]: meaningful fiction
+                  - generic [ref=f1e323]: dry humor
+            - generic [ref=f1e324]:
+              - generic [ref=f1e325]:
+                - paragraph [ref=f1e326]:
+                  - generic [ref=f1e327]: BUILD LOG
+                - generic [ref=f1e329]: timeline
+              - generic [ref=f1e330]:
+                - generic [ref=f1e331]:
+                  - text: TIMELINE
+                  - heading "Not a resume timeline. A trace." [level=2] [ref=f1e332]
+                - list [ref=f1e333]:
+                  - listitem [ref=f1e334]:
+                    - time [ref=f1e335]: 2023.03 -> 2023.06
+                    - generic [ref=f1e336]: IBM Full Stack Software Developer Certificate
+                  - listitem [ref=f1e337]:
+                    - time [ref=f1e338]: "2025.11"
+                    - generic [ref=f1e339]: Joined Creativefuel as Full Stack Developer
+                  - listitem [ref=f1e340]:
+                    - time [ref=f1e341]: 2025.11 -> 2026.04
+                    - generic [ref=f1e342]: Built across AI automation, media systems, cloud infra, frontend tooling, and observability
+                  - listitem [ref=f1e343]:
+                    - time [ref=f1e344]: "2026"
+                    - generic [ref=f1e345]: Rebuilding public identity around proof, systems, and taste
+            - generic [ref=f1e346]:
+              - generic [ref=f1e347]:
+                - paragraph [ref=f1e348]:
+                  - generic [ref=f1e349]: CONTACT / OPEN CHANNEL
+                - heading "For AI-native media systems, full-stack cloud engineering, automation, or strange high-leverage product ideas:" [level=2] [ref=f1e350]
+                - generic [ref=f1e351]:
+                  - link "aryanteddys@gmail.com" [ref=f1e352] [cursor=pointer]:
+                    - /url: mailto:aryanteddys@gmail.com
+                  - generic [ref=f1e353]: "@aryanteddys"
+                  - generic [ref=f1e354]: India
+              - generic "Contact actions" [ref=f1e355]:
+                - link "open_channel()" [ref=f1e356] [cursor=pointer]:
+                  - /url: mailto:aryanteddys@gmail.com
+                - link "view_resume" [ref=f1e357] [cursor=pointer]:
+                  - /url: Aryan_Sharma_Resume.pdf
+                - link "inspect_projects" [ref=f1e358] [cursor=pointer]:
+                  - /url: "#systems-built"
+          - contentinfo [ref=f1e359]:
+            - generic [ref=f1e360]:
+              - generic [ref=f1e361]: © 2026 ARYAN SHARMA. ALL RIGHTS RESERVED.
+              - link "[system_control]" [ref=f1e362] [cursor=pointer]:
+                - /url: /control-room

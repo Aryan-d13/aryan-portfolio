@@ -1,0 +1,10 @@
+- generic [ref=e3]:
+  - generic [ref=e4]: CR
+  - heading "Control Room" [level=1] [ref=e5]
+  - paragraph [ref=e6]: identity system access
+  - generic [ref=e7]:
+    - generic [ref=e8]: access_key
+    - textbox "access_key" [active] [ref=e9]:
+      - /placeholder: enter trace key
+    - button "authenticate" [ref=e10] [cursor=pointer]
+  - paragraph [ref=e11]: prototype access gate — not production security

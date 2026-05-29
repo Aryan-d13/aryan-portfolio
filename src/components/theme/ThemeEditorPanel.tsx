@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { SiteConfig } from '../../types/siteConfig';
-import type { ThemeBackgroundType, ThemeDefinition, ThemeDensity, ThemeMotionPersonality } from '../../themes/themeTypes';
+import type { ThemeBackgroundType, ThemeDefinition, ThemeDensity, ThemeMotionPersonality, ThemeTransitionStyle } from '../../themes/themeTypes';
 import { useThemeEngine } from '../../hooks/useThemeEngine';
 import ThemePreviewCard from './ThemePreviewCard';
 import { toast, confirmDialog } from '../ui/Toast';
@@ -26,6 +26,14 @@ const backgroundTypes: ThemeBackgroundType[] = [
 
 const densities: ThemeDensity[] = ['compact', 'balanced', 'cinematic', 'editorial', 'dense'];
 const motionPersonalities: ThemeMotionPersonality[] = ['restrained', 'minimal', 'atmospheric', 'sharp', 'scanline', 'editorial', 'dense', 'cinematic', 'archival', 'cosmic'];
+const transitionStyles: ThemeTransitionStyle[] = ['crossfade', 'scale-fade', 'soft-wipe', 'cover-reveal', 'trace-sweep', 'glow-shift'];
+
+function defaultTransitionStyle(personality: ThemeMotionPersonality): ThemeTransitionStyle {
+  if (personality === 'scanline' || personality === 'restrained') return 'trace-sweep';
+  if (personality === 'cosmic' || personality === 'atmospheric') return 'glow-shift';
+  if (personality === 'sharp' || personality === 'archival') return 'soft-wipe';
+  return 'scale-fade';
+}
 
 function ThemeField({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -44,6 +52,10 @@ export default function ThemeEditorPanel({ config, onConfigChange, onThemeChange
     activeThemeId,
     unsavedChanges,
     validation,
+    syncStatus,
+    syncSource,
+    lastSyncedAt,
+    remoteError,
     setActiveTheme,
     duplicateTheme,
     resetActiveTheme,
@@ -51,12 +63,18 @@ export default function ThemeEditorPanel({ config, onConfigChange, onThemeChange
     renameActiveTheme,
     updateDraftTheme,
     saveTheme,
+    saveThemeGlobally,
+    reloadRemoteTheme,
+    resetCloudTheme,
+    exportCloudConfig,
+    importCloudConfig,
     exportThemes,
     importThemes,
     getTheme,
   } = themeEngine;
 
   const importRef = useRef<HTMLInputElement>(null);
+  const cloudImportRef = useRef<HTMLInputElement>(null);
   const [renameValue, setRenameValue] = useState(activeTheme.name);
 
   useEffect(() => {
@@ -116,6 +134,48 @@ export default function ThemeEditorPanel({ config, onConfigChange, onThemeChange
     if (importRef.current) importRef.current.value = '';
   };
 
+  const downloadText = (text: string, filename: string) => {
+    const blob = new Blob([text], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleGlobalSave = async () => {
+    const ok = await saveThemeGlobally();
+    toast(ok ? 'Theme synced across clients' : 'Theme sync failed; local cache kept', ok ? 'success' : 'error');
+  };
+
+  const handleCloudReload = async () => {
+    const ok = await reloadRemoteTheme();
+    toast(ok ? 'Reloaded theme from cloud' : 'No cloud theme available', ok ? 'success' : 'warning');
+  };
+
+  const handleCloudReset = async () => {
+    const ok = await confirmDialog('Reset Cloud Theme', 'Reset the globally synced theme to the default Nocturnal Signal?');
+    if (!ok) return;
+    const synced = await resetCloudTheme();
+    toast(synced ? 'Cloud theme reset to default' : 'Cloud reset failed', synced ? 'warning' : 'error');
+  };
+
+  const handleCloudExport = () => {
+    downloadText(exportCloudConfig(), 'aryan-cloud-theme-config.json');
+    toast('Cloud theme config exported', 'success');
+  };
+
+  const handleCloudImport = async () => {
+    const file = cloudImportRef.current?.files?.[0];
+    if (!file) return;
+    const text = await file.text();
+    const result = await importCloudConfig(text);
+    if (result.success) toast('Imported and uploaded cloud theme config', 'success');
+    else toast(`Cloud import failed: ${result.errors[0]}`, 'error');
+    if (cloudImportRef.current) cloudImportRef.current.value = '';
+  };
+
   const togglePublicSelector = () => {
     config.themeEngine = config.themeEngine ?? { publicSelectorEnabled: false };
     config.themeEngine.publicSelectorEnabled = !config.themeEngine.publicSelectorEnabled;
@@ -129,11 +189,27 @@ export default function ThemeEditorPanel({ config, onConfigChange, onThemeChange
         <p>Saved visual identity systems. Default themes stay immutable; custom variants hold your edits.</p>
         <div className="theme-engine-status">
           <span>{activeTheme.source === 'custom' ? 'custom editable theme' : 'built-in source preset'}</span>
+          <span className={syncStatus === 'synced' ? 'is-synced' : syncStatus === 'failed' ? 'is-dirty' : ''}>
+            cloud: {syncStatus}
+          </span>
+          <span>source: {syncSource}</span>
+          {lastSyncedAt && <span>last sync: {new Date(lastSyncedAt).toLocaleString()}</span>}
           {unsavedChanges && <span className="is-dirty">unsaved theme changes</span>}
+          {syncStatus === 'synced' && <span>Theme synced across clients</span>}
         </div>
+        {remoteError && <div className="theme-validation-errors"><span>{remoteError}</span></div>}
       </div>
 
       <section className="theme-engine-block">
+        <div className="theme-cloud-actions">
+          <button className="cr-btn cr-btn-primary" type="button" onClick={handleGlobalSave}>save theme globally</button>
+          <button className="cr-btn cr-btn-ghost" type="button" onClick={handleCloudReload}>reload from cloud</button>
+          <button className="cr-btn cr-btn-ghost" type="button" onClick={handleCloudExport}>export cloud config</button>
+          <button className="cr-btn cr-btn-ghost" type="button" onClick={() => cloudImportRef.current?.click()}>import and upload config</button>
+          <button className="cr-btn cr-btn-danger" type="button" onClick={handleCloudReset}>reset cloud theme</button>
+        </div>
+        <input ref={cloudImportRef} type="file" accept=".json" hidden onChange={handleCloudImport} />
+
         <div className="theme-engine-toolbar">
           <ThemeField label="Active theme">
             <select className="cr-select" value={activeThemeId} onChange={event => applySelectedTheme(event.target.value)}>
@@ -261,6 +337,11 @@ export default function ThemeEditorPanel({ config, onConfigChange, onThemeChange
                 {motionPersonalities.map(type => <option key={type} value={type}>{type}</option>)}
               </select>
             </ThemeField>
+            <ThemeField label="Transition style">
+              <select className="cr-select" value={activeTheme.motion.transitionStyle ?? defaultTransitionStyle(activeTheme.motion.personality)} onChange={event => updateTheme(theme => ({ ...theme, motion: { ...theme.motion, transitionStyle: event.target.value as ThemeTransitionStyle } }))}>
+                {transitionStyles.map(type => <option key={type} value={type}>{type}</option>)}
+              </select>
+            </ThemeField>
             <ThemeField label="Transition ms">
               <input className="cr-input" type="number" min={100} max={500} value={activeTheme.motion.transitionDuration} onChange={event => updateTheme(theme => ({ ...theme, motion: { ...theme.motion, transitionDuration: Number(event.target.value) } }))} />
             </ThemeField>
@@ -281,4 +362,3 @@ export default function ThemeEditorPanel({ config, onConfigChange, onThemeChange
     </div>
   );
 }
-

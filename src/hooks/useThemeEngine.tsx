@@ -2,8 +2,10 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import type { SiteConfig } from '../types/siteConfig';
 import type { ThemeDefinition, ThemeValidationResult } from '../themes/themeTypes';
 import { DEFAULT_THEME_ID, builtInThemes, cloneTheme, getBuiltInTheme, getDefaultTheme, getThemeById } from '../themes/themeRegistry';
-import { applyThemeTokens, startThemeTransition } from '../themes/utils/applyThemeTokens';
+import { applyTheme } from '../themes/utils/applyThemeTokens';
 import { mergeThemeIntoConfig, deriveThemeFromConfig } from '../themes/utils/themeConfigBridge';
+import { useRemoteTheme } from './useRemoteTheme';
+import type { RemoteThemeState, ThemeSyncSource, ThemeSyncStatus } from '../services/themeService';
 import {
   createThemeExport,
   downloadThemeJson,
@@ -29,6 +31,15 @@ interface ThemeEngineContextValue {
   draftTheme: ThemeDefinition | null;
   unsavedChanges: boolean;
   validation: ThemeValidationResult;
+  syncStatus: ThemeSyncStatus;
+  syncSource: ThemeSyncSource;
+  lastSyncedAt: string | null;
+  remoteError: string | null;
+  saveThemeGlobally: () => Promise<boolean>;
+  reloadRemoteTheme: () => Promise<boolean>;
+  resetCloudTheme: () => Promise<boolean>;
+  exportCloudConfig: () => string;
+  importCloudConfig: (json: string) => Promise<{ success: boolean; errors: string[] }>;
   setActiveTheme: (id: string) => void;
   duplicateTheme: (id?: string, name?: string) => ThemeDefinition;
   resetActiveTheme: () => void;
@@ -84,6 +95,7 @@ export function ThemeEngineProvider({ children }: { children: ReactNode }) {
     const draft = loadDraftTheme();
     return !!draft && draft.id === loadActiveThemeId();
   });
+  const hasAppliedTheme = useRef(false);
 
   useEffect(() => {
     configRef.current = config;
@@ -102,6 +114,17 @@ export function ThemeEngineProvider({ children }: { children: ReactNode }) {
   const allThemes = useMemo(() => [...builtInThemes, ...customThemes], [customThemes]);
   const validation = useMemo(() => validateTheme(activeTheme), [activeTheme]);
 
+  const applyRemoteState = useCallback((state: RemoteThemeState) => {
+    const remoteTheme = getThemeById(state.activeThemeId, state.customThemes);
+    if (!remoteTheme) return;
+    setCustomThemes(state.customThemes);
+    setActiveThemeIdState(state.activeThemeId);
+    setDraftTheme(null);
+    setUnsavedChanges(false);
+  }, []);
+
+  const remoteTheme = useRemoteTheme({ onRemoteState: applyRemoteState });
+
   useEffect(() => {
     saveCustomThemes(customThemes);
   }, [customThemes]);
@@ -116,8 +139,8 @@ export function ThemeEngineProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const theme = validation.valid ? activeTheme : getDefaultTheme();
-    startThemeTransition(theme.motion.transitionDuration + 160);
-    applyThemeTokens(theme);
+    applyTheme(theme, { transition: hasAppliedTheme.current });
+    hasAppliedTheme.current = true;
     const themedConfig = mergeThemeIntoConfig(configRef.current, theme);
     configRef.current = themedConfig;
     setConfig(themedConfig);
@@ -139,11 +162,19 @@ export function ThemeEngineProvider({ children }: { children: ReactNode }) {
   const setActiveTheme = useCallback((id: string) => {
     const nextTheme = getThemeById(id, customThemes);
     const safeId = nextTheme ? id : DEFAULT_THEME_ID;
-    if (unsavedChanges && draftTheme) commitDraft(draftTheme);
+    let nextCustomThemes = customThemes;
+    if (unsavedChanges && draftTheme?.source === 'custom') {
+      nextCustomThemes = replaceTheme(customThemes, draftTheme);
+      setCustomThemes(nextCustomThemes);
+    } else if (unsavedChanges && draftTheme) {
+      commitDraft(draftTheme);
+    }
     setActiveThemeIdState(safeId);
     setDraftTheme(null);
     setUnsavedChanges(false);
-  }, [commitDraft, customThemes, draftTheme, unsavedChanges]);
+    const resolvedTheme = getThemeById(safeId, nextCustomThemes) ?? getDefaultTheme();
+    void remoteTheme.saveThemeGlobally({ activeThemeId: safeId, customThemes: nextCustomThemes, activeTheme: resolvedTheme });
+  }, [commitDraft, customThemes, draftTheme, remoteTheme, unsavedChanges]);
 
   const duplicateTheme = useCallback((id = activeThemeId, name?: string) => {
     const source = getThemeById(id, customThemes) ?? activeTheme;
@@ -182,6 +213,23 @@ export function ThemeEngineProvider({ children }: { children: ReactNode }) {
   const saveTheme = useCallback(() => {
     commitDraft();
   }, [commitDraft]);
+
+  const saveThemeGlobally = useCallback(async () => {
+    let nextCustomThemes = customThemes;
+    let themeToSave = activeTheme;
+    if (draftTheme?.source === 'custom') {
+      nextCustomThemes = replaceTheme(customThemes, draftTheme);
+      themeToSave = draftTheme;
+      setCustomThemes(nextCustomThemes);
+      setDraftTheme(null);
+      setUnsavedChanges(false);
+    }
+    return remoteTheme.saveThemeGlobally({
+      activeThemeId: themeToSave.id,
+      customThemes: nextCustomThemes,
+      activeTheme: themeToSave,
+    });
+  }, [activeTheme, customThemes, draftTheme, remoteTheme]);
 
   const resetActiveTheme = useCallback(() => {
     const sourceTheme = activeTheme.source === 'custom' && activeTheme.sourceThemeId
@@ -266,6 +314,15 @@ export function ThemeEngineProvider({ children }: { children: ReactNode }) {
     draftTheme,
     unsavedChanges,
     validation,
+    syncStatus: remoteTheme.syncStatus,
+    syncSource: remoteTheme.syncSource,
+    lastSyncedAt: remoteTheme.lastSyncedAt,
+    remoteError: remoteTheme.remoteError,
+    saveThemeGlobally,
+    reloadRemoteTheme: remoteTheme.reloadRemoteTheme,
+    resetCloudTheme: remoteTheme.resetCloudTheme,
+    exportCloudConfig: remoteTheme.exportCloudConfig,
+    importCloudConfig: remoteTheme.importCloudConfig,
     setActiveTheme,
     duplicateTheme,
     resetActiveTheme,
@@ -286,6 +343,15 @@ export function ThemeEngineProvider({ children }: { children: ReactNode }) {
     draftTheme,
     unsavedChanges,
     validation,
+    remoteTheme.syncStatus,
+    remoteTheme.syncSource,
+    remoteTheme.lastSyncedAt,
+    remoteTheme.remoteError,
+    saveThemeGlobally,
+    remoteTheme.reloadRemoteTheme,
+    remoteTheme.resetCloudTheme,
+    remoteTheme.exportCloudConfig,
+    remoteTheme.importCloudConfig,
     setActiveTheme,
     duplicateTheme,
     resetActiveTheme,
@@ -311,4 +377,3 @@ export function useThemeEngine(): ThemeEngineContextValue {
   if (!ctx) throw new Error('useThemeEngine must be used within ThemeEngineProvider');
   return ctx;
 }
-

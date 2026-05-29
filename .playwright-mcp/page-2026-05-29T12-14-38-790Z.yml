@@ -1,0 +1,393 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: CR
+      - generic [ref=e7]: Control Room
+      - generic [ref=e8]: synced
+    - generic [ref=e9]:
+      - button "save draft" [ref=e10] [cursor=pointer]
+      - button "apply to site" [ref=e11] [cursor=pointer]
+      - button "export" [ref=e12] [cursor=pointer]
+      - button "import" [ref=e13] [cursor=pointer]
+      - button "reset" [ref=e14] [cursor=pointer]
+      - link "view site ↗" [ref=e15] [cursor=pointer]:
+        - /url: /
+  - generic [ref=e16]:
+    - complementary [ref=e18]:
+      - textbox "search controls..." [ref=e20]
+      - navigation "Control Room navigation" [ref=e21]:
+        - generic [ref=e22]:
+          - button "▸ Content" [ref=e23] [cursor=pointer]
+          - generic [ref=e24]:
+            - button "01 Global Identity" [ref=e25] [cursor=pointer]:
+              - generic [ref=e26]: "01"
+              - text: Global Identity
+            - button "02 Sections" [ref=e27] [cursor=pointer]:
+              - generic [ref=e28]: "02"
+              - text: Sections
+            - button "03 Projects / Case Files" [ref=e29] [cursor=pointer]:
+              - generic [ref=e30]: "03"
+              - text: Projects / Case Files
+            - button "04 Proof Cards" [ref=e31] [cursor=pointer]:
+              - generic [ref=e32]: "04"
+              - text: Proof Cards
+            - button "05 Skills / Stack" [ref=e33] [cursor=pointer]:
+              - generic [ref=e34]: "05"
+              - text: Skills / Stack
+            - button "06 Philosophy" [ref=e35] [cursor=pointer]:
+              - generic [ref=e36]: "06"
+              - text: Philosophy
+            - button "07 Human Layer" [ref=e37] [cursor=pointer]:
+              - generic [ref=e38]: "07"
+              - text: Human Layer
+            - button "08 Timeline / Build Log" [ref=e39] [cursor=pointer]:
+              - generic [ref=e40]: "08"
+              - text: Timeline / Build Log
+            - button "09 Contact / Links" [ref=e41] [cursor=pointer]:
+              - generic [ref=e42]: "09"
+              - text: Contact / Links
+        - generic [ref=e43]:
+          - button "▸ Design" [ref=e44] [cursor=pointer]
+          - generic [ref=e45]:
+            - button "10 Theme Engine" [ref=e46] [cursor=pointer]:
+              - generic [ref=e47]: "10"
+              - text: Theme Engine
+            - button "11 Portrait System" [ref=e48] [cursor=pointer]:
+              - generic [ref=e49]: "11"
+              - text: Portrait System
+            - button "12 Typography Lab" [ref=e50] [cursor=pointer]:
+              - generic [ref=e51]: "12"
+              - text: Typography Lab
+            - button "13 Colors" [ref=e52] [cursor=pointer]:
+              - generic [ref=e53]: "13"
+              - text: Colors
+            - button "14 Background / Trace Grid" [ref=e54] [cursor=pointer]:
+              - generic [ref=e55]: "14"
+              - text: Background / Trace Grid
+            - button "15 Motion / Animation" [ref=e56] [cursor=pointer]:
+              - generic [ref=e57]: "15"
+              - text: Motion / Animation
+            - button "16 Layout / Spacing" [ref=e58] [cursor=pointer]:
+              - generic [ref=e59]: "16"
+              - text: Layout / Spacing
+        - generic [ref=e60]:
+          - button "▸ System" [ref=e61] [cursor=pointer]
+          - generic [ref=e62]:
+            - button "17 SEO / Meta" [ref=e63] [cursor=pointer]:
+              - generic [ref=e64]: "17"
+              - text: SEO / Meta
+            - button "18 Assets" [ref=e65] [cursor=pointer]:
+              - generic [ref=e66]: "18"
+              - text: Assets
+            - button "19 Advanced JSON" [ref=e67] [cursor=pointer]:
+              - generic [ref=e68]: "19"
+              - text: Advanced JSON
+    - main [ref=e69]:
+      - generic [ref=e71]:
+        - generic [ref=e72]:
+          - heading "Theme Engine" [level=2] [ref=e73]
+          - paragraph [ref=e74]: Saved visual identity systems. Default themes stay immutable; custom variants hold your edits.
+          - generic [ref=e75]:
+            - generic [ref=e76]: built-in source preset
+            - generic [ref=e77]: "cloud: offline-cache"
+            - generic [ref=e78]: "source: cache"
+            - generic [ref=e79]: "last sync: 5/29/2026, 5:40:37 PM"
+          - generic [ref=e81]: Firebase environment variables are not configured
+        - generic [ref=e82]:
+          - generic [ref=e83]:
+            - button "save theme globally" [ref=e84] [cursor=pointer]
+            - button "reload from cloud" [ref=e85] [cursor=pointer]
+            - button "export cloud config" [ref=e86] [cursor=pointer]
+            - button "import and upload config" [ref=e87] [cursor=pointer]
+            - button "reset cloud theme" [ref=e88] [cursor=pointer]
+          - generic [ref=e89]:
+            - generic [ref=e90]:
+              - generic [ref=e91]: Active theme
+              - combobox "Active theme" [ref=e92] [cursor=pointer]:
+                - option "Nocturnal Signal - Original signal"
+                - option "Soft Trace Luxury - Recruiter-safe luxury"
+                - option "Quantum Rain - Cosmic rain" [selected]
+                - option "Noir Operating System - Evidence OS"
+                - option "Skyline Terminal - Night builder"
+                - option "Editorial Cybernetic - Magazine cybernetics"
+                - option "Obsidian Lab - Private AI lab"
+                - option "Blue Hour Cinema - Human cinema"
+                - option "Proof Archive - Receipt archive"
+                - option "Cosmic Debug - Reality debugger"
+            - button "duplicate theme" [ref=e93] [cursor=pointer]
+            - button "reset active theme" [ref=e94] [cursor=pointer]
+            - button "export themes JSON" [ref=e95] [cursor=pointer]
+            - button "import themes JSON" [ref=e96] [cursor=pointer]
+          - generic [ref=e97]:
+            - checkbox "Enable hidden public theme dropdown" [ref=e98]
+            - generic [ref=e99]: Enable hidden public theme dropdown
+        - generic [ref=e101]:
+          - button "Aa Nocturnal Signal default Midnight systems interface with cold blue trace light. Dark, precise, restrained, technical, premium. Cinematic Slow reveal" [ref=e102] [cursor=pointer]:
+            - generic [ref=e108]: Aa
+            - generic [ref=e109]:
+              - generic [ref=e110]:
+                - strong [ref=e111]: Nocturnal Signal
+                - generic [ref=e112]: default
+              - generic [ref=e113]: Midnight systems interface with cold blue trace light.
+              - generic [ref=e114]: Dark, precise, restrained, technical, premium.
+            - generic [ref=e121]:
+              - generic [ref=e122]: Cinematic
+              - generic [ref=e123]: Slow reveal
+          - button "Aa Soft Trace Luxury default Editorial luxury restraint with pearl-blue engineering traces. Expensive, quiet, spacious, controlled. Spacious Minimal fade" [ref=e124] [cursor=pointer]:
+            - generic [ref=e130]: Aa
+            - generic [ref=e131]:
+              - generic [ref=e132]:
+                - strong [ref=e133]: Soft Trace Luxury
+                - generic [ref=e134]: default
+              - generic [ref=e135]: Editorial luxury restraint with pearl-blue engineering traces.
+              - generic [ref=e136]: Expensive, quiet, spacious, controlled.
+            - generic [ref=e143]:
+              - generic [ref=e144]: Spacious
+              - generic [ref=e145]: Minimal fade
+          - button "Aa Quantum Rain default Cosmic rain field with cyan-violet scientific atmosphere. Cosmic, scientific, poetic, atmospheric. Cinematic Slow parallax" [pressed] [ref=e146] [cursor=pointer]:
+            - generic [ref=e152]: Aa
+            - generic [ref=e153]:
+              - generic [ref=e154]:
+                - strong [ref=e155]: Quantum Rain
+                - generic [ref=e156]: default
+              - generic [ref=e157]: Cosmic rain field with cyan-violet scientific atmosphere.
+              - generic [ref=e158]: Cosmic, scientific, poetic, atmospheric.
+            - generic [ref=e165]:
+              - generic [ref=e166]: Cinematic
+              - generic [ref=e167]: Slow parallax
+          - button "Aa Noir Operating System default Monochrome evidence OS with red proof markers. Investigative, sharp, monochrome, serious, cinematic noir. Balanced Sharp cuts" [ref=e168] [cursor=pointer]:
+            - generic [ref=e174]: Aa
+            - generic [ref=e175]:
+              - generic [ref=e176]:
+                - strong [ref=e177]: Noir Operating System
+                - generic [ref=e178]: default
+              - generic [ref=e179]: Monochrome evidence OS with red proof markers.
+              - generic [ref=e180]: Investigative, sharp, monochrome, serious, cinematic noir.
+            - generic [ref=e187]:
+              - generic [ref=e188]: Balanced
+              - generic [ref=e189]: Sharp cuts
+          - button "Aa Skyline Terminal default Late-night city terminal with electric blue ambition lines. Urban, ambitious, lonely-but-focused, modern. Balanced Scanline glow" [ref=e190] [cursor=pointer]:
+            - generic [ref=e196]: Aa
+            - generic [ref=e197]:
+              - generic [ref=e198]:
+                - strong [ref=e199]: Skyline Terminal
+                - generic [ref=e200]: default
+              - generic [ref=e201]: Late-night city terminal with electric blue ambition lines.
+              - generic [ref=e202]: Urban, ambitious, lonely-but-focused, modern.
+            - generic [ref=e209]:
+              - generic [ref=e210]: Balanced
+              - generic [ref=e211]: Scanline glow
+          - button "Aa Editorial Cybernetic default High-fashion editorial layout fused with engineering diagrams. Bold, stylish, sharp, magazine-like, futuristic. Editorial Type-led reveal" [ref=e212] [cursor=pointer]:
+            - generic [ref=e218]: Aa
+            - generic [ref=e219]:
+              - generic [ref=e220]:
+                - strong [ref=e221]: Editorial Cybernetic
+                - generic [ref=e222]: default
+              - generic [ref=e223]: High-fashion editorial layout fused with engineering diagrams.
+              - generic [ref=e224]: Bold, stylish, sharp, magazine-like, futuristic.
+            - generic [ref=e231]:
+              - generic [ref=e232]: Editorial
+              - generic [ref=e233]: Type-led reveal
+          - button "Aa Obsidian Lab default Private AI lab interface with modular dense surfaces. Experimental, technical, dense, powerful. Dense Fast controls" [ref=e234] [cursor=pointer]:
+            - generic [ref=e240]: Aa
+            - generic [ref=e241]:
+              - generic [ref=e242]:
+                - strong [ref=e243]: Obsidian Lab
+                - generic [ref=e244]: default
+              - generic [ref=e245]: Private AI lab interface with modular dense surfaces.
+              - generic [ref=e246]: Experimental, technical, dense, powerful.
+            - generic [ref=e253]:
+              - generic [ref=e254]: Dense
+              - generic [ref=e255]: Fast controls
+          - button "Aa Blue Hour Cinema default Human cinematic twilight between day and night. Melancholic, beautiful, calm, premium. Cinematic Slow atmospheric" [ref=e256] [cursor=pointer]:
+            - generic [ref=e262]: Aa
+            - generic [ref=e263]:
+              - generic [ref=e264]:
+                - strong [ref=e265]: Blue Hour Cinema
+                - generic [ref=e266]: default
+              - generic [ref=e267]: Human cinematic twilight between day and night.
+              - generic [ref=e268]: Melancholic, beautiful, calm, premium.
+            - generic [ref=e275]:
+              - generic [ref=e276]: Cinematic
+              - generic [ref=e277]: Slow atmospheric
+          - button "Aa Proof Archive default Structured archive of receipts, logs, tags, and indexed systems. Structured, archival, trustworthy, exact. Indexed Minimal" [ref=e278] [cursor=pointer]:
+            - generic [ref=e284]: Aa
+            - generic [ref=e285]:
+              - generic [ref=e286]:
+                - strong [ref=e287]: Proof Archive
+                - generic [ref=e288]: default
+              - generic [ref=e289]: Structured archive of receipts, logs, tags, and indexed systems.
+              - generic [ref=e290]: Structured, archival, trustworthy, exact.
+            - generic [ref=e297]:
+              - generic [ref=e298]: Indexed
+              - generic [ref=e299]: Minimal
+          - button "Aa Cosmic Debug default Debugging reality from a cosmic control room. Mysterious, futuristic, slightly strange, intelligent. Cinematic Trace drift" [ref=e300] [cursor=pointer]:
+            - generic [ref=e306]: Aa
+            - generic [ref=e307]:
+              - generic [ref=e308]:
+                - strong [ref=e309]: Cosmic Debug
+                - generic [ref=e310]: default
+              - generic [ref=e311]: Debugging reality from a cosmic control room.
+              - generic [ref=e312]: Mysterious, futuristic, slightly strange, intelligent.
+            - generic [ref=e319]:
+              - generic [ref=e320]: Cinematic
+              - generic [ref=e321]: Trace drift
+        - generic [ref=e323]:
+          - generic [ref=e324]:
+            - generic [ref=e325]: Theme name
+            - textbox "Theme name" [ref=e326]: Quantum Rain
+          - button "rename custom theme" [ref=e327] [cursor=pointer]
+          - button "save custom theme" [disabled] [ref=e328]
+          - button "delete custom theme" [disabled] [ref=e329]
+        - group [ref=e330]:
+          - generic "Edit current theme" [ref=e331] [cursor=pointer]
+          - generic [ref=e332]:
+            - heading "Identity" [level=3] [ref=e333]
+            - generic [ref=e334]:
+              - generic [ref=e335]: Short description
+              - textbox "Short description" [ref=e336]: Cosmic rain field with cyan-violet scientific atmosphere.
+            - generic [ref=e337]:
+              - generic [ref=e338]: Emotional tone
+              - textbox "Emotional tone" [ref=e339]: Cosmic, scientific, poetic, atmospheric.
+          - generic [ref=e340]:
+            - heading "Color System" [level=3] [ref=e341]
+            - generic [ref=e342]:
+              - generic [ref=e343]:
+                - generic [ref=e344]: bg
+                - textbox "bg" [ref=e345] [cursor=pointer]: "#020615"
+              - generic [ref=e346]:
+                - generic [ref=e347]: bgSecondary
+                - textbox "bgSecondary" [ref=e348] [cursor=pointer]: "#071022"
+              - generic [ref=e349]:
+                - generic [ref=e350]: surface
+                - textbox "surface" [ref=e351] [cursor=pointer]: "#0a162b"
+              - generic [ref=e352]:
+                - generic [ref=e353]: surfaceElevated
+                - textbox "surfaceElevated" [ref=e354] [cursor=pointer]: "#0e1c35"
+              - generic [ref=e355]:
+                - generic [ref=e356]: text
+                - textbox "text" [ref=e357] [cursor=pointer]: "#ecf5ff"
+              - generic [ref=e358]:
+                - generic [ref=e359]: textSecondary
+                - textbox "textSecondary" [ref=e360] [cursor=pointer]: "#a8bad4"
+              - generic [ref=e361]:
+                - generic [ref=e362]: textMuted
+                - textbox "textMuted" [ref=e363] [cursor=pointer]: "#6f82a2"
+              - generic [ref=e364]:
+                - generic [ref=e365]: accent
+                - textbox "accent" [ref=e366] [cursor=pointer]: "#34a4ff"
+              - generic [ref=e367]:
+                - generic [ref=e368]: accentSecondary
+                - textbox "accentSecondary" [ref=e369] [cursor=pointer]: "#73f7ff"
+              - generic [ref=e370]:
+                - generic [ref=e371]: accentEmotional
+                - textbox "accentEmotional" [ref=e372] [cursor=pointer]: "#9b7cff"
+              - generic [ref=e373]:
+                - generic [ref=e374]: accentProof
+                - textbox "accentProof" [ref=e375] [cursor=pointer]: "#ff5c9a"
+              - generic [ref=e376]:
+                - generic [ref=e377]: border
+                - textbox "border" [ref=e378] [cursor=pointer]: "#1a3151"
+              - generic [ref=e379]:
+                - generic [ref=e380]: borderSubtle
+                - textbox "borderSubtle" [ref=e381] [cursor=pointer]: "#10233d"
+              - generic [ref=e382]:
+                - generic [ref=e383]: borderStrong
+                - textbox "borderStrong" [ref=e384] [cursor=pointer]: "#2f5f91"
+              - generic [ref=e385]:
+                - generic [ref=e386]: glow
+                - textbox "glow" [ref=e387] [cursor=pointer]: "#73f7ff"
+          - generic [ref=e388]:
+            - heading "Typography" [level=3] [ref=e389]
+            - generic [ref=e390]:
+              - generic [ref=e391]: Display font
+              - textbox "Display font" [ref=e392]: "\"Space Grotesk\", \"Inter\", \"Segoe UI\", sans-serif"
+            - generic [ref=e393]:
+              - generic [ref=e394]: Body font
+              - textbox "Body font" [ref=e395]: "\"Inter\", \"Geist\", \"Segoe UI\", sans-serif"
+            - generic [ref=e396]:
+              - generic [ref=e397]:
+                - generic [ref=e398]: Heading weight
+                - spinbutton "Heading weight" [ref=e399]: "650"
+              - generic [ref=e400]:
+                - generic [ref=e401]: Line height
+                - spinbutton "Line height" [ref=e402]: "1.66"
+              - generic [ref=e403]:
+                - generic [ref=e404]: Display size
+                - textbox "Display size" [ref=e405]: clamp(4rem, 10.8vw, 8.8rem)
+          - generic [ref=e406]:
+            - heading "Atmosphere" [level=3] [ref=e407]
+            - generic [ref=e408]:
+              - generic [ref=e409]:
+                - generic [ref=e410]: Background type
+                - combobox "Background type" [ref=e411] [cursor=pointer]:
+                  - option "trace-grid"
+                  - option "soft-luxury"
+                  - option "starfield" [selected]
+                  - option "noir-document"
+                  - option "skyline"
+                  - option "diagram"
+                  - option "lab-grid"
+                  - option "blue-hour"
+                  - option "archive"
+                  - option "cosmic-debug"
+              - generic [ref=e412]:
+                - generic [ref=e413]: Dot spacing
+                - spinbutton "Dot spacing" [ref=e414]: "28"
+              - generic [ref=e415]:
+                - generic [ref=e416]: Dot opacity
+                - spinbutton "Dot opacity" [ref=e417]: "0.1"
+              - generic [ref=e418]:
+                - generic [ref=e419]: Vignette
+                - spinbutton "Vignette" [ref=e420]: "0.84"
+          - generic [ref=e421]:
+            - heading "Motion and Layout" [level=3] [ref=e422]
+            - generic [ref=e423]:
+              - generic [ref=e424]:
+                - generic [ref=e425]: Motion personality
+                - combobox "Motion personality" [ref=e426] [cursor=pointer]:
+                  - option "restrained"
+                  - option "minimal"
+                  - option "atmospheric" [selected]
+                  - option "sharp"
+                  - option "scanline"
+                  - option "editorial"
+                  - option "dense"
+                  - option "cinematic"
+                  - option "archival"
+                  - option "cosmic"
+              - generic [ref=e427]:
+                - generic [ref=e428]: Transition style
+                - combobox "Transition style" [ref=e429] [cursor=pointer]:
+                  - option "crossfade"
+                  - option "scale-fade"
+                  - option "soft-wipe"
+                  - option "cover-reveal"
+                  - option "trace-sweep"
+                  - option "glow-shift" [selected]
+              - generic [ref=e430]:
+                - generic [ref=e431]: Transition ms
+                - spinbutton "Transition ms" [ref=e432]: "340"
+              - generic [ref=e433]:
+                - generic [ref=e434]: Density
+                - combobox "Density" [ref=e435] [cursor=pointer]:
+                  - option "compact"
+                  - option "balanced"
+                  - option "cinematic" [selected]
+                  - option "editorial"
+                  - option "dense"
+              - generic [ref=e436]:
+                - generic [ref=e437]: Section Y
+                - textbox "Section Y" [ref=e438]: 136px
+              - generic [ref=e439]:
+                - generic [ref=e440]: Card radius
+                - textbox "Card radius" [ref=e441]: 8px
+    - complementary [ref=e442]:
+      - generic [ref=e443]:
+        - generic [ref=e444]: live preview
+        - generic [ref=e445]:
+          - button "desktop" [ref=e446] [cursor=pointer]
+          - button "tablet" [ref=e447] [cursor=pointer]
+          - button "mobile" [ref=e448] [cursor=pointer]
+      - iframe [ref=e450]:
+        

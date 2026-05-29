@@ -20,6 +20,7 @@ export type ThemeCardStyle = 'glass' | 'quiet-luxury' | 'case-file' | 'terminal'
 export type ThemeButtonStyle = 'signal' | 'luxury' | 'console' | 'evidence' | 'editorial' | 'lab' | 'archive' | 'cosmic';
 export type ThemeNavStyle = 'sticky-glass' | 'quiet-strip' | 'terminal-rail' | 'case-index' | 'editorial-band' | 'lab-bar';
 export type ThemeMotionPersonality = 'restrained' | 'minimal' | 'atmospheric' | 'sharp' | 'scanline' | 'editorial' | 'dense' | 'cinematic' | 'archival' | 'cosmic';
+export type ThemeTransitionStyle = 'crossfade' | 'scale-fade' | 'soft-wipe' | 'cover-reveal' | 'trace-sweep' | 'glow-shift';
 
 export interface ThemeColors {
   bg: string;
@@ -130,6 +131,7 @@ export interface ThemeGlow {
 
 export interface ThemeMotion {
   personality: ThemeMotionPersonality;
+  transitionStyle?: ThemeTransitionStyle;
   revealType: 'translateY' | 'fadeIn' | 'scale' | 'none';
   revealDuration: number;
   hoverDuration: number;

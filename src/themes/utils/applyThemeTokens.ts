@@ -1,5 +1,6 @@
 import type { ThemeDefinition } from '../themeTypes';
 import { applyTypographyVars } from '../../utils/textEffects';
+import { validateTheme } from './themeValidation';
 
 function setVar(root: HTMLElement, name: string, value: string | number): void {
   root.style.setProperty(name, String(value));
@@ -135,14 +136,95 @@ export function applyThemeTokens(theme: ThemeDefinition): void {
   setVar(root, '--header-height', theme.layout.headerHeight);
   setVar(root, '--layout-grid-gap', theme.layout.gridGap);
 
+  setVar(root, '--admin-bg', colorMix(theme.colors.bg, theme.colors.bgSecondary, 0.84));
+  setVar(root, '--admin-panel', colorMix(theme.colors.surface, theme.colors.bg, 0.72));
+  setVar(root, '--admin-panel-strong', colorMix(theme.colors.surfaceElevated, theme.colors.bg, 0.76));
+  setVar(root, '--admin-border', colorMix(theme.colors.borderStrong, theme.colors.bg, 0.55));
+  setVar(root, '--admin-border-soft', colorMix(theme.colors.border, theme.colors.bg, 0.48));
+  setVar(root, '--admin-text', theme.colors.text);
+  setVar(root, '--admin-muted', colorMix(theme.colors.textMuted, theme.colors.textSecondary, 0.62));
+  setVar(root, '--admin-accent', theme.colors.accentSecondary);
+  setVar(root, '--admin-accent-2', theme.colors.accent);
+  setVar(root, '--admin-proof', theme.colors.accentProof);
+  setVar(root, '--admin-glow', `color-mix(in srgb, ${theme.colors.glow} 18%, transparent)`);
+  setVar(root, '--cr-bg', 'var(--admin-bg)');
+  setVar(root, '--cr-bg-2', 'var(--admin-panel)');
+  setVar(root, '--cr-bg-3', 'var(--admin-panel-strong)');
+  setVar(root, '--cr-bg-4', colorMix(theme.colors.surfaceElevated, theme.colors.accent, 0.82));
+  setVar(root, '--cr-text', 'var(--admin-text)');
+  setVar(root, '--cr-text-2', theme.colors.textSecondary);
+  setVar(root, '--cr-text-3', 'var(--admin-muted)');
+  setVar(root, '--cr-accent', theme.colors.accent);
+  setVar(root, '--cr-accent-cyan', theme.colors.accentSecondary);
+  setVar(root, '--cr-accent-glow', `color-mix(in srgb, ${theme.colors.accentSecondary} 10%, transparent)`);
+  setVar(root, '--cr-border', 'var(--admin-border-soft)');
+  setVar(root, '--cr-border-2', 'var(--admin-border)');
+  setVar(root, '--cr-border-focus', theme.colors.accentSecondary);
+  setVar(root, '--cr-success', theme.colors.success);
+  setVar(root, '--cr-warning', theme.colors.warning);
+  setVar(root, '--cr-danger', theme.colors.accentProof);
+  setVar(root, '--cr-font-body', theme.typography.bodyFont);
+  setVar(root, '--cr-font-mono', theme.typography.monoFont);
+  setVar(root, '--cr-font-display', theme.typography.displayFont);
+
   const metaTheme = document.querySelector('meta[name="theme-color"]');
   if (metaTheme) metaTheme.setAttribute('content', theme.colors.bg);
 }
 
-export function startThemeTransition(duration = 420): void {
+function colorMix(a: string, b: string, aPercent: number): string {
+  return `color-mix(in srgb, ${a} ${Math.round(aPercent * 100)}%, ${b})`;
+}
+
+function resolveTransitionStyle(theme: ThemeDefinition): string {
+  if (theme.motion.transitionStyle) return theme.motion.transitionStyle;
+  if (theme.motion.personality === 'scanline' || theme.motion.personality === 'restrained') return 'trace-sweep';
+  if (theme.motion.personality === 'cosmic' || theme.motion.personality === 'atmospheric') return 'glow-shift';
+  if (theme.motion.personality === 'sharp' || theme.motion.personality === 'archival') return 'soft-wipe';
+  return 'scale-fade';
+}
+
+export function startThemeTransition(duration = 420, style = 'trace-sweep'): void {
   if (typeof document === 'undefined') return;
   const root = document.documentElement;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  root.dataset.themeTransitionStyle = style;
   root.classList.add('theme-transitioning');
   window.setTimeout(() => root.classList.remove('theme-transitioning'), duration);
+}
+
+interface ApplyThemeOptions {
+  transition?: boolean;
+}
+
+export function applyTheme(theme: ThemeDefinition, options: ApplyThemeOptions = {}): boolean {
+  if (typeof document === 'undefined') return false;
+  const validation = validateTheme(theme);
+  if (!validation.valid) {
+    console.warn('[ThemeEngine] Refused invalid theme:', validation.errors);
+    return false;
+  }
+
+  const root = document.documentElement;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const style = reduceMotion ? 'crossfade' : resolveTransitionStyle(theme);
+  const duration = reduceMotion ? 140 : Math.min(Math.max(theme.motion.transitionDuration + 180, 300), 520);
+  const apply = () => {
+    root.dataset.themeTransitionStyle = style;
+    root.style.setProperty('--theme-transition-duration', `${duration}ms`);
+    applyThemeTokens(theme);
+  };
+
+  if (options.transition === false || reduceMotion) {
+    apply();
+    return true;
+  }
+
+  startThemeTransition(duration, style);
+  if (typeof document.startViewTransition === 'function') {
+    document.startViewTransition(apply).finished.catch(() => undefined);
+    return true;
+  }
+
+  apply();
+  return true;
 }

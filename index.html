@@ -9,6 +9,83 @@
     />
     <title>Aryan Sharma | Proof of Work Interface</title>
     <meta name="theme-color" content="#05070d" />
+    <script>
+      (() => {
+        try {
+          const raw = localStorage.getItem('aryan_theme_engine_remote_cache');
+          if (!raw) return;
+          const cached = JSON.parse(raw);
+          const theme = cached && cached.activeTheme;
+          if (!theme || !theme.colors) return;
+          const root = document.documentElement;
+          const setVar = (name, value) => value !== undefined && root.style.setProperty(name, String(value));
+          const c = theme.colors;
+          const t = theme.typography || {};
+          const b = theme.background || {};
+          root.dataset.themeId = theme.id;
+          root.dataset.themeBackground = b.type || 'trace-grid';
+          root.dataset.themeDensity = theme.layout?.density || 'cinematic';
+          setVar('--color-bg', c.bg);
+          setVar('--color-bg-secondary', c.bgSecondary);
+          setVar('--color-surface', c.surface);
+          setVar('--color-surface-elevated', c.surfaceElevated);
+          setVar('--color-text', c.text);
+          setVar('--color-text-secondary', c.textSecondary);
+          setVar('--color-text-muted', c.textMuted);
+          setVar('--color-accent', c.accent);
+          setVar('--color-accent-secondary', c.accentSecondary);
+          setVar('--color-accent-emotional', c.accentEmotional);
+          setVar('--color-accent-proof', c.accentProof);
+          setVar('--color-border', c.border);
+          setVar('--color-border-subtle', c.borderSubtle);
+          setVar('--color-border-strong', c.borderStrong);
+          setVar('--color-glow', c.glow);
+          setVar('--surface-base', c.bg);
+          setVar('--surface-card', c.surface || c.bgSecondary);
+          setVar('--surface-raised', c.surfaceElevated || c.bgSecondary);
+          setVar('--text-primary', c.text);
+          setVar('--text-secondary', c.textSecondary);
+          setVar('--text-muted', c.textMuted);
+          setVar('--accent-primary', c.accent);
+          setVar('--accent-secondary', c.accentSecondary);
+          setVar('--accent-emotional', c.accentEmotional);
+          setVar('--accent-proof', c.accentProof);
+          setVar('--line-default', c.border);
+          setVar('--line-subtle', c.borderSubtle);
+          setVar('--line-strong', c.borderStrong);
+          setVar('--font-display', t.displayFont);
+          setVar('--font-body', t.bodyFont);
+          setVar('--font-mono', t.monoFont);
+          setVar('--type-display', t.typeDisplay);
+          setVar('--background-dot-opacity', b.dotOpacity);
+          setVar('--background-dot-field-opacity', b.dotFieldOpacity);
+          setVar('--background-radial-glow-color', b.radialGlowColor);
+          setVar('--background-radial-glow-color-2', b.radialGlowColor2);
+          setVar('--background-radial-glow-opacity', b.radialGlowOpacity);
+          setVar('--background-radial-glow-opacity-2', b.radialGlowOpacity2);
+          setVar('--admin-bg', c.bg);
+          setVar('--admin-panel', c.surface || c.bgSecondary);
+          setVar('--admin-border', c.borderStrong);
+          setVar('--admin-text', c.text);
+          setVar('--admin-muted', c.textMuted);
+          setVar('--admin-accent', c.accentSecondary);
+          setVar('--cr-bg', 'var(--admin-bg)');
+          setVar('--cr-bg-2', 'var(--admin-panel)');
+          setVar('--cr-bg-3', c.surfaceElevated || c.bgSecondary);
+          setVar('--cr-text', 'var(--admin-text)');
+          setVar('--cr-text-2', c.textSecondary);
+          setVar('--cr-text-3', 'var(--admin-muted)');
+          setVar('--cr-accent', c.accent);
+          setVar('--cr-accent-cyan', c.accentSecondary);
+          setVar('--cr-border', c.border);
+          setVar('--cr-border-2', c.borderStrong);
+          const metaTheme = document.querySelector('meta[name="theme-color"]');
+          if (metaTheme) metaTheme.setAttribute('content', c.bg);
+        } catch {
+          /* local cache is optional */
+        }
+      })();
+    </script>
     <link
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2305070D'/%3E%3Crect x='8' y='8' width='48' height='48' fill='%23101826' stroke='%235DEBFF' stroke-width='2'/%3E%3Ctext x='32' y='38' text-anchor='middle' font-family='monospace' font-size='18' font-weight='700' fill='%235DEBFF'%3EAS%3C/text%3E%3C/svg%3E"

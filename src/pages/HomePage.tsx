@@ -12,7 +12,7 @@ import { PhilosophySection, HumanSection, TimelineSection, ContactSection } from
 import ThemeTransitionLayer from '../components/theme/ThemeTransitionLayer';
 import type { SectionConfig, SiteConfig } from '../types/siteConfig';
 import { applyConfigToCSS } from '../config/configManager';
-import { applyThemeTokens } from '../themes/utils/applyThemeTokens';
+import { applyTheme } from '../themes/utils/applyThemeTokens';
 import { validateTheme } from '../themes/utils/themeValidation';
 
 const SECTION_COMPONENTS: Record<string, React.FC<{ config: SiteConfig; section: SectionConfig; openProjectId: string | null }>> = {
@@ -38,7 +38,7 @@ export default function HomePage() {
       if (event.data?.type === 'CONFIG_UPDATE') {
         try {
           if (event.data.theme && validateTheme(event.data.theme).valid) {
-            applyThemeTokens(event.data.theme);
+            applyTheme(event.data.theme, { transition: true });
           }
           setConfig(event.data.config);
           applyConfigToCSS(event.data.config);
