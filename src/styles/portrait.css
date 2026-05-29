@@ -1,0 +1,432 @@
+/* Portrait System Styling */
+
+.portrait-frame-container {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--component-card-border, var(--line-default));
+  border-radius: var(--radius-card, 4px);
+  background: var(--surface-card, #101826);
+  transition: transform var(--duration-standard, 300ms) var(--ease-standard),
+              border-color var(--duration-standard, 300ms) var(--ease-standard),
+              box-shadow var(--duration-standard, 300ms) var(--ease-standard);
+  width: 100%;
+}
+
+.portrait-frame-container img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--duration-slow, 500ms) var(--ease-standard),
+              filter var(--duration-standard, 300ms) var(--ease-standard);
+}
+
+/* Vignette Layer */
+.portrait-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(circle, transparent 30%, rgba(5, 7, 13, 0.8) 100%);
+  mix-blend-mode: multiply;
+  transition: opacity var(--duration-standard, 300ms) var(--ease-standard);
+}
+
+/* Scanlines Screen */
+.portrait-scanlines {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.03),
+    rgba(255, 255, 255, 0.03) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  transition: opacity var(--duration-standard, 300ms) var(--ease-standard);
+}
+
+/* Noise/Grain Screen */
+.portrait-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  mix-blend-mode: overlay;
+}
+
+/* Outer Hairline Border Layer */
+.portrait-hairline {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  border: 1px solid color-mix(in srgb, var(--text-primary, #ffffff) 10%, transparent);
+  box-shadow: inset 0 0 12px color-mix(in srgb, var(--accent-primary, #00ffff) 8%, transparent);
+}
+
+/* Interactive Sweeps */
+.portrait-sweep {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background: linear-gradient(
+    110deg,
+    transparent 0 35%,
+    color-mix(in srgb, var(--accent-secondary, #5debff) 15%, transparent) 45%,
+    color-mix(in srgb, var(--accent-secondary, #5debff) 25%, transparent) 50%,
+    color-mix(in srgb, var(--accent-secondary, #5debff) 15%, transparent) 55%,
+    transparent 65% 100%
+  );
+  transform: translateX(-100%);
+  transition: transform 0s;
+}
+
+.portrait-frame-container:hover .portrait-sweep {
+  transform: translateX(100%);
+  transition: transform 1.2s var(--ease-standard);
+}
+
+/* Glow Shadow */
+.portrait-glow-shadow {
+  box-shadow: 0 0 24px color-mix(in srgb, var(--color-glow, var(--accent-secondary)) 15%, transparent),
+              var(--shadow-card);
+}
+
+.portrait-frame-container:hover {
+  border-color: var(--line-strong, var(--accent-secondary));
+  box-shadow: 0 0 32px color-mix(in srgb, var(--color-glow, var(--accent-secondary)) 25%, transparent),
+              var(--shadow-raised);
+}
+
+.portrait-frame-container:hover img {
+  transform: scale(1.04);
+  filter: saturate(0.92) contrast(1.1) brightness(0.85);
+}
+
+/* Floating HUD Tag */
+.portrait-hud-tag {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  z-index: 6;
+  padding: 4px 8px;
+  background: color-mix(in srgb, var(--surface-base) 80%, transparent);
+  border: 1px solid var(--line-default);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--accent-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ─── IDENTITY CARD VARIANT ────────────────────────────────── */
+
+.portrait-identity-card {
+  display: flex;
+  flex-direction: column;
+  background: color-mix(in srgb, var(--surface-card) 90%, transparent);
+  border: 1px solid var(--line-default);
+  border-radius: var(--radius-card);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-card);
+  position: relative;
+  transition: border-color var(--duration-standard) var(--ease-standard);
+}
+
+.portrait-identity-card:hover {
+  border-color: color-mix(in srgb, var(--accent-secondary) 50%, var(--line-default));
+}
+
+.portrait-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--type-xs);
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--line-subtle);
+  padding-bottom: var(--space-2);
+}
+
+.portrait-card-header .live-heartbeat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+}
+
+.portrait-card-header .live-heartbeat .heartbeat-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent-secondary);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--accent-secondary);
+  animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+.portrait-card-metadata {
+  margin-top: var(--space-3);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-2);
+  border-top: 1px dashed var(--line-subtle);
+  padding-top: var(--space-3);
+}
+
+.portrait-card-metadata .metadata-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.portrait-card-metadata .metadata-item dt {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.portrait-card-metadata .metadata-item dd {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ─── BENTO VARIANT ───────────────────────────────────────── */
+
+.portrait-bento-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  grid-template-rows: auto auto;
+  gap: var(--space-card-padding, var(--space-4));
+  width: 100%;
+}
+
+.portrait-bento-cell {
+  background: var(--component-card-bg, var(--surface-card));
+  border: 1px solid var(--component-card-border, var(--line-default));
+  border-radius: var(--radius-card);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: var(--shadow-card);
+  transition: border-color var(--duration-standard) var(--ease-standard),
+              transform var(--duration-standard) var(--ease-standard);
+  overflow: hidden;
+}
+
+.portrait-bento-cell:hover {
+  border-color: color-mix(in srgb, var(--accent-secondary) 30%, var(--component-card-border));
+}
+
+.portrait-bento-cell.cell-main {
+  grid-row: span 2;
+  padding: 0;
+}
+
+.portrait-bento-cell.cell-terminal {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  min-height: 130px;
+}
+
+.bento-terminal-header {
+  display: flex;
+  justify-content: space-between;
+  color: var(--accent-secondary);
+  border-bottom: 1px solid var(--line-subtle);
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+}
+
+.bento-terminal-logs {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--text-secondary);
+}
+
+.bento-terminal-line {
+  animation: line-fade-in 0.3s ease-out forwards;
+  opacity: 0.85;
+}
+
+.bento-terminal-line span.cyan {
+  color: var(--accent-secondary);
+}
+.bento-terminal-line span.muted {
+  color: var(--text-muted);
+}
+
+.portrait-bento-cell.cell-widget {
+  min-height: 110px;
+}
+
+.bento-widget-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--line-subtle);
+  padding-bottom: 4px;
+  margin-bottom: 8px;
+}
+
+.bento-widget-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.bento-widget-stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.bento-widget-stat span:first-child {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.bento-widget-stat span:last-child {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-primary);
+  font-weight: bold;
+}
+
+/* ─── CLASSIFIED ARCHIVE VARIANT ────────────────────────────── */
+
+.portrait-archive-frame {
+  background: var(--surface-card);
+  border: 2px solid var(--line-strong);
+  padding: var(--space-4);
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+.portrait-archive-frame::before {
+  content: "CLASSIFIED";
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 10;
+  border: 2px solid var(--accent-proof, #ff3b5c);
+  color: var(--accent-proof, #ff3b5c);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 6px;
+  transform: rotate(12deg);
+  letter-spacing: 0.15em;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.portrait-archive-footer {
+  margin-top: var(--space-4);
+  font-family: var(--font-mono);
+  border-top: 1px solid var(--line-default);
+  padding-top: var(--space-3);
+  font-size: var(--type-xs);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.portrait-archive-line {
+  display: flex;
+  justify-content: space-between;
+}
+
+.portrait-archive-line span:first-child {
+  color: var(--text-muted);
+}
+.portrait-archive-line span:last-child {
+  color: var(--text-primary);
+}
+
+/* ─── CINEMATIC SIDE PANEL VARIANT ──────────────────────────── */
+
+.portrait-cinematic-panel {
+  position: relative;
+  width: 100%;
+}
+
+.portrait-panel-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, var(--surface-base) 0%, transparent 40%, transparent 60%, var(--surface-base) 100%);
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* ─── SCROLL REVEAL & MOTION ────────────────────────────────── */
+
+.portrait-scroll-reveal {
+  opacity: 0;
+  transform: translateY(20px) scale(0.98);
+  transition: opacity 0.8s var(--ease-enter), transform 0.8s var(--ease-enter);
+}
+
+.portrait-scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* ─── RESPONSIVE LAYOUTS ────────────────────────────────────── */
+
+@media (max-width: 1120px) {
+  .portrait-bento-grid {
+    grid-template-columns: 1.2fr 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .portrait-bento-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+  }
+  .portrait-bento-cell.cell-main {
+    grid-row: span 1;
+  }
+}
+
+/* ─── ENCRYPTED NAME ANIMATION ────────────────────────────── */
+
+.encrypted-name-wrapper {
+  display: inline-block;
+}
+
+.encrypted-name-last.is-scrambling {
+  font-family: var(--font-mono), monospace;
+  color: var(--accent-secondary, #5debff);
+  text-shadow: 0 0 10px color-mix(in srgb, var(--accent-secondary, #5debff) 50%, transparent);
+  letter-spacing: -0.02em;
+  display: inline-block;
+  transition: color var(--duration-fast) var(--ease-standard),
+              text-shadow var(--duration-fast) var(--ease-standard);
+}
+
