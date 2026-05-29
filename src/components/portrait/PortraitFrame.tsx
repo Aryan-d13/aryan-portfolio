@@ -37,6 +37,7 @@ export default function PortraitFrame({ portrait }: Props) {
   } as React.CSSProperties;
 
   const containerClass = [
+    'portrait-frame',
     'portrait-frame-container',
     portrait.effects.hoverLift ? 'portrait-hover-lift' : '',
     portrait.effects.glow > 0 ? 'portrait-glow-shadow' : '',
