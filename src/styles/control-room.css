@@ -1291,6 +1291,39 @@ html.cr-active, body.cr-active {
   width: 100%;
 }
 
+.typography-lab {
+  display: grid;
+  gap: 2px;
+}
+
+.typography-lab-toolbar {
+  display: grid;
+  gap: 10px;
+}
+
+.typography-lab-toolbar .cr-field {
+  margin-bottom: 0;
+}
+
+.typography-lab-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.typography-warnings {
+  display: grid;
+  gap: 6px;
+  padding: 10px 12px;
+  border: 1px solid rgba(234, 179, 8, 0.32);
+  border-radius: var(--cr-radius);
+  background: rgba(234, 179, 8, 0.06);
+  color: var(--cr-warning);
+  font-family: var(--cr-font-mono);
+  font-size: 10px;
+  line-height: 1.45;
+}
+
 /* ─── VALIDATION INLINE ──────────────────────────────────────── */
 .cr-field-error {
   display: block;

@@ -1,4 +1,5 @@
 import { defineTheme, defaultTypography, themeTimestamp } from './_shared';
+import { getTypographySystemForTheme } from '../../utils/textEffects';
 
 export const skylineTerminal = defineTheme({
   id: 'skyline-terminal',
@@ -36,6 +37,7 @@ export const skylineTerminal = defineTheme({
     type2xl: 'clamp(2.35rem, 4.8vw, 4.4rem)',
     typeDisplay: 'clamp(3.7rem, 9.8vw, 8.1rem)',
   },
+  typographySystem: getTypographySystemForTheme('skyline-terminal'),
   spacing: {
     baseUnit: 8,
     sectionY: '116px',
@@ -133,4 +135,3 @@ export const skylineTerminal = defineTheme({
   createdAt: themeTimestamp,
   updatedAt: themeTimestamp,
 });
-

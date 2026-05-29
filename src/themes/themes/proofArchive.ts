@@ -1,4 +1,5 @@
 import { defineTheme, defaultTypography, themeTimestamp } from './_shared';
+import { getTypographySystemForTheme } from '../../utils/textEffects';
 
 export const proofArchive = defineTheme({
   id: 'proof-archive',
@@ -36,6 +37,7 @@ export const proofArchive = defineTheme({
     type2xl: 'clamp(2.3rem, 4.8vw, 4.2rem)',
     typeDisplay: 'clamp(3.6rem, 9.5vw, 7.6rem)',
   },
+  typographySystem: getTypographySystemForTheme('proof-archive'),
   spacing: {
     baseUnit: 8,
     sectionY: '112px',
@@ -133,4 +135,3 @@ export const proofArchive = defineTheme({
   createdAt: themeTimestamp,
   updatedAt: themeTimestamp,
 });
-

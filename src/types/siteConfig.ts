@@ -1,4 +1,5 @@
 // ─── SITE CONFIG TYPES ──────────────────────────────────────────
+import type { TypographySystemConfig } from './typographyConfig';
 
 export interface CtaLink {
   text: string;
@@ -307,6 +308,7 @@ export interface SiteConfig {
   timeline: TimelineEntry[];
   contact: ContactConfig;
   typography: TypographyConfig;
+  typographySystem: TypographySystemConfig;
   colors: ColorsConfig;
   background: BackgroundConfig;
   motion: MotionConfig;

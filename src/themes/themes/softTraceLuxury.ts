@@ -1,4 +1,5 @@
 import { defineTheme, defaultTypography, themeTimestamp } from './_shared';
+import { getTypographySystemForTheme } from '../../utils/textEffects';
 
 export const softTraceLuxury = defineTheme({
   id: 'soft-trace-luxury',
@@ -36,6 +37,7 @@ export const softTraceLuxury = defineTheme({
     type2xl: 'clamp(2.75rem, 5.8vw, 5.25rem)',
     typeDisplay: 'clamp(4.25rem, 11vw, 9rem)',
   },
+  typographySystem: getTypographySystemForTheme('soft-trace-luxury'),
   spacing: {
     baseUnit: 8,
     sectionY: '152px',
@@ -133,4 +135,3 @@ export const softTraceLuxury = defineTheme({
   createdAt: themeTimestamp,
   updatedAt: themeTimestamp,
 });
-

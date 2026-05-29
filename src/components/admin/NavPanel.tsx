@@ -19,7 +19,7 @@ const NAV_GROUPS: NavGroup[] = [
     label: 'Design', items: [
       { id: 'theme', label: 'Theme Engine', index: '10' },
       { id: 'portrait', label: 'Portrait System', index: '11' },
-      { id: 'typography', label: 'Typography', index: '12' },
+      { id: 'typography', label: 'Typography Lab', index: '12' },
       { id: 'colors', label: 'Colors', index: '13' },
       { id: 'background', label: 'Background / Trace Grid', index: '14' },
       { id: 'motion', label: 'Motion / Animation', index: '15' },

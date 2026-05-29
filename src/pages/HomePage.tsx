@@ -17,7 +17,7 @@ import { validateTheme } from '../themes/utils/themeValidation';
 
 const SECTION_COMPONENTS: Record<string, React.FC<{ config: SiteConfig; section: SectionConfig; openProjectId: string | null }>> = {
   hero: ({ config, section }) => <HeroSection config={config} section={section} />,
-  statement: ({ section }) => <StatementSection section={section} />,
+  statement: ({ config, section }) => <StatementSection config={config} section={section} />,
   projects: ({ config, section, openProjectId }) => <ProjectsSection config={config} section={section} openProjectId={openProjectId} />,
   proof: ({ config, section }) => <ProofSection config={config} section={section} />,
   stack: ({ config, section }) => <StackSection config={config} section={section} />,

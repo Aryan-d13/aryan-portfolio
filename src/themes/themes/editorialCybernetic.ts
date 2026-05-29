@@ -1,4 +1,5 @@
 import { defineTheme, defaultTypography, themeTimestamp } from './_shared';
+import { getTypographySystemForTheme } from '../../utils/textEffects';
 
 export const editorialCybernetic = defineTheme({
   id: 'editorial-cybernetic',
@@ -37,6 +38,7 @@ export const editorialCybernetic = defineTheme({
     type2xl: 'clamp(3rem, 7vw, 6.4rem)',
     typeDisplay: 'clamp(5rem, 14vw, 11rem)',
   },
+  typographySystem: getTypographySystemForTheme('editorial-cybernetic'),
   spacing: {
     baseUnit: 8,
     sectionY: '148px',
@@ -134,4 +136,3 @@ export const editorialCybernetic = defineTheme({
   createdAt: themeTimestamp,
   updatedAt: themeTimestamp,
 });
-

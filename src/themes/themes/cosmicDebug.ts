@@ -1,4 +1,5 @@
 import { defineTheme, defaultTypography, themeTimestamp } from './_shared';
+import { getTypographySystemForTheme } from '../../utils/textEffects';
 
 export const cosmicDebug = defineTheme({
   id: 'cosmic-debug',
@@ -37,6 +38,7 @@ export const cosmicDebug = defineTheme({
     type2xl: 'clamp(2.5rem, 5.4vw, 4.8rem)',
     typeDisplay: 'clamp(4rem, 10.8vw, 8.8rem)',
   },
+  typographySystem: getTypographySystemForTheme('cosmic-debug'),
   spacing: {
     baseUnit: 8,
     sectionY: '124px',
@@ -134,4 +136,3 @@ export const cosmicDebug = defineTheme({
   createdAt: themeTimestamp,
   updatedAt: themeTimestamp,
 });
-

@@ -1,8 +1,10 @@
-import type { SectionConfig } from '../../types/siteConfig';
+import type { SectionConfig, SiteConfig } from '../../types/siteConfig';
+import MetadataText from '../typography/MetadataText';
+import TextTreatment from '../typography/Text';
 
-interface Props { section: SectionConfig; }
+interface Props { config: SiteConfig; section: SectionConfig; }
 
-export default function StatementSection({ section }: Props) {
+export default function StatementSection({ config, section }: Props) {
   return (
     <section
       className="statement-shell section-frame"
@@ -13,15 +15,25 @@ export default function StatementSection({ section }: Props) {
       data-system-status={section.systemStatus}
     >
       <div className="trace-label" aria-hidden="true">
-        section_id: {section.sectionId} / signal: {section.signal} / proof_level: {section.proofLevel} / system_status: {section.systemStatus}
+        <MetadataText config={config.typographySystem}>
+          section_id: {section.sectionId} / signal: {section.signal} / proof_level: {section.proofLevel} / system_status: {section.systemStatus}
+        </MetadataText>
       </div>
       <div className="section-rail">
-        <p className="section-kicker">{section.kicker}</p>
-        {section.railLabel && <span>{section.railLabel}</span>}
+        <p className="section-kicker"><MetadataText config={config.typographySystem}>{section.kicker}</MetadataText></p>
+        {section.railLabel && <span><MetadataText config={config.typographySystem}>{section.railLabel}</MetadataText></span>}
       </div>
       <div className="statement-panel">
-        {section.bodyAtmospheric && <p className="statement-text" data-atmospheric="">{section.bodyAtmospheric}</p>}
-        {section.bodyDirect && <p className="statement-text" data-direct="">{section.bodyDirect}</p>}
+        {section.bodyAtmospheric && (
+          <TextTreatment as="p" slot="identityStatement" config={config.typographySystem} className="statement-text" visibilityMode="atmospheric">
+            {section.bodyAtmospheric}
+          </TextTreatment>
+        )}
+        {section.bodyDirect && (
+          <TextTreatment as="p" slot="identityStatement" config={config.typographySystem} className="statement-text" visibilityMode="direct">
+            {section.bodyDirect}
+          </TextTreatment>
+        )}
       </div>
     </section>
   );

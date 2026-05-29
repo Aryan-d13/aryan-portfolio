@@ -1,9 +1,20 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import type { SiteConfig } from '../../../types/siteConfig';
 import { getDefaultConfig } from '../../../config/siteConfig';
 import { validateConfig } from '../../../config/configSchema';
 import { Field, TextInput, TextArea, NumberInput, Toggle, ColorField, Range, Select, getPath } from '../../ui/FormControls';
 import { toast, confirmDialog } from '../../ui/Toast';
+import { useThemeEngine } from '../../../hooks/useThemeEngine';
+import type { TextTreatmentSlot, TypographyPresetName } from '../../../types/typographyConfig';
+import {
+  TEXT_EFFECT_OPTIONS,
+  TEXT_MOTION_OPTIONS,
+  TEXT_TEXTURE_OPTIONS,
+  TYPOGRAPHY_PRESET_NAMES,
+  getTypographyPreset,
+  normalizeTypographySystem,
+  validateTypographySystem,
+} from '../../../utils/textEffects';
 
 interface EditorProps {
   config: SiteConfig;
@@ -19,7 +30,7 @@ function EditorHeader({ title, description, config, onChange }: { title: string;
     'Global Identity': 'identity', 'Sections': 'sections', 'Projects / Case Files': 'projects',
     'Proof Cards': 'proofCards', 'Skills / Stack': 'skillGroups', 'Philosophy': 'philosophy',
     'Human Layer': 'humanLayer', 'Timeline / Build Log': 'timeline', 'Contact / Links': 'contact',
-    'Typography': 'typography', 'Colors': 'colors', 'Background / Soft Trace Grid': 'background',
+    'Typography': 'typography', 'Typography Lab': 'typography', 'Colors': 'colors', 'Background / Soft Trace Grid': 'background',
     'Motion / Animation': 'motion', 'Layout / Spacing': 'layout', 'SEO / Meta': 'seo', 'Assets': 'assets',
   };
 
@@ -406,22 +417,151 @@ export function ContactEditor({ config, onChange }: EditorProps) {
 // ─── 10. TYPOGRAPHY ─────────────────────────────────────────────
 
 export function TypographyEditor({ config, onChange }: EditorProps) {
+  const themeEngine = useThemeEngine();
+  const importRef = useRef<HTMLInputElement>(null);
+  config.typographySystem = normalizeTypographySystem(config.typographySystem);
+  const warnings = validateTypographySystem(config.typographySystem);
+
+  const treatmentSlots: { slot: TextTreatmentSlot; label: string; hint: string }[] = [
+    { slot: 'heroHeadline', label: 'Hero Headline', hint: 'Most expressive, used for Aryan Sharma.' },
+    { slot: 'sectionTitle', label: 'Section Titles', hint: 'Editorial hierarchy and ghost layers.' },
+    { slot: 'projectTitle', label: 'Project Titles', hint: 'Case-file / dossier identity.' },
+    { slot: 'manifestoLine', label: 'Manifesto Lines', hint: 'Sharp operating principles.' },
+    { slot: 'metadata', label: 'Metadata', hint: 'Mono signal labels and trace IDs.' },
+    { slot: 'identityStatement', label: 'Identity Statement', hint: 'Restrained cinematic positioning.' },
+    { slot: 'contactHeading', label: 'Contact Heading', hint: 'Final channel / CTA tone.' },
+  ];
+
+  const applyPreset = (name: TypographyPresetName) => {
+    config.typographySystem = getTypographyPreset(name);
+    onChange();
+    toast(`Typography preset applied: ${name}`, 'info');
+  };
+
+  const resetToThemeDefault = () => {
+    config.typographySystem = normalizeTypographySystem(themeEngine.activeTheme.typographySystem);
+    onChange();
+    toast('Typography reset to active theme default', 'info');
+  };
+
+  const saveCustomPreset = () => {
+    localStorage.setItem('aryan_typography_custom_preset', JSON.stringify(config.typographySystem));
+    toast('Custom typography preset saved locally', 'success');
+  };
+
+  const exportTypography = () => {
+    const blob = new Blob([JSON.stringify(config.typographySystem, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'aryan-typography-system.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('Typography config exported', 'success');
+  };
+
+  const importTypography = async () => {
+    const file = importRef.current?.files?.[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const parsed = JSON.parse(text);
+      config.typographySystem = normalizeTypographySystem(parsed);
+      onChange();
+      toast('Typography config imported', 'success');
+    } catch (e) {
+      toast(`Import failed: ${(e as Error).message}`, 'error');
+    }
+    if (importRef.current) importRef.current.value = '';
+  };
+
   return (
-    <div>
-      <EditorHeader title="Typography" description="Fonts, sizes, weights, spacing, and scale" config={config} onChange={onChange} />
+    <div className="typography-lab">
+      <EditorHeader title="Typography Lab" description="Theme-aware text direction, readability, treatments, and motion" config={config} onChange={onChange} />
+
+      <div className="theme-engine-block typography-lab-toolbar">
+        <Field label="Treatment Preset">
+          <select className="cr-select" value={config.typographySystem.presetName} onChange={e => applyPreset(e.target.value as TypographyPresetName)}>
+            {TYPOGRAPHY_PRESET_NAMES.map(name => <option key={name} value={name}>{name}</option>)}
+          </select>
+        </Field>
+        <div className="typography-lab-actions">
+          <button className="cr-btn cr-btn-ghost cr-btn-sm" type="button" onClick={resetToThemeDefault}>reset to theme default</button>
+          <button className="cr-btn cr-btn-ghost cr-btn-sm" type="button" onClick={saveCustomPreset}>save custom preset</button>
+          <button className="cr-btn cr-btn-ghost cr-btn-sm" type="button" onClick={exportTypography}>export typography</button>
+          <button className="cr-btn cr-btn-ghost cr-btn-sm" type="button" onClick={() => importRef.current?.click()}>import typography</button>
+        </div>
+        <input ref={importRef} type="file" accept=".json" hidden onChange={importTypography} />
+      </div>
+
+      {warnings.length > 0 && (
+        <div className="typography-warnings" role="status">
+          {warnings.map(warning => <span key={warning.code}>{warning.message}</span>)}
+        </div>
+      )}
+
+      <div className="cr-section-label">Global Font Controls</div>
       <Field label="Display Font" hint="--font-display"><TextInput config={config} path="typography.displayFont" onChange={onChange} /></Field>
       <Field label="Body Font" hint="--font-body"><TextInput config={config} path="typography.bodyFont" onChange={onChange} /></Field>
       <Field label="Mono Font" hint="--font-mono"><TextInput config={config} path="typography.monoFont" onChange={onChange} /></Field>
-      <div className="cr-section-label">Scale</div>
+
+      <div className="cr-section-label">Heading Scale & Readability</div>
       <Field label="Base Font Size"><TextInput config={config} path="typography.baseFontSize" onChange={onChange} /></Field>
-      <Field label="Line Height"><Range config={config} path="typography.lineHeight" min={1.0} max={2.5} step={0.1} onChange={onChange} /></Field>
-      <Field label="Letter Spacing"><TextInput config={config} path="typography.letterSpacing" onChange={onChange} /></Field>
-      <Field label="Heading Weight"><Range config={config} path="typography.headingWeight" min={100} max={900} step={100} onChange={onChange} /></Field>
-      <Field label="Body Weight"><Range config={config} path="typography.bodyWeight" min={100} max={900} step={100} onChange={onChange} /></Field>
-      <div className="cr-section-label">Label Style</div>
+      <Field label="Heading Scale"><Range config={config} path="typographySystem.controls.headingScale" min={0.75} max={1.35} step={0.01} onChange={onChange} /></Field>
+      <Field label="Line Height"><Range config={config} path="typographySystem.controls.lineHeight" min={1.15} max={2.0} step={0.01} onChange={onChange} /></Field>
+      <Field label="Letter Spacing"><TextInput config={config} path="typographySystem.controls.letterSpacing" onChange={onChange} /></Field>
+      <Field label="Heading Weight"><Range config={config} path="typography.headingWeight" min={100} max={900} step={50} onChange={onChange} /></Field>
+      <Field label="Body Weight"><Range config={config} path="typography.bodyWeight" min={100} max={900} step={50} onChange={onChange} /></Field>
+
+      <div className="cr-section-label">Treatment Selectors</div>
+      {treatmentSlots.map(({ slot, label, hint }) => (
+        <SubEditor key={slot} title={label} defaultOpen={slot === 'heroHeadline' || slot === 'sectionTitle'}>
+          <Field label="Effect" hint={hint}>
+            <Select config={config} path={`typographySystem.treatments.${slot}.effect`} options={TEXT_EFFECT_OPTIONS} onChange={onChange} />
+          </Field>
+          <div className="cr-field-row">
+            <Field label="Motion"><Select config={config} path={`typographySystem.treatments.${slot}.motion`} options={TEXT_MOTION_OPTIONS} onChange={onChange} /></Field>
+            <Field label="Texture"><Select config={config} path={`typographySystem.treatments.${slot}.texture`} options={TEXT_TEXTURE_OPTIONS} onChange={onChange} /></Field>
+          </div>
+          <Field label="Effect Intensity"><Range config={config} path={`typographySystem.treatments.${slot}.intensity`} min={0} max={1} step={0.01} onChange={onChange} /></Field>
+          <Field label="Slot Glow"><Range config={config} path={`typographySystem.treatments.${slot}.glow`} min={0} max={0.5} step={0.01} onChange={onChange} /></Field>
+          <Field label="Slot Outline"><Range config={config} path={`typographySystem.treatments.${slot}.outline`} min={0} max={1} step={0.01} onChange={onChange} /></Field>
+        </SubEditor>
+      ))}
+
+      <div className="cr-section-label">Effect Intensity Sliders</div>
+      <Field label="Text Animation Intensity"><Range config={config} path="typographySystem.controls.animationIntensity" min={0} max={1} step={0.01} onChange={onChange} /></Field>
+      <Field label="Glow Intensity"><Range config={config} path="typographySystem.controls.glowIntensity" min={0} max={0.5} step={0.01} onChange={onChange} /></Field>
+      <Field label="Outline Thickness"><Range config={config} path="typographySystem.controls.outlineThickness" min={0} max={4} step={0.1} suffix="px" onChange={onChange} /></Field>
+      <Field label="Stroke Opacity"><Range config={config} path="typographySystem.controls.strokeOpacity" min={0} max={1} step={0.01} onChange={onChange} /></Field>
+      <Field label="Masked Texture Opacity"><Range config={config} path="typographySystem.controls.maskedTextureOpacity" min={0} max={1} step={0.01} onChange={onChange} /></Field>
+      <Field label="Grain Amount"><Range config={config} path="typographySystem.controls.grainAmount" min={0} max={0.4} step={0.01} onChange={onChange} /></Field>
+
+      <div className="cr-section-label">Hero Animation Controls</div>
+      <Field label="Kinetic Stagger Delay"><Range config={config} path="typographySystem.controls.kineticStaggerDelay" min={0} max={160} step={1} suffix="ms" onChange={onChange} /></Field>
+      <Field label="Reveal Duration"><Range config={config} path="typographySystem.controls.revealDuration" min={100} max={900} step={10} suffix="ms" onChange={onChange} /></Field>
+
+      <div className="cr-section-label">Case & Experimental Options</div>
       <Field label="Label Case"><Select config={config} path="typography.sectionLabelStyle" options={[
         { value: 'uppercase', label: 'UPPERCASE' }, { value: 'lowercase', label: 'lowercase' },
         { value: 'capitalize', label: 'Capitalize' }, { value: 'none', label: 'None' },
+      ]} onChange={onChange} /></Field>
+      <Field label="Global Case Behavior"><Select config={config} path="typographySystem.controls.caseBehavior" options={[
+        { value: 'theme', label: 'Theme Default' }, { value: 'none', label: 'None' },
+        { value: 'uppercase', label: 'UPPERCASE' }, { value: 'lowercase', label: 'lowercase' },
+        { value: 'capitalize', label: 'Capitalize' },
+      ]} onChange={onChange} /></Field>
+      <div className="cr-field-row">
+        <Field label="Path Text"><Toggle config={config} path="typographySystem.controls.pathTextEnabled" label="Enable rare circular identity stamp" onChange={onChange} /></Field>
+        <Field label="Glitch States"><Toggle config={config} path="typographySystem.controls.glitchEnabled" label="Allow metadata hover glitch" onChange={onChange} /></Field>
+      </div>
+
+      <div className="cr-section-label">Accessibility Preview</div>
+      <Field label="Reading Mode"><Toggle config={config} path="typographySystem.controls.readingMode" label="Disable decorative text effects" onChange={onChange} /></Field>
+      <Field label="Reduced Motion Behavior"><Select config={config} path="typographySystem.controls.reducedMotionBehavior" options={[
+        { value: 'respect-system', label: 'Respect System' },
+        { value: 'force-reduced', label: 'Force Reduced Motion' },
+        { value: 'reading-mode', label: 'Reading Mode' },
       ]} onChange={onChange} /></Field>
     </div>
   );

@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import type { SiteConfig, SectionConfig, ProjectConfig } from '../../types/siteConfig';
+import MetadataText from '../typography/MetadataText';
+import ProjectTitle from '../typography/ProjectTitle';
+import SectionHeading from '../typography/SectionHeading';
 
 interface Props {
   config: SiteConfig;
@@ -7,7 +10,7 @@ interface Props {
   openProjectId: string | null;
 }
 
-function CaseFile({ project, isOpen: defaultOpen }: { project: ProjectConfig; isOpen: boolean }) {
+function CaseFile({ config, project, isOpen: defaultOpen }: { config: SiteConfig; project: ProjectConfig; isOpen: boolean }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [storyMode, setStoryMode] = useState<'story' | 'system'>('story');
   const [activeTab, setActiveTab] = useState('problem');
@@ -28,10 +31,10 @@ function CaseFile({ project, isOpen: defaultOpen }: { project: ProjectConfig; is
         aria-expanded={isOpen}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span className="case-index">{project.caseNumber}</span>
-        <span className="case-name">{project.name}</span>
-        <span className="case-type">{project.type}</span>
-        <span className="case-indicator" aria-hidden="true">{isOpen ? 'open' : 'closed'}</span>
+        <span className="case-index"><MetadataText config={config.typographySystem}>{project.caseNumber}</MetadataText></span>
+        <span className="case-name"><ProjectTitle config={config} project={project} /></span>
+        <span className="case-type"><MetadataText config={config.typographySystem}>{project.type}</MetadataText></span>
+        <span className="case-indicator" aria-hidden="true"><MetadataText config={config.typographySystem}>{isOpen ? 'open' : 'closed'}</MetadataText></span>
       </button>
 
       <div className="case-body">
@@ -96,24 +99,26 @@ export default function ProjectsSection({ config, section, openProjectId }: Prop
       data-system-status={section.systemStatus}
     >
       <div className="trace-label" aria-hidden="true">
-        section_id: {section.sectionId} / signal: {section.signal} / proof_level: {section.proofLevel} / system_status: {section.systemStatus}
+        <MetadataText config={config.typographySystem}>
+          section_id: {section.sectionId} / signal: {section.signal} / proof_level: {section.proofLevel} / system_status: {section.systemStatus}
+        </MetadataText>
       </div>
       <div className="section-rail">
-        <p className="section-kicker">{section.kicker}</p>
-        {section.railLabel && <span>{section.railLabel}</span>}
+        <p className="section-kicker"><MetadataText config={config.typographySystem}>{section.kicker}</MetadataText></p>
+        {section.railLabel && <span><MetadataText config={config.typographySystem}>{section.railLabel}</MetadataText></span>}
       </div>
       <div className="section-main">
-        <div className="section-heading">
-          <h2>{section.heading}</h2>
+        <SectionHeading config={config} section={section} heading={section.heading}>
           <div>
             {section.descriptionAtmospheric && <p data-atmospheric="">{section.descriptionAtmospheric}</p>}
             {section.descriptionDirect && <p data-direct="">{section.descriptionDirect}</p>}
           </div>
-        </div>
+        </SectionHeading>
         <div className="case-files" aria-label="Project case files">
           {config.projects.map((project, idx) => (
             <CaseFile
               key={project.id}
+              config={config}
               project={project}
               isOpen={openProjectId ? project.id === openProjectId : idx === 0}
             />

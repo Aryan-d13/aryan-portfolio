@@ -1,3 +1,5 @@
+import type { TypographySystemConfig } from '../types/typographyConfig';
+
 export type ThemeSource = 'built-in' | 'custom';
 
 export type ThemeDensity = 'compact' | 'balanced' | 'cinematic' | 'editorial' | 'dense';
@@ -197,6 +199,7 @@ export interface ThemeDefinition {
   sourceThemeId?: string;
   colors: ThemeColors;
   typography: ThemeTypography;
+  typographySystem: TypographySystemConfig;
   spacing: ThemeSpacing;
   radius: ThemeRadius;
   borders: ThemeBorders;
@@ -224,4 +227,3 @@ export interface ThemeExportPayload {
   builtInThemes: ThemeDefinition[];
   customThemes: ThemeDefinition[];
 }
-

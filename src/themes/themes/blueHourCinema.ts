@@ -1,4 +1,5 @@
 import { defineTheme, defaultTypography, themeTimestamp } from './_shared';
+import { getTypographySystemForTheme } from '../../utils/textEffects';
 
 export const blueHourCinema = defineTheme({
   id: 'blue-hour-cinema',
@@ -37,6 +38,7 @@ export const blueHourCinema = defineTheme({
     type2xl: 'clamp(2.65rem, 5.6vw, 5rem)',
     typeDisplay: 'clamp(4.2rem, 10.4vw, 8.6rem)',
   },
+  typographySystem: getTypographySystemForTheme('blue-hour-cinema'),
   spacing: {
     baseUnit: 8,
     sectionY: '144px',
@@ -134,4 +136,3 @@ export const blueHourCinema = defineTheme({
   createdAt: themeTimestamp,
   updatedAt: themeTimestamp,
 });
-

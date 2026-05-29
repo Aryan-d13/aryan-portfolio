@@ -1,4 +1,5 @@
 import type { ThemeDefinition } from '../themeTypes';
+import { applyTypographyVars } from '../../utils/textEffects';
 
 function setVar(root: HTMLElement, name: string, value: string | number): void {
   root.style.setProperty(name, String(value));
@@ -62,6 +63,7 @@ export function applyThemeTokens(theme: ThemeDefinition): void {
   setVar(root, '--type-xl', theme.typography.typeXl);
   setVar(root, '--type-2xl', theme.typography.type2xl);
   setVar(root, '--type-display', theme.typography.typeDisplay);
+  applyTypographyVars(root, theme.typographySystem, theme);
 
   setVar(root, '--space-section-y', theme.spacing.sectionY);
   setVar(root, '--space-container-x', theme.spacing.containerX);
@@ -144,4 +146,3 @@ export function startThemeTransition(duration = 420): void {
   root.classList.add('theme-transitioning');
   window.setTimeout(() => root.classList.remove('theme-transitioning'), duration);
 }
-

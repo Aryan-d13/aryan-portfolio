@@ -1,13 +1,17 @@
 import type { SiteConfig, SectionConfig } from '../../types/siteConfig';
 import PortraitSelector from '../portrait/PortraitSelector';
-import EncryptedName from './EncryptedName';
+import { HeroHeadline } from '../typography/DisplayText';
+import MetadataText from '../typography/MetadataText';
+import PathText from '../typography/PathText';
 
 interface Props { config: SiteConfig; section: SectionConfig; }
 
-function TraceLabel({ section }: { section: SectionConfig }) {
+function TraceLabel({ config, section }: { config: SiteConfig; section: SectionConfig }) {
   return (
     <div className="trace-label" aria-hidden="true">
-      section_id: {section.sectionId} / signal: {section.signal} / proof_level: {section.proofLevel} / system_status: {section.systemStatus}
+      <MetadataText config={config.typographySystem}>
+        section_id: {section.sectionId} / signal: {section.signal} / proof_level: {section.proofLevel} / system_status: {section.systemStatus}
+      </MetadataText>
     </div>
   );
 }
@@ -25,14 +29,19 @@ export default function HeroSection({ config, section }: Props) {
       data-proof-level={section.proofLevel}
       data-system-status={section.systemStatus}
     >
-      <TraceLabel section={section} />
+      <TraceLabel config={config} section={section} />
 
       <div className="hero-content">
-        <p className="section-kicker reveal">{id.heroKicker}</p>
+        <p className="section-kicker reveal">
+          <MetadataText config={config.typographySystem}>{id.heroKicker}</MetadataText>
+        </p>
         <h1 className="hero-title reveal">
-          <EncryptedName fullName={id.name} />
-          <span className="terminal-cursor" aria-hidden="true" />
+          <HeroHeadline config={config.typographySystem}>{id.name}</HeroHeadline>
         </h1>
+        <PathText
+          enabled={config.typographySystem?.controls.pathTextEnabled ?? true}
+          text="PROOF OVER VIBES / SYSTEMS BUILDER / ARYAN SHARMA / "
+        />
         <p className="hero-line reveal" data-atmospheric="">{id.heroStatement}</p>
         <p className="hero-line reveal" data-direct="">{id.heroStatementDirect}</p>
         <div className="hero-actions reveal" aria-label="Primary actions">

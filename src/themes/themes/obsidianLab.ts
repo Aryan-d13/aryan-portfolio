@@ -1,4 +1,5 @@
 import { defineTheme, defaultTypography, themeTimestamp } from './_shared';
+import { getTypographySystemForTheme } from '../../utils/textEffects';
 
 export const obsidianLab = defineTheme({
   id: 'obsidian-lab',
@@ -39,6 +40,7 @@ export const obsidianLab = defineTheme({
     type2xl: 'clamp(2.25rem, 4.6vw, 4rem)',
     typeDisplay: 'clamp(3.5rem, 9.4vw, 7.8rem)',
   },
+  typographySystem: getTypographySystemForTheme('obsidian-lab'),
   spacing: {
     baseUnit: 8,
     sectionY: '104px',
@@ -136,4 +138,3 @@ export const obsidianLab = defineTheme({
   createdAt: themeTimestamp,
   updatedAt: themeTimestamp,
 });
-

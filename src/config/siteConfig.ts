@@ -1,4 +1,5 @@
 import type { SiteConfig } from '../types/siteConfig';
+import { getTypographySystemForTheme } from '../utils/textEffects';
 
 export function getDefaultConfig(): SiteConfig {
   return {
@@ -144,6 +145,8 @@ export function getDefaultConfig(): SiteConfig {
       typeLg: '1.5rem', typeXl: '2rem', type2xl: 'clamp(2.5rem, 5vw, 4.5rem)',
       typeDisplay: 'clamp(4rem, 10.5vw, 8.5rem)',
     },
+
+    typographySystem: getTypographySystemForTheme('nocturnal-signal'),
 
     colors: {
       bg: '#05070d', bgSecondary: '#0b111c', panel: '#101826',

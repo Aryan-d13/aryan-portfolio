@@ -1,4 +1,5 @@
 import { defineTheme, defaultTypography, themeTimestamp } from './_shared';
+import { getTypographySystemForTheme } from '../../utils/textEffects';
 
 export const noirOperatingSystem = defineTheme({
   id: 'noir-operating-system',
@@ -36,6 +37,7 @@ export const noirOperatingSystem = defineTheme({
     type2xl: 'clamp(2.4rem, 5vw, 4.25rem)',
     typeDisplay: 'clamp(3.8rem, 10vw, 8rem)',
   },
+  typographySystem: getTypographySystemForTheme('noir-operating-system'),
   spacing: {
     baseUnit: 8,
     sectionY: '112px',
@@ -133,4 +135,3 @@ export const noirOperatingSystem = defineTheme({
   createdAt: themeTimestamp,
   updatedAt: themeTimestamp,
 });
-

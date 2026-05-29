@@ -1,6 +1,7 @@
 import type { SiteConfig } from '../../types/siteConfig';
 import type { ThemeDefinition } from '../themeTypes';
 import { cloneTheme } from '../themeRegistry';
+import { normalizeTypographySystem } from '../../utils/textEffects';
 
 export function mergeThemeIntoConfig(config: SiteConfig, theme: ThemeDefinition): SiteConfig {
   const next = JSON.parse(JSON.stringify(config)) as SiteConfig;
@@ -43,6 +44,7 @@ export function mergeThemeIntoConfig(config: SiteConfig, theme: ThemeDefinition)
     type2xl: theme.typography.type2xl,
     typeDisplay: theme.typography.typeDisplay,
   };
+  next.typographySystem = normalizeTypographySystem(theme.typographySystem);
 
   next.background = {
     enabled: true,
@@ -148,6 +150,7 @@ export function deriveThemeFromConfig(baseTheme: ThemeDefinition, config: SiteCo
     type2xl: config.typography.type2xl,
     typeDisplay: config.typography.typeDisplay,
   };
+  next.typographySystem = normalizeTypographySystem(config.typographySystem);
 
   next.background = {
     ...next.background,
@@ -218,4 +221,3 @@ export function deriveThemeFromConfig(baseTheme: ThemeDefinition, config: SiteCo
   next.updatedAt = now;
   return next;
 }
-

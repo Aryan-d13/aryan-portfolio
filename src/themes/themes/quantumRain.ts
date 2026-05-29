@@ -1,4 +1,5 @@
 import { defineTheme, defaultTypography, themeTimestamp } from './_shared';
+import { getTypographySystemForTheme } from '../../utils/textEffects';
 
 export const quantumRain = defineTheme({
   id: 'quantum-rain',
@@ -36,6 +37,7 @@ export const quantumRain = defineTheme({
     type2xl: 'clamp(2.6rem, 5.6vw, 4.9rem)',
     typeDisplay: 'clamp(4rem, 10.8vw, 8.8rem)',
   },
+  typographySystem: getTypographySystemForTheme('quantum-rain'),
   spacing: {
     baseUnit: 8,
     sectionY: '136px',
@@ -133,4 +135,3 @@ export const quantumRain = defineTheme({
   createdAt: themeTimestamp,
   updatedAt: themeTimestamp,
 });
-

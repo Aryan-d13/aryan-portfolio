@@ -1,4 +1,5 @@
 import { defineTheme, defaultTypography, themeTimestamp } from './_shared';
+import { getTypographySystemForTheme } from '../../utils/textEffects';
 
 export const nocturnalSignal = defineTheme({
   id: 'nocturnal-signal',
@@ -28,6 +29,7 @@ export const nocturnalSignal = defineTheme({
     selection: '#5debff',
   },
   typography: defaultTypography,
+  typographySystem: getTypographySystemForTheme('nocturnal-signal'),
   spacing: {
     baseUnit: 8,
     sectionY: '128px',
@@ -125,4 +127,3 @@ export const nocturnalSignal = defineTheme({
   createdAt: themeTimestamp,
   updatedAt: themeTimestamp,
 });
-

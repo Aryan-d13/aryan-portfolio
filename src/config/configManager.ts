@@ -1,6 +1,7 @@
 import type { SiteConfig } from '../types/siteConfig';
 import { getDefaultConfig } from './siteConfig';
 import { validateConfig, validateJsonConfig, mergeConfig } from './configSchema';
+import { applyTypographyVars } from '../utils/textEffects';
 
 const STORAGE_KEY = 'aryan_identity_site_config';
 const DRAFT_KEY = 'aryan_identity_site_config_draft';
@@ -103,6 +104,9 @@ export function applyConfigToCSS(config: SiteConfig): void {
     if (t.bodyWeight) root.style.setProperty('--body-weight', String(t.bodyWeight));
     if (t.letterSpacing) root.style.setProperty('--letter-spacing', t.letterSpacing);
     if (t.headingScale) root.style.setProperty('--heading-scale', String(t.headingScale));
+  }
+  if (config.typographySystem) {
+    applyTypographyVars(root, config.typographySystem, config);
   }
   if (config.background) {
     const b = config.background;
