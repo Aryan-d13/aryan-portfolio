@@ -315,15 +315,22 @@ button {
   position: sticky;
   top: 0;
   z-index: 100;
+  min-height: var(--header-height);
+  border-bottom: 1px solid color-mix(in srgb, var(--line-default) 64%, transparent);
+  background: var(--component-nav-bg);
+  backdrop-filter: blur(var(--layout-panel-blur, 16px));
+  display: flex;
+  align-items: center;
+}
+
+.header-inner {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   gap: var(--space-5);
   align-items: center;
-  min-height: var(--header-height);
-  padding: var(--space-4) clamp(var(--space-4), 4vw, var(--space-7));
-  border-bottom: 1px solid color-mix(in srgb, var(--line-default) 64%, transparent);
-  background: var(--component-nav-bg);
-  backdrop-filter: blur(var(--layout-panel-blur, 16px));
+  width: min(var(--container), calc(100% - clamp(var(--space-5), 6vw, var(--space-9))));
+  margin-inline: auto;
+  min-height: inherit;
 }
 
 .brand-mark,
@@ -1788,7 +1795,7 @@ main {
 }
 
 @media (max-width: 1120px) {
-  .site-header {
+  .header-inner {
     grid-template-columns: minmax(0, 1fr) auto;
   }
 
@@ -1851,8 +1858,11 @@ main {
   }
 
   .site-header {
-    gap: var(--space-3);
     padding: var(--space-3);
+  }
+
+  .header-inner {
+    gap: var(--space-3);
   }
 
   .brand-copy {
