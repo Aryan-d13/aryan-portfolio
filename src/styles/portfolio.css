@@ -1,5 +1,17 @@
 @import "./portrait.css";
 
+@property --theme-sweep-x {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 18%;
+}
+
+@property --theme-sweep-y {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 78%;
+}
+
 .hero-shell.no-portrait {
   grid-template-columns: 1fr;
   grid-template-areas:

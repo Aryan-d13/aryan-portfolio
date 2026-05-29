@@ -9,7 +9,6 @@ import ProjectsSection from '../components/public/ProjectsSection';
 import ProofSection from '../components/public/ProofSection';
 import StackSection from '../components/public/StackSection';
 import { PhilosophySection, HumanSection, TimelineSection, ContactSection } from '../components/public/Sections';
-import ThemeTransitionLayer from '../components/theme/ThemeTransitionLayer';
 import type { SectionConfig, SiteConfig } from '../types/siteConfig';
 import { applyConfigToCSS } from '../config/configManager';
 import { applyTheme } from '../themes/utils/applyThemeTokens';
@@ -72,7 +71,6 @@ export default function HomePage() {
   return (
     <>
       <BackgroundSystem config={config} />
-      <ThemeTransitionLayer />
       <a className="skip-link" href="#main">Skip to content</a>
       <Header config={config} onOpenCommand={() => setCommandOpen(true)} />
       <main id="main">
