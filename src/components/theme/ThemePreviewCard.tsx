@@ -1,4 +1,5 @@
 import type { ThemeDefinition } from '../../themes/themeTypes';
+import Icon from '../icons/Icon';
 
 interface Props {
   theme: ThemeDefinition;
@@ -34,7 +35,7 @@ export default function ThemePreviewCard({ theme, active, dirty, onSelect }: Pro
       <span className="theme-preview-copy">
         <span className="theme-preview-title-row">
           <strong>{theme.name}</strong>
-          <span>{theme.source === 'custom' ? 'custom' : 'default'}</span>
+          <span className="icon-align-status"><Icon name={theme.source === 'custom' ? 'edit' : 'lock'} size="xs" tone="muted" />{theme.source === 'custom' ? 'custom' : 'default'}</span>
         </span>
         <span className="theme-preview-desc">{theme.shortDescription}</span>
         <span className="theme-preview-meta">{theme.emotionalTone}</span>
@@ -45,11 +46,11 @@ export default function ThemePreviewCard({ theme, active, dirty, onSelect }: Pro
       </span>
 
       <span className="theme-preview-tags">
-        <span>{theme.preview.densityLabel}</span>
-        <span>{theme.preview.motionLabel}</span>
-        {dirty && <span className="is-dirty">unsaved</span>}
+        <span className="icon-align-status"><Icon name="layout" size="xs" tone="muted" />{theme.preview.densityLabel}</span>
+        <span className="icon-align-status"><Icon name="motion" size="xs" tone="muted" />{theme.preview.motionLabel}</span>
+        {active && <span className="icon-align-status is-synced"><Icon name="success" size="xs" tone="success" />active</span>}
+        {dirty && <span className="icon-align-status is-dirty"><Icon name="warning" size="xs" tone="warning" />unsaved</span>}
       </span>
     </button>
   );
 }
-

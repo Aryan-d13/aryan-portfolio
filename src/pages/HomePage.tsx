@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useSiteConfig } from '../hooks/useSiteConfig';
+import { ReactLenis } from 'lenis/react';
 import BackgroundSystem from '../components/layout/BackgroundSystem';
 import Header from '../components/layout/Header';
 import CommandPalette from '../components/layout/CommandPalette';
@@ -68,7 +69,9 @@ export default function HomePage() {
 
   const sections = [...config.sections].filter(s => s.visible !== false).sort((a, b) => a.order - b.order);
 
-  return (
+  const isSmoothScrollDisabled = config.motion.reducedMotion || !config.motion.enabled;
+
+  const content = (
     <>
       <BackgroundSystem config={config} />
       <a className="skip-link" href="#main">Skip to content</a>
@@ -93,5 +96,15 @@ export default function HomePage() {
         onOpenProject={handleOpenProject}
       />
     </>
+  );
+
+  if (isSmoothScrollDisabled) {
+    return content;
+  }
+
+  return (
+    <ReactLenis root options={{ lerp: 0.1, smoothWheel: true, syncTouch: false }}>
+      {content}
+    </ReactLenis>
   );
 }

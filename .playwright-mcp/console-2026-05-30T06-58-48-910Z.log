@@ -1,0 +1,43 @@
+[ 5100721ms] Transition was skipped
+[ 7577045ms] [ERROR] Failed to load resource: net::ERR_QUIC_PROTOCOL_ERROR.QUIC_PACKET_WRITE_ERROR @ https://firestore.googleapis.com/google.firestore.v1.Firestore/Listen/channel?gsessionid=kCCKf9ZKBVLCM9LU886CzKYqvUh-Hv7vXgtU4_PwOS72hCEb-M4ghA&VER=8&database=projects%2Faryan-personal-portfolio%2Fdatabases%2F(default)&RID=rpc&SID=OGuQWV2iFdTZXmK0mCY8_g&AID=182&CI=0&TYPE=xmlhttp&zx=5pjmvqqzdz3a&t=1:0
+[ 8312233ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://127.0.0.1:3000/src/components/portrait/PortraitFrame.tsx?t=1780132641080:0
+[ 8312249ms] [ERROR] [vite] Failed to reload /src/components/portrait/PortraitFrame.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://127.0.0.1:3000/@vite/client:881
+[ 8465198ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://127.0.0.1:3000/src/pages/HomePage.tsx?t=1780132794038:0
+[ 8465198ms] [ERROR] [vite] Failed to reload /src/pages/HomePage.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://127.0.0.1:3000/@vite/client:881
+[ 8502909ms] [ERROR] Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem. @ http://127.0.0.1:3000/node_modules/.vite/deps/chunk-JHD6DHFA.js?v=e6572503:391
+[ 8502981ms] [ERROR] Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem. @ http://127.0.0.1:3000/node_modules/.vite/deps/chunk-JHD6DHFA.js?v=e6572503:391
+[ 8503009ms] TypeError: Cannot read properties of null (reading 'useRef')
+    at exports.useRef (http://127.0.0.1:3000/node_modules/.vite/deps/chunk-JHD6DHFA.js?v=e6572503:956:35)
+    at http://127.0.0.1:3000/node_modules/.vite/deps/lenis_react.js?v=9121148f:997:46
+    at Object.react_stack_bottom_frame (http://127.0.0.1:3000/node_modules/.vite/deps/react-dom_client.js?v=f2841f2d:18509:20)
+    at renderWithHooks (http://127.0.0.1:3000/node_modules/.vite/deps/react-dom_client.js?v=f2841f2d:5654:24)
+    at updateForwardRef (http://127.0.0.1:3000/node_modules/.vite/deps/react-dom_client.js?v=f2841f2d:7198:21)
+    at beginWork (http://127.0.0.1:3000/node_modules/.vite/deps/react-dom_client.js?v=f2841f2d:8735:20)
+    at runWithFiberInDEV (http://127.0.0.1:3000/node_modules/.vite/deps/react-dom_client.js?v=f2841f2d:997:72)
+    at performUnitOfWork (http://127.0.0.1:3000/node_modules/.vite/deps/react-dom_client.js?v=f2841f2d:12561:98)
+    at workLoopSync (http://127.0.0.1:3000/node_modules/.vite/deps/react-dom_client.js?v=f2841f2d:12424:43)
+    at renderRootSync (http://127.0.0.1:3000/node_modules/.vite/deps/react-dom_client.js?v=f2841f2d:12408:13)
+[ 8502996ms] [WARNING] %s
+
+%s
+ An error occurred in the <ForwardRef> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://127.0.0.1:3000/node_modules/.vite/deps/react-dom_client.js?v=f2841f2d:6965
+[ 8503937ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:3000/node_modules/.vite/deps/react-dom_client.js?v=e6572503:20102
+[ 8525886ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://127.0.0.1:3000/src/styles/portfolio.css?t=1780132854709:0
+[ 8525887ms] [ERROR] [vite] Failed to reload /src/styles/portfolio.css. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://127.0.0.1:3000/@vite/client:881
+[ 8562817ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://127.0.0.1:3000/src/styles/portfolio.css?t=1780132891631:0
+[ 8562823ms] [ERROR] [vite] Failed to reload /src/styles/portfolio.css. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://127.0.0.1:3000/@vite/client:881
+[ 8589970ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://127.0.0.1:3000/src/styles/portfolio.css?t=1780132918831:0
+[ 8589981ms] [ERROR] [vite] Failed to reload /src/styles/portfolio.css. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://127.0.0.1:3000/@vite/client:881
+[ 8609594ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://127.0.0.1:3000/src/styles/portfolio.css?t=1780132938457:0
+[ 8609634ms] [ERROR] [vite] Failed to reload /src/styles/portfolio.css. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://127.0.0.1:3000/@vite/client:881
+[ 8637728ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://127.0.0.1:3000/src/styles/portfolio.css?t=1780132966575:0
+[ 8637728ms] [ERROR] [vite] Failed to reload /src/styles/portfolio.css. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://127.0.0.1:3000/@vite/client:881

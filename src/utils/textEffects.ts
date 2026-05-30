@@ -319,10 +319,14 @@ export function applyTypographyVars(
   root.dataset.typeReducedMotion = system.controls.reducedMotionBehavior;
   root.dataset.typeCase = labelCase;
 
+  const glowVal = clampNumber(system.controls.glowIntensity, 0, 0.5, 0.12);
+  const strokeVal = clampNumber(system.controls.strokeOpacity, 0, 1, 0.26);
   root.style.setProperty('--type-animation-intensity', String(clampNumber(system.controls.animationIntensity, 0, 1, 0.5)));
-  root.style.setProperty('--type-glow-opacity', String(clampNumber(system.controls.glowIntensity, 0, 0.5, 0.12)));
+  root.style.setProperty('--type-glow-opacity', String(glowVal));
+  root.style.setProperty('--type-glow-opacity-pct', `${Math.round(glowVal * 100)}%`);
   root.style.setProperty('--type-outline-width', `${clampNumber(system.controls.outlineThickness, 0, 4, 1)}px`);
-  root.style.setProperty('--type-outline-opacity', String(clampNumber(system.controls.strokeOpacity, 0, 1, 0.26)));
+  root.style.setProperty('--type-outline-opacity', String(strokeVal));
+  root.style.setProperty('--type-outline-opacity-pct', `${Math.round(strokeVal * 100)}%`);
   root.style.setProperty('--type-mask-opacity', String(clampNumber(system.controls.maskedTextureOpacity, 0, 1, 0.22)));
   root.style.setProperty('--type-grain-opacity', String(clampNumber(system.controls.grainAmount, 0, 0.4, 0.08)));
   root.style.setProperty('--type-reveal-duration', toMs(system.controls.revealDuration, 460));

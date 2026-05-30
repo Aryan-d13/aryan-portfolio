@@ -1,0 +1,274 @@
+{
+    "meta": {
+        "title": "Aryan Sharma | Systems, AI, and Proof of Work",
+        "url": "http://127.0.0.1:3000/"
+    },
+    "hero": {
+        "brand": {
+            "initials": "AS",
+            "name": "Aryan Sharma",
+            "label": "proof of work"
+        },
+        "tags": [
+            "AI SYSTEMS",
+            "FULL STACK",
+            "MEDIA AUTOMATION"
+        ],
+        "headline": "I build systems that turn messy ideas into working products.",
+        "subheadline": "My work sits at the intersection of AI, media, infrastructure, and product taste. I care about things that survive real production pressure, not just things that look impressive in a demo.",
+        "cta": [
+            {
+                "label": "See the work",
+                "href": "#systems-built"
+            },
+            {
+                "label": "Get in touch",
+                "href": "#open-channel"
+            }
+        ],
+        "identity_trace": {
+            "file": "identity.trace_file",
+            "status": "live",
+            "description": "Aryan Sharma in cold outdoor light wearing winter layers and sunglasses.",
+            "trace_id": "aryan.sharma",
+            "mode": "builder",
+            "origin": "India",
+            "signal": "proof over noise"
+        },
+        "roles": [
+            "AI-native media systems builder",
+            "Full Stack Developer",
+            "AI & Automation Engineer"
+        ]
+    },
+    "identity": {
+        "section_label": "IDENTITY",
+        "title": "Not a template developer",
+        "description": "I do not like building things that only look finished. I like going deep into how a system behaves, where it breaks, how it recovers, and whether the final experience actually feels right to use."
+    },
+    "case_files": {
+        "section_label": "SYSTEMS BUILT",
+        "title": "Selected work",
+        "subtitle": "Projects explained as systems, not just screenshots.",
+        "description": "These are the builds that best show how I think: the problem, the machinery, the tradeoffs, the stack, and the kind of pressure the system was designed to handle.",
+        "projects": [
+            {
+                "index": "01",
+                "name": "SEONE",
+                "type": "Case study",
+                "headline": "AI-native media automation pipeline",
+                "modes": [
+                    "Story mode",
+                    "System mode"
+                ],
+                "summary": "SEONE turns long-form video into short-form, social-ready output through a proper pipeline instead of treating media automation like a single prompt and a loading bar.",
+                "details": "It connects download, transcription, analysis, rendering, queues, workers, storage, and final assets into one traceable workflow.",
+                "problem": "Long-form video workflows become slow and fragile when every step depends on manual editing, scattered tools, and no clear recovery path."
+            },
+            {
+                "index": "02",
+                "name": "CONTENT LAB",
+                "type": "Case study",
+                "headline": "AI-native creative production system",
+                "modes": [
+                    "Story mode",
+                    "System mode"
+                ],
+                "summary": "Content Lab treats AI creative generation like a production system. It plans, follows brand constraints, checks output quality, and prepares assets for review and export.",
+                "details": "The goal is not just to generate images. The goal is controlled variation, consistent layouts, brand safety, and repeatable creative output.",
+                "problem": "AI-generated creative often falls apart when it has to follow a brand, maintain consistency across multiple pages, and move through a real review process."
+            }
+        ]
+    },
+    "proof_layer": {
+        "section_label": "PROOF LAYER",
+        "title": "How I judge systems",
+        "subtitle": "The things I look for when production stops being polite.",
+        "description": "These are the engineering habits I trust when a system needs to be reliable, explainable, and fixable.",
+        "principles": [
+            {
+                "index": "01",
+                "title": "Idempotency",
+                "description": "Retries should not quietly create duplicate work or duplicate cost."
+            },
+            {
+                "index": "02",
+                "title": "Observability",
+                "description": "A system should leave enough evidence to explain what happened."
+            },
+            {
+                "index": "03",
+                "title": "Render parity",
+                "description": "The preview and final output should not feel like two different products."
+            },
+            {
+                "index": "04",
+                "title": "State machines",
+                "description": "Complex workflows need clear rules, not optimistic guessing."
+            },
+            {
+                "index": "05",
+                "title": "Golden threads",
+                "description": "Every job should be traceable from start to finish."
+            },
+            {
+                "index": "06",
+                "title": "Tests before code",
+                "description": "When correctness matters, prove the behavior before adding more implementation."
+            }
+        ]
+    },
+    "stack": {
+        "section_label": "STACK",
+        "title": "Tools I work with",
+        "subtitle": "Grouped by the kind of problems they help me solve.",
+        "description": "I do not think of tools as badges. I think of them as surfaces for solving different kinds of system pressure.",
+        "categories": [
+            {
+                "name": "Interface",
+                "items": [
+                    "React",
+                    "React Native",
+                    "responsive UI",
+                    "visual editors",
+                    "clean hierarchy"
+                ]
+            },
+            {
+                "name": "Backend",
+                "items": [
+                    "Java",
+                    "Spring Boot",
+                    "Python",
+                    "APIs",
+                    "Pydantic",
+                    "validation"
+                ]
+            },
+            {
+                "name": "Cloud and infrastructure",
+                "items": [
+                    "Azure",
+                    "Azure Container Apps",
+                    "Blob Storage",
+                    "Redis",
+                    "KEDA",
+                    "Vercel"
+                ]
+            },
+            {
+                "name": "Media systems",
+                "items": [
+                    "FFmpeg",
+                    "overlays",
+                    "rendering",
+                    "VFR/CFR handling",
+                    "preview/render parity"
+                ]
+            },
+            {
+                "name": "AI systems",
+                "items": [
+                    "Gemini",
+                    "Google Nano Banana Pro",
+                    "AI orchestration",
+                    "provider abstraction",
+                    "prompt control"
+                ]
+            },
+            {
+                "name": "Reliability",
+                "items": [
+                    "queues",
+                    "lease tokens",
+                    "heartbeats",
+                    "idempotency",
+                    "structured logs",
+                    "Prometheus",
+                    "health probes"
+                ]
+            }
+        ]
+    },
+    "philosophy": {
+        "section_label": "PHILOSOPHY",
+        "title": "Operating principles",
+        "items": [
+            "Build things that can be inspected.",
+            "Start from the problem, not the framework.",
+            "Make systems traceable, editable, and recoverable.",
+            "Use tests when guessing would be expensive.",
+            "Keep the clever parts backstage. Let the product feel simple.",
+            "Use cloud for leverage, but understand what it is doing.",
+            "Say what is true. Avoid fake certainty."
+        ]
+    },
+    "human_layer": {
+        "section_label": "HUMAN LAYER",
+        "title": "Outside the work",
+        "subtitle": "Cold weather, blue light, quiet places, and systems that make chaos smaller.",
+        "description": "I am drawn to systems because they give shape to messy things. Outside work, I like the kind of spaces that feel quiet, slightly cinematic, and a little impossible.",
+        "interests": [
+            "rain",
+            "night",
+            "blue",
+            "cold weather",
+            "neon",
+            "space",
+            "mysteries",
+            "skylines",
+            "basketball",
+            "gymnastics",
+            "meaningful fiction",
+            "dry humor"
+        ]
+    },
+    "timeline": {
+        "section_label": "BUILD LOG",
+        "title": "Timeline",
+        "subtitle": "A simple trace of how the work evolved.",
+        "events": [
+            {
+                "period": "2023.03 -> 2023.06",
+                "event": "Completed the IBM Full Stack Software Developer Certificate"
+            },
+            {
+                "period": "2025.11",
+                "event": "Joined Creativefuel as a Full Stack Developer"
+            },
+            {
+                "period": "2025.11 -> 2026.04",
+                "event": "Worked across AI automation, media systems, cloud infrastructure, frontend tooling, and observability"
+            },
+            {
+                "period": "2026",
+                "event": "Rebuilding my public identity around proof, systems, and taste"
+            }
+        ]
+    },
+    "contact": {
+        "section_label": "CONTACT",
+        "description": "For AI-native media systems, full-stack cloud engineering, automation work, or unusual product ideas with real leverage:",
+        "email": "aryanteddys@gmail.com",
+        "handle": "@aryanteddys",
+        "location": "India",
+        "links": [
+            {
+                "label": "Email me",
+                "href": "mailto:aryanteddys@gmail.com"
+            },
+            {
+                "label": "View resume",
+                "href": "/Aryan_Sharma_Resume.pdf"
+            },
+            {
+                "label": "See projects",
+                "href": "#systems-built"
+            }
+        ]
+    },
+    "footer": {
+        "copyright": "2026 ARYAN SHARMA. ALL RIGHTS RESERVED.",
+        "control_room": "/control-room"
+    }
+}

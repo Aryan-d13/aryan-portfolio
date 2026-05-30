@@ -4,7 +4,10 @@ import { getDefaultConfig } from '../../../config/siteConfig';
 import { validateConfig } from '../../../config/configSchema';
 import { Field, TextInput, TextArea, NumberInput, Toggle, ColorField, Range, Select, getPath } from '../../ui/FormControls';
 import { toast, confirmDialog } from '../../ui/Toast';
+import Icon, { type IconName } from '../../icons/Icon';
+import { controlNavIconMap } from '../../icons/iconRegistry';
 import { useThemeEngine } from '../../../hooks/useThemeEngine';
+import { themePortraitMap, getPortraitForTheme } from '../../../config/themePortraitMap';
 import type { TextTreatmentSlot, TypographyPresetName } from '../../../types/typographyConfig';
 import {
   TEXT_EFFECT_OPTIONS,
@@ -24,6 +27,29 @@ interface EditorProps {
 // ─── SHARED HELPERS ─────────────────────────────────────────────
 
 function uid(): string { return Math.random().toString(36).slice(2, 9); }
+
+function editorIcon(title: string): IconName {
+  const key = title.toLowerCase();
+  if (key.includes('identity')) return controlNavIconMap.identity;
+  if (key.includes('section')) return controlNavIconMap.sections;
+  if (key.includes('project')) return controlNavIconMap.projects;
+  if (key.includes('proof')) return controlNavIconMap.proof;
+  if (key.includes('skill') || key.includes('stack')) return controlNavIconMap.skills;
+  if (key.includes('philosophy')) return controlNavIconMap.philosophy;
+  if (key.includes('human')) return controlNavIconMap.human;
+  if (key.includes('timeline') || key.includes('build')) return controlNavIconMap.timeline;
+  if (key.includes('contact')) return controlNavIconMap.contact;
+  if (key.includes('typography')) return controlNavIconMap.typography;
+  if (key.includes('color')) return controlNavIconMap.colors;
+  if (key.includes('background')) return controlNavIconMap.background;
+  if (key.includes('motion')) return controlNavIconMap.motion;
+  if (key.includes('layout')) return controlNavIconMap.layout;
+  if (key.includes('seo')) return controlNavIconMap.seo;
+  if (key.includes('asset')) return controlNavIconMap.assets;
+  if (key.includes('json')) return controlNavIconMap.json;
+  if (key.includes('portrait')) return controlNavIconMap.portrait;
+  return 'settings';
+}
 
 function EditorHeader({ title, description, config, onChange }: { title: string; description: string; config: SiteConfig; onChange: () => void }) {
   const keyMap: Record<string, keyof SiteConfig> = {
@@ -49,10 +75,10 @@ function EditorHeader({ title, description, config, onChange }: { title: string;
 
   return (
     <div className="cr-editor-header">
-      <h2>{title}</h2>
+      <h2 className="icon-align-inline"><Icon name={editorIcon(title)} size="md" tone="accent" />{title}</h2>
       <p>{description}</p>
       <div className="cr-editor-actions">
-        <button className="cr-btn cr-btn-ghost cr-btn-sm" type="button" onClick={resetGroup}>reset group</button>
+        <button className="cr-btn cr-btn-ghost cr-btn-sm icon-align-inline" type="button" onClick={resetGroup}><Icon name="reset" size="xs" tone="muted" />reset group</button>
       </div>
     </div>
   );
@@ -62,7 +88,7 @@ function SubEditor({ title, defaultOpen, children }: { title: string; defaultOpe
   const [open, setOpen] = useState(defaultOpen ?? false);
   return (
     <div className={`cr-sub-editor${open ? ' is-open' : ''}`}>
-      <button className="cr-sub-editor-header" type="button" onClick={() => setOpen(!open)}>{title}</button>
+      <button className="cr-sub-editor-header icon-align-inline" type="button" aria-expanded={open} onClick={() => setOpen(!open)}><Icon name="chevron" size="xs" tone="muted" />{title}</button>
       <div className="cr-sub-editor-body">{children}</div>
     </div>
   );
@@ -80,13 +106,13 @@ export function IdentityEditor({ config, onChange }: EditorProps) {
       <div className="cr-section-label">Role Lines</div>
       {config.identity.roleLines.map((_, i) => (
         <div key={i} className="cr-list-item">
-          <input className="cr-input" style={{ flex: 1 }} value={config.identity.roleLines[i]}
+          <input className="cr-input cr-flex-1" aria-label={`Role line ${i + 1}`} value={config.identity.roleLines[i]}
             onChange={e => { config.identity.roleLines[i] = e.target.value; onChange(); }} />
-          <button className="cr-btn cr-btn-danger cr-btn-sm cr-btn-icon" type="button"
-            onClick={() => { config.identity.roleLines.splice(i, 1); onChange(); }}>×</button>
+          <button className="cr-btn cr-btn-danger cr-btn-sm cr-btn-icon" type="button" aria-label={`Remove role line ${i + 1}`}
+            onClick={() => { config.identity.roleLines.splice(i, 1); onChange(); }}><Icon name="delete" size="xs" tone="error" /></button>
         </div>
       ))}
-      <button className="cr-list-add-btn" type="button" onClick={() => { config.identity.roleLines.push(''); onChange(); }}>+ add role line</button>
+      <button className="cr-list-add-btn" type="button" onClick={() => { config.identity.roleLines.push(''); onChange(); }}><Icon name="duplicate" size="xs" tone="accent" />add role line</button>
 
       <div className="cr-divider" />
       <Field label="Location"><TextInput config={config} path="identity.location" onChange={onChange} /></Field>
@@ -175,7 +201,7 @@ export function ProjectsEditor({ config, onChange }: EditorProps) {
               <TextArea config={config} path={`projects.${idx}.storyDescription.${pi}`} rows={2} onChange={onChange} />
             </Field>
           ))}
-          <button className="cr-list-add-btn" type="button" onClick={() => { config.projects[idx].storyDescription.push(''); onChange(); }}>+ add paragraph</button>
+          <button className="cr-list-add-btn" type="button" onClick={() => { config.projects[idx].storyDescription.push(''); onChange(); }}><Icon name="duplicate" size="xs" tone="accent" />add paragraph</button>
 
           <div className="cr-section-label">System Mode</div>
           <Field label="System Description"><TextArea config={config} path={`projects.${idx}.systemDescription`} rows={2} onChange={onChange} /></Field>
@@ -206,7 +232,7 @@ export function ProjectsEditor({ config, onChange }: EditorProps) {
           problem: '', system: '', stack: '', proofThemes: '', shows: '', links: {},
         });
         onChange(); toast('New project added', 'success');
-      }}>+ add project</button>
+      }}><Icon name="archive" size="xs" tone="accent" />add project</button>
     </div>
   );
 }
@@ -240,7 +266,7 @@ export function ProofEditor({ config, onChange }: EditorProps) {
       <button className="cr-list-add-btn" type="button" onClick={() => {
         config.proofCards.push({ id: `proof-${uid()}`, index: String(config.proofCards.length + 1).padStart(2, '0'), title: '', description: '', accentColor: null, visible: true, order: config.proofCards.length });
         onChange();
-      }}>+ add proof card</button>
+      }}><Icon name="proof" size="xs" tone="accent" />add proof card</button>
     </div>
   );
 }
@@ -277,7 +303,7 @@ export function SkillsEditor({ config, onChange }: EditorProps) {
       <button className="cr-list-add-btn" type="button" onClick={() => {
         config.skillGroups.push({ id: `skill-${uid()}`, name: 'New Group', description: '', skills: [], displayStyle: 'matrix', order: config.skillGroups.length });
         onChange();
-      }}>+ add skill group</button>
+      }}><Icon name="stack" size="xs" tone="accent" />add skill group</button>
     </div>
   );
 }
@@ -293,24 +319,24 @@ export function PhilosophyEditor({ config, onChange }: EditorProps) {
         const idx = config.philosophy.indexOf(line);
         return (
           <div key={line.id} className="cr-list-item">
-            <div className="cr-list-item-content" style={{ flex: 1 }}>
-              <input className="cr-input" value={line.text} onChange={e => { config.philosophy[idx].text = e.target.value; onChange(); }} />
-              <div style={{ marginTop: 4 }}>
-                <select className="cr-select" style={{ height: 24, fontSize: 10, width: 'auto' }} value={line.intensity}
+            <div className="cr-list-item-content cr-flex-1">
+              <input className="cr-input" aria-label="Philosophy line text" value={line.text} onChange={e => { config.philosophy[idx].text = e.target.value; onChange(); }} />
+              <div className="cr-list-item-subcontrol">
+                <select className="cr-select cr-select-compact" aria-label="Philosophy line intensity" value={line.intensity}
                   onChange={e => { config.philosophy[idx].intensity = e.target.value as 'quiet' | 'sharp' | 'loud'; onChange(); }}>
                   <option value="quiet">quiet</option><option value="sharp">sharp</option><option value="loud">loud</option>
                 </select>
               </div>
             </div>
-            <button className="cr-btn cr-btn-danger cr-btn-sm cr-btn-icon" type="button"
-              onClick={() => { config.philosophy.splice(idx, 1); onChange(); }}>×</button>
+            <button className="cr-btn cr-btn-danger cr-btn-sm cr-btn-icon" type="button" aria-label="Remove philosophy line"
+              onClick={() => { config.philosophy.splice(idx, 1); onChange(); }}><Icon name="delete" size="xs" tone="error" /></button>
           </div>
         );
       })}
       <button className="cr-list-add-btn" type="button" onClick={() => {
         config.philosophy.push({ id: `p-${uid()}`, text: '', intensity: 'quiet', largeType: true, order: config.philosophy.length });
         onChange();
-      }}>+ add philosophy line</button>
+      }}><Icon name="spark" size="xs" tone="accent" />add philosophy line</button>
     </div>
   );
 }
@@ -326,21 +352,21 @@ export function HumanEditor({ config, onChange }: EditorProps) {
         const idx = config.humanLayer.motifs.indexOf(motif);
         return (
           <div key={motif.id} className="cr-list-item">
-            <input className="cr-input" style={{ flex: 1 }} value={motif.text}
+            <input className="cr-input cr-flex-1" aria-label="Human layer motif" value={motif.text}
               onChange={e => { config.humanLayer.motifs[idx].text = e.target.value; onChange(); }} />
-            <div className="cr-toggle" style={{ minWidth: 50 }}>
-              <input type="checkbox" className="cr-toggle-switch" checked={motif.visible}
+            <div className="cr-toggle cr-toggle-compact">
+              <input type="checkbox" className="cr-toggle-switch" aria-label="Toggle motif visibility" checked={motif.visible}
                 onChange={e => { config.humanLayer.motifs[idx].visible = e.target.checked; onChange(); }} />
             </div>
-            <button className="cr-btn cr-btn-danger cr-btn-sm cr-btn-icon" type="button"
-              onClick={() => { config.humanLayer.motifs.splice(idx, 1); onChange(); }}>×</button>
+            <button className="cr-btn cr-btn-danger cr-btn-sm cr-btn-icon" type="button" aria-label="Remove motif"
+              onClick={() => { config.humanLayer.motifs.splice(idx, 1); onChange(); }}><Icon name="delete" size="xs" tone="error" /></button>
           </div>
         );
       })}
       <button className="cr-list-add-btn" type="button" onClick={() => {
         config.humanLayer.motifs.push({ id: `m-${uid()}`, text: '', symbol: '', visible: true, order: config.humanLayer.motifs.length });
         onChange();
-      }}>+ add motif</button>
+      }}><Icon name="person" size="xs" tone="accent" />add motif</button>
     </div>
   );
 }
@@ -376,7 +402,7 @@ export function TimelineEditor({ config, onChange }: EditorProps) {
       <button className="cr-list-add-btn" type="button" onClick={() => {
         config.timeline.push({ id: `t-${uid()}`, date: '', title: '', description: '', tags: [], visible: true, order: config.timeline.length });
         onChange();
-      }}>+ add timeline entry</button>
+      }}><Icon name="log" size="xs" tone="accent" />add timeline entry</button>
     </div>
   );
 }
@@ -400,16 +426,16 @@ export function ContactEditor({ config, onChange }: EditorProps) {
       <Field label="LinkedIn"><TextInput config={config} path="contact.linkedinLink" onChange={onChange} /></Field>
       <div className="cr-section-label">Custom Links</div>
       {config.contact.customLinks.map((link, idx) => (
-        <div key={idx} className="cr-field-row" style={{ alignItems: 'end' }}>
+        <div key={idx} className="cr-field-row cr-field-row-end">
           <Field label="Label"><TextInput config={config} path={`contact.customLinks.${idx}.label`} onChange={onChange} /></Field>
           <Field label="Href"><TextInput config={config} path={`contact.customLinks.${idx}.href`} onChange={onChange} /></Field>
-          <button className="cr-btn cr-btn-danger cr-btn-sm" style={{ marginBottom: 18 }} type="button"
-            onClick={() => { config.contact.customLinks.splice(idx, 1); onChange(); }}>×</button>
+          <button className="cr-btn cr-btn-danger cr-btn-sm cr-field-action-bottom" type="button" aria-label={`Remove custom link ${link.label || idx + 1}`}
+            onClick={() => { config.contact.customLinks.splice(idx, 1); onChange(); }}><Icon name="delete" size="xs" tone="error" /></button>
         </div>
       ))}
       <button className="cr-list-add-btn" type="button" onClick={() => {
         config.contact.customLinks.push({ label: '', href: '' }); onChange();
-      }}>+ add custom link</button>
+      }}><Icon name="externalLink" size="xs" tone="accent" />add custom link</button>
     </div>
   );
 }
@@ -737,7 +763,7 @@ export function JsonEditor({ config, onChange }: EditorProps) {
   return (
     <div>
       <EditorHeader title="Advanced JSON Editor" description="Direct config editing, validation" config={config} onChange={onChange} />
-      <div className="cr-editor-actions" style={{ marginBottom: 16 }}>
+      <div className="cr-editor-actions cr-editor-actions-spaced">
         <button className="cr-btn cr-btn-ghost" type="button" onClick={validate}>validate</button>
         <button className="cr-btn cr-btn-ghost" type="button" onClick={format}>format</button>
         <button className="cr-btn cr-btn-ghost" type="button" onClick={copy}>copy</button>
@@ -754,6 +780,11 @@ export function JsonEditor({ config, onChange }: EditorProps) {
 // ─── 18. PORTRAIT EDITOR ─────────────────────────────────────────
 
 export function PortraitEditor({ config, onChange }: EditorProps) {
+  const themeEngine = useThemeEngine();
+  const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
+
+  const activeThemeSrc = getPortraitForTheme(themeEngine.activeThemeId);
+
   config.portrait = config.portrait || {
     enabled: true,
     src: 'assets/aryan-profile.png',
@@ -805,7 +836,7 @@ export function PortraitEditor({ config, onChange }: EditorProps) {
       <Field label="Vignette Opacity"><Range config={config} path="portrait.effects.vignette" min={0} max={1} step={0.01} onChange={onChange} /></Field>
       <Field label="Accent Glow Intensity"><Range config={config} path="portrait.effects.glow" min={0} max={1} step={0.01} onChange={onChange} /></Field>
       <Field label="Grain Noise Opacity"><Range config={config} path="portrait.effects.grain" min={0} max={0.3} step={0.01} onChange={onChange} /></Field>
-      <div className="cr-field-row" style={{ marginTop: 12 }}>
+      <div className="cr-field-row cr-field-row-spaced">
         <Field label="Hover Lift Offset"><Toggle config={config} path="portrait.effects.hoverLift" label="Slight lift on hover" onChange={onChange} /></Field>
         <Field label="Scroll Reveal Fade"><Toggle config={config} path="portrait.effects.scrollReveal" label="Fade in on viewport enter" onChange={onChange} /></Field>
       </div>
@@ -815,18 +846,68 @@ export function PortraitEditor({ config, onChange }: EditorProps) {
 
       <div className="cr-section-label">HUD Metadata Tags</div>
       {config.portrait.metadata.map((item, idx) => (
-        <div key={idx} className="cr-list-item" style={{ gap: '8px', alignItems: 'end' }}>
-          <div style={{ flex: 1, display: 'flex', gap: '8px' }}>
-            <input className="cr-input" style={{ flex: 1 }} placeholder="Label (e.g. mode)" value={item.label}
+        <div key={idx} className="cr-list-item cr-list-item-edit-row">
+          <div className="cr-inline-fields">
+            <input className="cr-input cr-flex-1" aria-label="Portrait metadata label" placeholder="Label (e.g. mode)" value={item.label}
               onChange={e => { config.portrait.metadata[idx].label = e.target.value; onChange(); }} />
-            <input className="cr-input" style={{ flex: 2 }} placeholder="Value (e.g. nocturnal)" value={item.value}
+            <input className="cr-input cr-flex-2" aria-label="Portrait metadata value" placeholder="Value (e.g. nocturnal)" value={item.value}
               onChange={e => { config.portrait.metadata[idx].value = e.target.value; onChange(); }} />
           </div>
-          <button className="cr-btn cr-btn-danger cr-btn-sm cr-btn-icon" type="button"
-            onClick={() => { config.portrait.metadata.splice(idx, 1); onChange(); }}>×</button>
+          <button className="cr-btn cr-btn-danger cr-btn-sm cr-btn-icon" type="button" aria-label="Remove portrait metadata row"
+            onClick={() => { config.portrait.metadata.splice(idx, 1); onChange(); }}><Icon name="delete" size="xs" tone="error" /></button>
         </div>
       ))}
-      <button className="cr-list-add-btn" type="button" onClick={() => { config.portrait.metadata.push({ label: '', value: '' }); onChange(); }}>+ add metadata row</button>
+      <button className="cr-list-add-btn" type="button" onClick={() => { config.portrait.metadata.push({ label: '', value: '' }); onChange(); }}><Icon name="trace" size="xs" tone="accent" />add metadata row</button>
+
+      <div className="cr-divider" />
+      <div className="cr-section-label">Theme Portraits Mapping</div>
+      <div className="theme-portraits-lab">
+        <div className="theme-portrait-active">
+          <div className="theme-portrait-thumb theme-portrait-thumb-lg">
+            <img src={activeThemeSrc} alt="Active theme portrait" />
+          </div>
+          <div className="theme-portrait-copy">
+            <span className="theme-portrait-label">active theme portrait</span>
+            <strong>{themeEngine.activeTheme.name}</strong>
+            <code>{activeThemeSrc}</code>
+          </div>
+        </div>
+
+        <div className="theme-portrait-grid">
+          {themeEngine.builtInThemes.map(t => {
+            const src = themePortraitMap[t.id];
+            const hasError = imageErrors[t.id] || !src;
+            const isActiveTheme = themeEngine.activeThemeId === t.id;
+            return (
+              <div key={t.id} className={`theme-portrait-card${isActiveTheme ? ' is-active' : ''}${hasError ? ' has-error' : ''}`}>
+                <div className="theme-portrait-thumb">
+                  {src ? (
+                    <img 
+                      src={src} 
+                      alt={`${t.name} portrait`} 
+                      onError={() => setImageErrors(prev => ({ ...prev, [t.id]: true }))}
+                    />
+                  ) : (
+                    <div className="theme-portrait-empty">NO MAP</div>
+                  )}
+                </div>
+                <div className="theme-portrait-body">
+                  <div>
+                    <strong>{t.name}</strong>
+                    <span>{t.id}</span>
+                  </div>
+                  {hasError ? (
+                    <em>MISSING FILE</em>
+                  ) : (
+                    <code>{src}</code>
+                  )}
+                </div>
+                {isActiveTheme && <span className="theme-portrait-chip">active</span>}
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }

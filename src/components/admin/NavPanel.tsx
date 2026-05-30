@@ -1,5 +1,7 @@
 import { useState, useMemo } from 'react';
 import type { NavGroup } from '../../types/siteConfig';
+import Icon from '../icons/Icon';
+import { controlGroupIconMap, controlNavIconMap } from '../icons/iconRegistry';
 
 const NAV_GROUPS: NavGroup[] = [
   {
@@ -64,8 +66,10 @@ export default function NavPanel({ activePanel, onSelect }: Props) {
   return (
     <aside className="cr-panel cr-nav-panel">
       <div className="cr-nav-search">
+        <Icon name="search" size="xs" tone="muted" />
         <input
           type="text"
+          aria-label="Search Control Room panels"
           placeholder="search controls..."
           value={search}
           onChange={e => setSearch(e.target.value)}
@@ -77,22 +81,26 @@ export default function NavPanel({ activePanel, onSelect }: Props) {
           return (
             <div key={group.label} className={`cr-nav-group${isOpen ? ' is-open' : ''}`}>
               <button
-                className="cr-nav-group-header"
+                className="cr-nav-group-header icon-align-inline"
                 type="button"
+                aria-expanded={isOpen}
                 onClick={() => toggleGroup(group.label)}
               >
-                {group.label}
+                <Icon name={controlGroupIconMap[group.label] ?? 'archive'} size="xs" tone="muted" />
+                <span>{group.label}</span>
+                <Icon name="chevron" size="xs" tone="muted" className="cr-nav-chevron" />
               </button>
               <div className="cr-nav-group-items">
                 {group.items.map(item => (
                   <button
                     key={item.id}
-                    className={`cr-nav-item${item.id === activePanel ? ' is-active' : ''}`}
+                    className={`cr-nav-item icon-align-inline${item.id === activePanel ? ' is-active' : ''}`}
                     type="button"
                     onClick={() => onSelect(item.id)}
                   >
                     <span className="cr-nav-item-index">{item.index}</span>
-                    {item.label}
+                    <Icon name={controlNavIconMap[item.id] ?? 'settings'} size="xs" tone={item.id === activePanel ? 'accent' : 'muted'} />
+                    <span>{item.label}</span>
                   </button>
                 ))}
               </div>

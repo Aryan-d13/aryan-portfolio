@@ -1,4 +1,6 @@
 import type { SiteConfig, SectionConfig } from '../../types/siteConfig';
+import Icon from '../icons/Icon';
+import { proofIconMap } from '../icons/iconRegistry';
 import MetadataText from '../typography/MetadataText';
 import SectionHeading from '../typography/SectionHeading';
 
@@ -20,7 +22,10 @@ export default function ProofSection({ config, section }: Props) {
         <div className="proof-grid">
           {cards.map(card => (
             <article key={card.id} className="proof-item">
-              <span><MetadataText config={config.typographySystem}>{card.index}</MetadataText></span>
+              <span className="proof-index icon-align-status">
+                <Icon name={proofIconMap[card.id] ?? 'proof'} size="sm" tone="accent" />
+                <MetadataText config={config.typographySystem}>{card.index}</MetadataText>
+              </span>
               <h3>{card.title}</h3>
               <p>{card.description}</p>
             </article>

@@ -167,7 +167,7 @@ export async function fetchRemoteThemeState(): Promise<RemoteThemeState | null> 
 }
 
 export async function subscribeRemoteThemeState(
-  onNext: (state: RemoteThemeState) => void,
+  onNext: (state: RemoteThemeState | null) => void,
   onError: (error: Error) => void,
 ): Promise<Unsubscribe | null> {
   const runtime = await themeDocRef();
@@ -175,9 +175,12 @@ export async function subscribeRemoteThemeState(
   return runtime.api.onSnapshot(
     runtime.ref,
     snapshot => {
-      if (!snapshot.exists()) return;
+      if (!snapshot.exists()) {
+        onNext(null);
+        return;
+      }
       const state = sanitizeRemoteThemeState(snapshot.data());
-      if (state) onNext(state);
+      onNext(state);
     },
     error => onError(error),
   );
@@ -186,10 +189,8 @@ export async function subscribeRemoteThemeState(
 export async function saveRemoteThemeState(next: RemoteThemeState): Promise<RemoteThemeState> {
   const runtime = await themeDocRef();
   if (!runtime) throw new Error('Firebase is not configured');
-  const current = await fetchRemoteThemeState();
   const state: RemoteThemeState = {
     ...next,
-    version: (current?.version ?? 0) + 1,
     updatedAt: nowIso(),
   };
   await runtime.api.setDoc(runtime.ref, stripUndefined(state), { merge: false });

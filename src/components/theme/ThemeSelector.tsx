@@ -1,4 +1,5 @@
 import { useThemeEngine } from '../../hooks/useThemeEngine';
+import Icon from '../icons/Icon';
 
 interface Props {
   compact?: boolean;
@@ -16,8 +17,8 @@ export default function ThemeSelector({ compact, label = 'Active theme', onTheme
 
   return (
     <label className={`theme-selector${compact ? ' theme-selector-compact' : ''}`}>
-      <span>{label}</span>
-      <select value={activeThemeId} onChange={event => handleChange(event.target.value)}>
+      <span className="icon-align-inline"><Icon name="palette" size="xs" tone="accent" />{label}</span>
+      <select value={activeThemeId} aria-label={label} onChange={event => handleChange(event.target.value)}>
         {allThemes.map(theme => (
           <option key={theme.id} value={theme.id}>
             {theme.name} - {theme.preview.vibeLabel}
@@ -27,4 +28,3 @@ export default function ThemeSelector({ compact, label = 'Active theme', onTheme
     </label>
   );
 }
-

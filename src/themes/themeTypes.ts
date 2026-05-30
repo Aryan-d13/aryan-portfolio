@@ -144,6 +144,15 @@ export interface ThemeMotion {
   ambientMotionIntensity: number;
 }
 
+export interface ThemeIconTokens {
+  color?: string;
+  muted?: string;
+  accent?: string;
+  strokeWidth?: number;
+  hoverEffect?: 'glow' | 'shift' | 'none';
+  motionIntensity?: number;
+}
+
 export interface ThemeComponents {
   cardStyle: ThemeCardStyle;
   buttonStyle: ThemeButtonStyle;
@@ -209,6 +218,7 @@ export interface ThemeDefinition {
   background: ThemeBackground;
   glow: ThemeGlow;
   motion: ThemeMotion;
+  icons?: ThemeIconTokens;
   components: ThemeComponents;
   layout: ThemeLayout;
   sectionMoodOverrides: Record<string, ThemeSectionMood>;

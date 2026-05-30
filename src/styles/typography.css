@@ -86,7 +86,7 @@ body {
   inset: -0.08em auto auto -0.055em;
   width: min-content;
   color: transparent;
-  -webkit-text-stroke: var(--type-outline-width) color-mix(in srgb, var(--type-gradient-mid) calc(var(--type-outline-opacity) * 100%), transparent);
+  -webkit-text-stroke: var(--type-outline-width) color-mix(in srgb, var(--type-gradient-mid) var(--type-outline-opacity-pct, calc(var(--type-outline-opacity) * 100%)), transparent);
   opacity: calc(var(--type-treatment-outline) * 0.72);
   transform: translate3d(0.05em, 0.045em, 0);
   white-space: pre-line;
@@ -148,7 +148,7 @@ body {
 .text-effect-editorial-ghost {
   text-shadow:
     calc(var(--type-outline-width) * 1.5) calc(var(--type-outline-width) * 1.5) 0 color-mix(in srgb, var(--type-gradient-mid) 9%, transparent),
-    0 0 calc(var(--type-shadow-depth) * 1.1) color-mix(in srgb, var(--type-gradient-mid) calc(var(--type-glow-opacity) * 100%), transparent);
+    0 0 calc(var(--type-shadow-depth) * 1.1) color-mix(in srgb, var(--type-gradient-mid) var(--type-glow-opacity-pct, calc(var(--type-glow-opacity) * 100%)), transparent);
 }
 
 .text-effect-outline-layered::before,
@@ -159,7 +159,7 @@ body {
   inset: 0 auto auto 0;
   z-index: -1;
   color: transparent;
-  -webkit-text-stroke: var(--type-outline-width) color-mix(in srgb, var(--accent-secondary) calc(var(--type-outline-opacity) * 100%), transparent);
+  -webkit-text-stroke: var(--type-outline-width) color-mix(in srgb, var(--accent-secondary) var(--type-outline-opacity-pct, calc(var(--type-outline-opacity) * 100%)), transparent);
   opacity: var(--type-treatment-outline);
   transform: translate3d(0.06em, 0.055em, 0);
 }

@@ -5,7 +5,7 @@
   overflow: hidden;
   border: 1px solid var(--component-card-border, var(--line-default));
   border-radius: var(--radius-card, 4px);
-  background: var(--surface-card, #101826);
+  background: var(--surface-card, var(--surface-raised));
   transition: transform var(--duration-standard, 300ms) var(--ease-standard),
               border-color var(--duration-standard, 300ms) var(--ease-standard),
               box-shadow var(--duration-standard, 300ms) var(--ease-standard);
@@ -17,8 +17,47 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--duration-slow, 500ms) var(--ease-standard),
+}
+
+/* Portrait Theme Transition Styles */
+.portrait-img-current {
+  transition: opacity 400ms var(--ease-standard),
+              transform 400ms var(--ease-standard),
               filter var(--duration-standard, 300ms) var(--ease-standard);
+}
+
+.portrait-img-current.is-entering {
+  opacity: 0;
+  transform: scale(0.98);
+}
+
+.portrait-img-prev {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 400ms var(--ease-standard);
+}
+
+.portrait-img-prev.is-fading-out {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portrait-img-current {
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  .portrait-img-current.is-entering {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .portrait-img-prev {
+    transition: none !important;
+    opacity: 0 !important;
+  }
 }
 
 /* Vignette Layer */
@@ -27,7 +66,7 @@
   inset: 0;
   z-index: 2;
   pointer-events: none;
-  background: radial-gradient(circle, transparent 30%, rgba(5, 7, 13, 0.8) 100%);
+  background: radial-gradient(circle, transparent 30%, color-mix(in srgb, var(--surface-base) 82%, transparent) 100%);
   mix-blend-mode: multiply;
   transition: opacity var(--duration-standard, 300ms) var(--ease-standard);
 }
@@ -40,8 +79,8 @@
   pointer-events: none;
   background: repeating-linear-gradient(
     0deg,
-    rgba(255, 255, 255, 0.03),
-    rgba(255, 255, 255, 0.03) 1px,
+    color-mix(in srgb, var(--text-primary) 3%, transparent),
+    color-mix(in srgb, var(--text-primary) 3%, transparent) 1px,
     transparent 1px,
     transparent 2px
   );
@@ -65,8 +104,8 @@
   inset: 0;
   z-index: 4;
   pointer-events: none;
-  border: 1px solid color-mix(in srgb, var(--text-primary, #ffffff) 10%, transparent);
-  box-shadow: inset 0 0 12px color-mix(in srgb, var(--accent-primary, #00ffff) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-primary) 10%, transparent);
+  box-shadow: inset 0 0 12px color-mix(in srgb, var(--accent-primary) 8%, transparent);
 }
 
 /* Interactive Sweeps */
@@ -78,9 +117,9 @@
   background: linear-gradient(
     110deg,
     transparent 0 35%,
-    color-mix(in srgb, var(--accent-secondary, #5debff) 15%, transparent) 45%,
-    color-mix(in srgb, var(--accent-secondary, #5debff) 25%, transparent) 50%,
-    color-mix(in srgb, var(--accent-secondary, #5debff) 15%, transparent) 55%,
+    color-mix(in srgb, var(--accent-secondary) 15%, transparent) 45%,
+    color-mix(in srgb, var(--accent-secondary) 25%, transparent) 50%,
+    color-mix(in srgb, var(--accent-secondary) 15%, transparent) 55%,
     transparent 65% 100%
   );
   transform: translateX(-100%);
@@ -115,6 +154,9 @@
   bottom: 12px;
   right: 12px;
   z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 4px 8px;
   background: color-mix(in srgb, var(--surface-base) 80%, transparent);
   border: 1px solid var(--line-default);
@@ -155,10 +197,14 @@
   padding-bottom: var(--space-2);
 }
 
+.portrait-card-header > span,
 .portrait-card-header .live-heartbeat {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
+}
+
+.portrait-card-header .live-heartbeat {
   color: var(--text-secondary);
 }
 
@@ -168,6 +214,11 @@
   background: var(--accent-secondary);
   border-radius: 50%;
   box-shadow: 0 0 8px var(--accent-secondary);
+  animation: pulse-glow 2s infinite;
+}
+
+.portrait-card-header .live-heartbeat .ui-icon,
+.bento-terminal-header .ui-icon[data-icon-name="signal"] {
   animation: pulse-glow 2s infinite;
 }
 
@@ -192,6 +243,9 @@
 }
 
 .portrait-card-metadata .metadata-item dt {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-family: var(--font-mono);
   font-size: 9px;
   color: var(--text-muted);
@@ -255,6 +309,13 @@
   border-bottom: 1px solid var(--line-subtle);
   padding-bottom: 4px;
   margin-bottom: 6px;
+}
+
+.bento-terminal-header span,
+.bento-widget-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .bento-terminal-logs {
@@ -324,7 +385,7 @@
   border: 2px solid var(--line-strong);
   padding: var(--space-4);
   position: relative;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--surface-base) 72%, transparent);
 }
 
 .portrait-archive-frame::before {
@@ -333,8 +394,8 @@
   top: 15px;
   right: 15px;
   z-index: 10;
-  border: 2px solid var(--accent-proof, #ff3b5c);
-  color: var(--accent-proof, #ff3b5c);
+  border: 2px solid var(--accent-proof);
+  color: var(--accent-proof);
   font-family: var(--font-mono);
   font-size: 10px;
   font-weight: bold;
@@ -362,6 +423,9 @@
 }
 
 .portrait-archive-line span:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   color: var(--text-muted);
 }
 .portrait-archive-line span:last-child {
@@ -422,11 +486,10 @@
 
 .encrypted-name-last.is-scrambling {
   font-family: var(--font-mono), monospace;
-  color: var(--accent-secondary, #5debff);
-  text-shadow: 0 0 10px color-mix(in srgb, var(--accent-secondary, #5debff) 50%, transparent);
+  color: var(--accent-secondary);
+  text-shadow: 0 0 10px color-mix(in srgb, var(--accent-secondary) 50%, transparent);
   letter-spacing: -0.02em;
   display: inline-block;
   transition: color var(--duration-fast) var(--ease-standard),
               text-shadow var(--duration-fast) var(--ease-standard);
 }
-

@@ -117,10 +117,15 @@ export function applyThemeTokens(theme: ThemeDefinition): void {
   setVar(root, '--duration-fast', `${theme.motion.hoverDuration}ms`);
   setVar(root, '--duration-standard', `${theme.motion.transitionDuration}ms`);
   setVar(root, '--duration-slow', `${theme.motion.complexDuration}ms`);
+  setVar(root, '--duration-ui', `${Math.min(Math.max(theme.motion.hoverDuration, 100), 160)}ms`);
+  setVar(root, '--duration-panel', `${Math.min(Math.max(theme.motion.transitionDuration + 80, 220), 320)}ms`);
+  setVar(root, '--duration-cinematic', `${Math.min(Math.max(theme.motion.complexDuration, 360), 520)}ms`);
   setVar(root, '--motion-reveal-duration', `${theme.motion.revealDuration}ms`);
   setVar(root, '--ease-enter', theme.motion.easingEnter);
   setVar(root, '--ease-exit', theme.motion.easingExit);
   setVar(root, '--ease-standard', theme.motion.easingState);
+  setVar(root, '--ease-productive', theme.motion.easingState);
+  setVar(root, '--ease-expressive', theme.motion.easingEnter);
   setVar(root, '--motion-parallax-intensity', theme.motion.parallaxIntensity);
   setVar(root, '--motion-ambient-intensity', theme.motion.ambientMotionIntensity);
 
@@ -130,6 +135,25 @@ export function applyThemeTokens(theme: ThemeDefinition): void {
   setVar(root, '--component-button-bg', theme.components.buttonBackground);
   setVar(root, '--component-button-border', theme.components.buttonBorder);
   setVar(root, '--component-nav-bg', theme.components.navBackground);
+  setVar(root, '--surface-flat', colorMix(theme.colors.surface, theme.colors.bg, 0.5));
+  setVar(root, '--surface-floating', colorMix(theme.colors.surfaceElevated, theme.colors.bg, 0.78));
+  setVar(root, '--panel-border', colorMix(theme.colors.borderStrong, theme.colors.bg, 0.62));
+  setVar(root, '--focus-ring', `0 0 0 1px ${theme.colors.bg}, 0 0 0 3px color-mix(in srgb, ${theme.colors.accentSecondary} 70%, transparent)`);
+  setVar(root, '--hover-glow', `0 0 24px color-mix(in srgb, ${theme.colors.glow} 18%, transparent)`);
+  setVar(root, '--press-scale', 0.985);
+  setVar(root, '--status-success', theme.colors.success);
+  setVar(root, '--status-warning', theme.colors.warning);
+  setVar(root, '--status-error', theme.colors.accentProof);
+  setVar(root, '--icon-color', theme.icons?.color ?? theme.colors.textSecondary);
+  setVar(root, '--icon-muted', theme.icons?.muted ?? theme.colors.textMuted);
+  setVar(root, '--icon-accent', theme.icons?.accent ?? theme.colors.accentSecondary);
+  setVar(root, '--icon-success', theme.colors.success);
+  setVar(root, '--icon-warning', theme.colors.warning);
+  setVar(root, '--icon-error', theme.colors.accentProof);
+  setVar(root, '--icon-stroke', theme.icons?.strokeWidth ?? 1.8);
+  setVar(root, '--icon-hover-glow', `0 0 16px color-mix(in srgb, ${theme.icons?.accent ?? theme.colors.accentSecondary} 24%, transparent)`);
+  setVar(root, '--icon-transition', `color var(--duration-ui) var(--ease-productive), opacity var(--duration-ui) var(--ease-productive), transform var(--duration-ui) var(--ease-productive), filter var(--duration-ui) var(--ease-productive)`);
+  setVar(root, '--section-icon-optical-offset', resolveSectionIconOffset(theme));
 
   setVar(root, '--container', theme.layout.maxContentWidth);
   setVar(root, '--layout-panel-blur', `${theme.layout.panelBlur}px`);
@@ -163,6 +187,11 @@ export function applyThemeTokens(theme: ThemeDefinition): void {
   setVar(root, '--cr-success', theme.colors.success);
   setVar(root, '--cr-warning', theme.colors.warning);
   setVar(root, '--cr-danger', theme.colors.accentProof);
+  setVar(root, '--cr-danger-bg', `color-mix(in srgb, ${theme.colors.accentProof} 10%, transparent)`);
+  setVar(root, '--cr-status-success', theme.colors.success);
+  setVar(root, '--cr-status-warning', theme.colors.warning);
+  setVar(root, '--cr-status-error', theme.colors.accentProof);
+  setVar(root, '--cr-focus-ring', `0 0 0 1px ${theme.colors.bg}, 0 0 0 3px color-mix(in srgb, ${theme.colors.accentSecondary} 58%, transparent)`);
   setVar(root, '--cr-font-body', theme.typography.bodyFont);
   setVar(root, '--cr-font-mono', theme.typography.monoFont);
   setVar(root, '--cr-font-display', theme.typography.displayFont);
@@ -173,6 +202,12 @@ export function applyThemeTokens(theme: ThemeDefinition): void {
 
 function colorMix(a: string, b: string, aPercent: number): string {
   return `color-mix(in srgb, ${a} ${Math.round(aPercent * 100)}%, ${b})`;
+}
+
+function resolveSectionIconOffset(theme: ThemeDefinition): string {
+  if (theme.layout.density === 'compact' || theme.layout.density === 'dense') return 'clamp(5px, 0.78vw, 9px)';
+  if (theme.layout.density === 'editorial') return 'clamp(6px, 0.9vw, 11px)';
+  return 'clamp(6px, 0.85vw, 10px)';
 }
 
 function resolveTransitionStyle(theme: ThemeDefinition): string {

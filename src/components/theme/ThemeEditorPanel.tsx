@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { SiteConfig } from '../../types/siteConfig';
 import type { ThemeBackgroundType, ThemeDefinition, ThemeDensity, ThemeMotionPersonality, ThemeTransitionStyle } from '../../themes/themeTypes';
 import { useThemeEngine } from '../../hooks/useThemeEngine';
+import Icon, { type IconName } from '../icons/Icon';
 import ThemePreviewCard from './ThemePreviewCard';
 import { toast, confirmDialog } from '../ui/Toast';
 
@@ -33,6 +34,14 @@ function defaultTransitionStyle(personality: ThemeMotionPersonality): ThemeTrans
   if (personality === 'cosmic' || personality === 'atmospheric') return 'glow-shift';
   if (personality === 'sharp' || personality === 'archival') return 'soft-wipe';
   return 'scale-fade';
+}
+
+function syncIcon(status: string): IconName {
+  if (status === 'saving') return 'sync';
+  if (status === 'synced') return 'success';
+  if (status === 'failed') return 'error';
+  if (status === 'unsaved') return 'warning';
+  return 'database';
 }
 
 function ThemeField({ label, children }: { label: string; children: React.ReactNode }) {
@@ -76,6 +85,7 @@ export default function ThemeEditorPanel({ config, onConfigChange, onThemeChange
   const importRef = useRef<HTMLInputElement>(null);
   const cloudImportRef = useRef<HTMLInputElement>(null);
   const [renameValue, setRenameValue] = useState(activeTheme.name);
+  const isCloudSaving = syncStatus === 'saving';
 
   useEffect(() => {
     setRenameValue(activeTheme.name);
@@ -185,28 +195,32 @@ export default function ThemeEditorPanel({ config, onConfigChange, onThemeChange
   return (
     <div className="theme-engine-panel">
       <div className="cr-editor-header">
-        <h2>Theme Engine</h2>
+        <h2><Icon name="theme" size="md" tone="accent" />Theme Engine</h2>
         <p>Saved visual identity systems. Default themes stay immutable; custom variants hold your edits.</p>
         <div className="theme-engine-status">
-          <span>{activeTheme.source === 'custom' ? 'custom editable theme' : 'built-in source preset'}</span>
-          <span className={syncStatus === 'synced' ? 'is-synced' : syncStatus === 'failed' ? 'is-dirty' : ''}>
+          <span className="icon-align-status"><Icon name={activeTheme.source === 'custom' ? 'edit' : 'lock'} size="xs" tone="muted" />{activeTheme.source === 'custom' ? 'custom editable theme' : 'built-in source preset'}</span>
+          <span className={`icon-align-status is-${syncStatus}`}>
+            <Icon name={syncIcon(syncStatus)} size="xs" tone={syncStatus === 'synced' ? 'success' : syncStatus === 'failed' ? 'error' : syncStatus === 'saving' ? 'accent' : 'warning'} state={syncStatus === 'saving' ? 'loading' : syncStatus === 'synced' ? 'success' : syncStatus === 'failed' ? 'error' : 'idle'} />
             cloud: {syncStatus}
           </span>
-          <span>source: {syncSource}</span>
-          {lastSyncedAt && <span>last sync: {new Date(lastSyncedAt).toLocaleString()}</span>}
-          {unsavedChanges && <span className="is-dirty">unsaved theme changes</span>}
-          {syncStatus === 'synced' && <span>Theme synced across clients</span>}
+          <span className="icon-align-status"><Icon name="database" size="xs" tone="muted" />source: {syncSource}</span>
+          {lastSyncedAt && <span className="icon-align-status"><Icon name="log" size="xs" tone="muted" />last sync: {new Date(lastSyncedAt).toLocaleString()}</span>}
+          {unsavedChanges && <span className="icon-align-status is-dirty"><Icon name="warning" size="xs" tone="warning" state="warning" />unsaved theme changes</span>}
+          {syncStatus === 'synced' && <span className="icon-align-status"><Icon name="success" size="xs" tone="success" state="success" />Theme synced across clients</span>}
         </div>
-        {remoteError && <div className="theme-validation-errors"><span>{remoteError}</span></div>}
+        {remoteError && <div className="theme-validation-errors"><span><Icon name="error" size="xs" tone="error" state="error" />{remoteError}</span></div>}
       </div>
 
       <section className="theme-engine-block">
         <div className="theme-cloud-actions">
-          <button className="cr-btn cr-btn-primary" type="button" onClick={handleGlobalSave}>save theme globally</button>
-          <button className="cr-btn cr-btn-ghost" type="button" onClick={handleCloudReload}>reload from cloud</button>
-          <button className="cr-btn cr-btn-ghost" type="button" onClick={handleCloudExport}>export cloud config</button>
-          <button className="cr-btn cr-btn-ghost" type="button" onClick={() => cloudImportRef.current?.click()}>import and upload config</button>
-          <button className="cr-btn cr-btn-danger" type="button" onClick={handleCloudReset}>reset cloud theme</button>
+          <button className="cr-btn cr-btn-primary icon-align-inline" type="button" onClick={handleGlobalSave} disabled={isCloudSaving} aria-busy={isCloudSaving}>
+            <Icon name="sync" size="xs" tone="accent" state={isCloudSaving ? 'loading' : 'idle'} />
+            {isCloudSaving ? 'saving theme' : 'save theme globally'}
+          </button>
+          <button className="cr-btn cr-btn-ghost icon-align-inline" type="button" onClick={handleCloudReload} disabled={isCloudSaving}><Icon name="download" size="xs" tone="muted" />reload from cloud</button>
+          <button className="cr-btn cr-btn-ghost icon-align-inline" type="button" onClick={handleCloudExport}><Icon name="export" size="xs" tone="muted" />export cloud config</button>
+          <button className="cr-btn cr-btn-ghost icon-align-inline" type="button" onClick={() => cloudImportRef.current?.click()} disabled={isCloudSaving}><Icon name="import" size="xs" tone="muted" />import and upload config</button>
+          <button className="cr-btn cr-btn-danger icon-align-inline" type="button" onClick={handleCloudReset} disabled={isCloudSaving}><Icon name="reset" size="xs" tone="error" />reset cloud theme</button>
         </div>
         <input ref={cloudImportRef} type="file" accept=".json" hidden onChange={handleCloudImport} />
 
@@ -218,10 +232,10 @@ export default function ThemeEditorPanel({ config, onConfigChange, onThemeChange
               ))}
             </select>
           </ThemeField>
-          <button className="cr-btn cr-btn-primary" type="button" onClick={handleDuplicate}>duplicate theme</button>
-          <button className="cr-btn cr-btn-ghost" type="button" onClick={handleReset}>reset active theme</button>
-          <button className="cr-btn cr-btn-ghost" type="button" onClick={exportThemes}>export themes JSON</button>
-          <button className="cr-btn cr-btn-ghost" type="button" onClick={() => importRef.current?.click()}>import themes JSON</button>
+          <button className="cr-btn cr-btn-primary icon-align-inline" type="button" onClick={handleDuplicate}><Icon name="duplicate" size="xs" tone="accent" />duplicate theme</button>
+          <button className="cr-btn cr-btn-ghost icon-align-inline" type="button" onClick={handleReset}><Icon name="reset" size="xs" tone="muted" />reset active theme</button>
+          <button className="cr-btn cr-btn-ghost icon-align-inline" type="button" onClick={exportThemes}><Icon name="export" size="xs" tone="muted" />export themes JSON</button>
+          <button className="cr-btn cr-btn-ghost icon-align-inline" type="button" onClick={() => importRef.current?.click()}><Icon name="import" size="xs" tone="muted" />import themes JSON</button>
         </div>
 
         <label className="theme-public-toggle">
@@ -251,21 +265,21 @@ export default function ThemeEditorPanel({ config, onConfigChange, onThemeChange
           <ThemeField label="Theme name">
             <input className="cr-input" value={renameValue} onChange={event => setRenameValue(event.target.value)} />
           </ThemeField>
-          <button className="cr-btn cr-btn-ghost" type="button" onClick={handleRename}>rename custom theme</button>
-          <button className="cr-btn cr-btn-primary" type="button" onClick={saveTheme} disabled={!unsavedChanges}>save custom theme</button>
-          <button className="cr-btn cr-btn-danger" type="button" onClick={handleDelete} disabled={activeTheme.source !== 'custom'}>delete custom theme</button>
+          <button className="cr-btn cr-btn-ghost icon-align-inline" type="button" onClick={handleRename}><Icon name="edit" size="xs" tone="muted" />rename custom theme</button>
+          <button className="cr-btn cr-btn-primary icon-align-inline" type="button" onClick={saveTheme} disabled={!unsavedChanges}><Icon name="save" size="xs" tone="accent" />save custom theme</button>
+          <button className="cr-btn cr-btn-danger icon-align-inline" type="button" onClick={handleDelete} disabled={activeTheme.source !== 'custom'}><Icon name="delete" size="xs" tone="error" />delete custom theme</button>
         </div>
 
         {!validation.valid && (
           <div className="theme-validation-errors">
-            <strong>Validation errors</strong>
-            {validation.errors.map(error => <span key={error}>{error}</span>)}
+            <strong><Icon name="warning" size="xs" tone="warning" state="warning" />Validation errors</strong>
+            {validation.errors.map(error => <span key={error}><Icon name="error" size="xs" tone="error" />{error}</span>)}
           </div>
         )}
       </section>
 
       <details className="theme-token-editor" open>
-        <summary>Edit current theme</summary>
+        <summary><Icon name="settings" size="sm" tone="accent" />Edit current theme</summary>
 
         <div className="theme-token-section">
           <h3>Identity</h3>

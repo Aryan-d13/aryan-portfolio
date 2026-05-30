@@ -44,10 +44,26 @@ export function clearDraft(): void { localStorage.removeItem(DRAFT_KEY); }
 export function exportConfig(config: SiteConfig): string { return JSON.stringify(config, null, 2); }
 
 export function importConfig(jsonString: string): { success: boolean; config: SiteConfig | null; errors: string[] } {
-  const { valid, errors, parsed } = validateJsonConfig(jsonString);
-  if (!valid || !parsed) return { success: false, config: null, errors };
-  const merged = mergeConfig(getDefaultConfig() as unknown as Record<string, unknown>, parsed as unknown as Record<string, unknown>) as unknown as SiteConfig;
-  return { success: true, config: merged, errors: [] };
+  let parsed: any;
+  try {
+    parsed = JSON.parse(jsonString);
+  } catch (e) {
+    return { success: false, config: null, errors: [`Invalid JSON: ${(e as Error).message}`] };
+  }
+
+  let finalConfigToValidate: any = parsed;
+
+  if (isCustomContentJson(parsed)) {
+    const mappedPartial = mapCustomToSiteConfig(parsed);
+    finalConfigToValidate = mergeConfig(getDefaultConfig() as unknown as Record<string, unknown>, mappedPartial as unknown as Record<string, unknown>);
+  } else {
+    finalConfigToValidate = mergeConfig(getDefaultConfig() as unknown as Record<string, unknown>, parsed as unknown as Record<string, unknown>);
+  }
+
+  const { valid, errors } = validateConfig(finalConfigToValidate);
+  if (!valid) return { success: false, config: null, errors };
+
+  return { success: true, config: finalConfigToValidate as SiteConfig, errors: [] };
 }
 
 export function resetToDefaults(): SiteConfig {
@@ -113,12 +129,15 @@ export function applyConfigToCSS(config: SiteConfig): void {
     root.style.setProperty('--background-dot-size', `${b.dotSize}px`);
     root.style.setProperty('--background-dot-spacing', `${b.dotSpacing}px`);
     root.style.setProperty('--background-dot-opacity', String(b.dotOpacity));
+    root.style.setProperty('--background-dot-opacity-pct', `${Math.round(b.dotOpacity * 100)}%`);
     root.style.setProperty('--background-dot-reveal-opacity', String(b.dotRevealOpacity));
     root.style.setProperty('--background-dot-field-opacity', String(b.dotFieldOpacity));
     root.style.setProperty('--background-radial-glow-color', b.radialGlowColor);
     root.style.setProperty('--background-radial-glow-opacity', String(b.radialGlowOpacity));
+    root.style.setProperty('--background-radial-glow-opacity-pct', `${Math.round(b.radialGlowOpacity * 100)}%`);
     root.style.setProperty('--background-radial-glow-color-2', b.radialGlowColor2);
     root.style.setProperty('--background-radial-glow-opacity-2', String(b.radialGlowOpacity2));
+    root.style.setProperty('--background-radial-glow-opacity-2-pct', `${Math.round(b.radialGlowOpacity2 * 100)}%`);
     root.style.setProperty('--background-radial-glow-blur', `${b.radialGlowBlur}px`);
     root.style.setProperty('--background-vignette-opacity', String(b.vignetteOpacity));
     root.style.setProperty('--background-animation-speed', `${b.animationSpeed}s`);
@@ -165,4 +184,215 @@ export function readConfigFile(file: File): Promise<string> {
     reader.onerror = () => reject(new Error('Failed to read file'));
     reader.readAsText(file);
   });
+}
+
+function isCustomContentJson(parsed: any): boolean {
+  return parsed && typeof parsed === 'object' && (
+    'hero' in parsed || 
+    'case_files' in parsed || 
+    'proof_layer' in parsed ||
+    'human_layer' in parsed
+  );
+}
+
+function mapCustomToSiteConfig(custom: any): Partial<SiteConfig> {
+  const partial: Partial<SiteConfig> = {};
+
+  if (custom.hero || custom.meta || custom.contact) {
+    partial.identity = {
+      name: custom.hero?.brand?.name || 'Aryan Sharma',
+      handle: custom.contact?.handle || '@aryanteddys',
+      roleLines: custom.hero?.roles || custom.hero?.tags || [
+        'AI-native media systems builder',
+        'Full Stack Developer',
+        'AI & Automation Engineer',
+      ],
+      location: custom.contact?.location || 'India',
+      email: custom.contact?.email || 'aryanteddys@gmail.com',
+      shortBio: custom.hero?.headline || 'I build systems that turn messy ideas into working products.',
+      heroStatement: custom.hero?.subheadline || '',
+      heroStatementDirect: custom.hero?.subheadline || '',
+      heroKicker: custom.hero?.brand?.label || 'THE PROOF OF WORK INTERFACE',
+      brandSubtitle: 'proof.interface',
+      brandGlyph: custom.hero?.brand?.initials || 'AS',
+      ctaPrimary: {
+        text: custom.hero?.cta?.[0]?.label || 'Inspect Work',
+        href: custom.hero?.cta?.[0]?.href || '#systems-built'
+      },
+      ctaSecondary: {
+        text: custom.hero?.cta?.[1]?.label || 'Open Channel',
+        href: custom.hero?.cta?.[1]?.href || '#open-channel'
+      },
+      metadata: {
+        trace_id: custom.hero?.identity_trace?.trace_id || 'aryan.sharma',
+        mode: custom.hero?.identity_trace?.mode || 'builder',
+        origin: custom.hero?.identity_trace?.origin || 'India',
+        handle: custom.contact?.handle || '@aryanteddys',
+        stack: 'full-stack / cloud / ai / media',
+        signal: custom.hero?.identity_trace?.signal || 'proof over noise',
+      },
+      portraitCaption: {
+        label: 'visual_id',
+        value: custom.hero?.identity_trace?.file || 'identity.trace_file'
+      },
+      portraitAlt: custom.hero?.identity_trace?.description || 'Aryan Sharma Portrait',
+    };
+
+    partial.portrait = {
+      enabled: true,
+      src: 'assets/aryan-profile.png',
+      alt: custom.hero?.identity_trace?.description || 'Aryan Sharma in cold outdoor light wearing winter layers and sunglasses.',
+      placement: 'hero',
+      variant: 'identity-card',
+      aspectRatio: '4 / 5',
+      objectPosition: '52% 50%',
+      showMetadata: true,
+      metadata: [
+        { label: 'trace_id', value: custom.hero?.identity_trace?.trace_id || 'aryan.sharma' },
+        { label: 'mode', value: custom.hero?.identity_trace?.mode || 'builder' },
+        { label: 'origin', value: custom.hero?.identity_trace?.origin || 'India' },
+        { label: 'signal', value: custom.hero?.identity_trace?.signal || 'proof over noise' },
+      ],
+      effects: {
+        vignette: 0.45,
+        glow: 0.25,
+        grain: 0.08,
+        hoverLift: true,
+        scrollReveal: true,
+      }
+    };
+  }
+
+  // Mapping projects
+  if (custom.case_files?.projects) {
+    partial.projects = custom.case_files.projects.map((p: any) => ({
+      id: p.name ? p.name.toLowerCase().replace(/\s+/g, '-') : 'project',
+      name: p.name || 'Project Name',
+      caseNumber: p.index || '01',
+      type: p.headline || p.type || 'Case study',
+      featured: true,
+      status: 'active',
+      confidenceLabel: 'high',
+      storyDescription: [p.summary || '', p.details || p.problem || ''],
+      systemDescription: p.details || p.problem || '',
+      systemFlow: p.modes ? p.modes.map((m: string) => m.toLowerCase().replace(/\s+/g, '-')) : ['story-mode', 'system-mode'],
+      problem: p.problem || '',
+      system: p.details || '',
+      stack: '',
+      proofThemes: '',
+      shows: '',
+      links: {},
+    }));
+  }
+
+  // Mapping proof layer (principles)
+  if (custom.proof_layer?.principles) {
+    partial.proofCards = custom.proof_layer.principles.map((p: any) => ({
+      id: p.title ? p.title.toLowerCase().replace(/\s+/g, '-') : 'principle',
+      index: p.index || '01',
+      title: p.title || 'Principle Title',
+      description: p.description || '',
+      accentColor: null,
+      visible: true,
+      order: 0,
+    }));
+  }
+
+  // Mapping stack
+  if (custom.stack?.categories) {
+    partial.skillGroups = custom.stack.categories.map((c: any, idx: number) => ({
+      id: c.name ? c.name.toLowerCase().replace(/\s+/g, '-') : 'skill-group',
+      name: c.name || 'Category',
+      description: c.items ? c.items.join(', ') : '',
+      skills: c.items || [],
+      displayStyle: 'matrix',
+      order: idx,
+    }));
+  }
+
+  // Mapping philosophy
+  if (custom.philosophy?.items) {
+    partial.philosophy = custom.philosophy.items.map((text: string, idx: number) => ({
+      id: `p${idx + 1}`,
+      text,
+      intensity: idx === 6 ? 'loud' : 'sharp',
+      largeType: true,
+      order: idx,
+    }));
+  }
+
+  // Mapping human layer (interests)
+  if (custom.human_layer?.interests) {
+    const symbolMap: Record<string, string> = {
+      rain: '🌧', night: '🌙', blue: '🔵', 'cold weather': '❄', neon: '💡', space: '🚀',
+      mysteries: '🔍', skylines: '🏙', basketball: '🏀', gymnastics: '🤸',
+      'meaningful fiction': '📖', 'dry humor': '😐'
+    };
+    partial.humanLayer = {
+      motifs: custom.human_layer.interests.map((text: string, idx: number) => ({
+        id: `m${idx + 1}`,
+        text,
+        symbol: symbolMap[text.toLowerCase()] || '❄',
+        visible: true,
+        order: idx,
+      }))
+    };
+  }
+
+  // Mapping timeline
+  if (custom.timeline?.events) {
+    partial.timeline = custom.timeline.events.map((e: any, idx: number) => ({
+      id: `t${idx + 1}`,
+      date: e.period || '',
+      title: e.event || '',
+      description: '',
+      tags: ['history'],
+      visible: true,
+      order: idx,
+    }));
+  }
+
+  // Mapping contact
+  if (custom.contact) {
+    partial.contact = {
+      email: custom.contact.email || 'aryanteddys@gmail.com',
+      handle: custom.contact.handle || '@aryanteddys',
+      location: custom.contact.location || 'India',
+      ctaText: 'open_channel()',
+      ctaLink: custom.contact.links?.[0]?.href || `mailto:${custom.contact.email}`,
+      resumeLink: custom.contact.links?.[1]?.href || 'Aryan_Sharma_Resume.pdf',
+      resumeLabel: custom.contact.links?.[1]?.label || 'view_resume',
+      githubLink: '',
+      linkedinLink: '',
+      socialLinks: [],
+      customLinks: custom.contact.links?.slice(2).map((l: any) => ({ label: l.label, href: l.href })) || [],
+    };
+  }
+
+  // Map sections metadata (section titles/kickers)
+  partial.sections = [
+    { id: 'trace-begins', sectionId: 'trace_begins', signal: 'cold_boot', proofLevel: 'identity', systemStatus: 'awake', type: 'hero', title: 'Hero', kicker: custom.hero?.brand?.label || 'THE PROOF OF WORK INTERFACE', visible: true, order: 0, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+    { id: 'identity', sectionId: 'not_template_developer', signal: 'anti_template', proofLevel: 'positioning', systemStatus: 'clear', type: 'statement', title: 'Identity Statement', kicker: custom.identity?.section_label || 'IDENTITY', railLabel: 'not_a_template_developer', visible: true, order: 1, animationStyle: 'reveal', backgroundIntensity: 1.0, bodyAtmospheric: custom.identity?.description || '', bodyDirect: custom.identity?.description || '' },
+    { id: 'systems-built', sectionId: 'systems_built', signal: 'case_files', proofLevel: 'high', systemStatus: 'inspectable', type: 'projects', title: 'Systems Built', kicker: custom.case_files?.section_label || 'SYSTEMS BUILT', railLabel: 'case_files', heading: custom.case_files?.title || 'Selected work', descriptionAtmospheric: custom.case_files?.subtitle || '', descriptionDirect: custom.case_files?.description || '', visible: true, order: 2, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+    { id: 'proof-layer', sectionId: 'proof_layer', signal: 'receipts_not_vibes', proofLevel: 'black_box', systemStatus: 'recording', type: 'proof', title: 'Proof Layer', kicker: custom.proof_layer?.section_label || 'PROOF LAYER', railLabel: 'receipts_not_vibes', heading: custom.proof_layer?.title || 'How I judge systems', descriptionAtmospheric: custom.proof_layer?.subtitle || '', descriptionDirect: custom.proof_layer?.description || '', visible: true, order: 3, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+    { id: 'stack', sectionId: 'stack_clusters', signal: 'tools_with_context', proofLevel: 'practical', systemStatus: 'available', type: 'stack', title: 'Stack', kicker: custom.stack?.section_label || 'STACK', railLabel: 'tools_i_think_with', heading: custom.stack?.title || 'Tools I work with', descriptionAtmospheric: custom.stack?.subtitle || '', descriptionDirect: custom.stack?.description || '', visible: true, order: 4, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+    { id: 'philosophy', sectionId: 'operating_principles', signal: 'manifesto', proofLevel: 'values', systemStatus: 'stable', type: 'philosophy', title: 'Philosophy', kicker: custom.philosophy?.section_label || 'PHILOSOPHY', railLabel: 'operating_principles', visible: true, order: 5, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+    { id: 'human-layer', sectionId: 'weather_inside_machine', signal: 'human_layer', proofLevel: 'subtle', systemStatus: 'breathing', type: 'human', title: 'Human Layer', kicker: custom.human_layer?.section_label || 'HUMAN LAYER', railLabel: 'weather_inside_machine', heading: custom.human_layer?.title || 'Outside the work', descriptionAtmospheric: custom.human_layer?.subtitle || '', descriptionDirect: custom.human_layer?.description || '', visible: true, order: 6, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+    { id: 'build-log', sectionId: 'build_log', signal: 'timeline', proofLevel: 'receipts', systemStatus: 'indexed', type: 'timeline', title: 'Build Log', kicker: custom.timeline?.section_label || 'BUILD LOG', railLabel: 'timeline', heading: custom.timeline?.title || 'Timeline', visible: true, order: 7, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+    { id: 'open-channel', sectionId: 'open_channel', signal: 'contact', proofLevel: 'direct', systemStatus: 'listening', type: 'contact', title: 'Contact', kicker: custom.contact?.section_label || 'CONTACT', heading: custom.contact?.description || '', visible: true, order: 8, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+  ];
+
+  if (custom.meta) {
+    partial.seo = {
+      pageTitle: custom.meta.title || 'Aryan Sharma | Proof of Work Interface',
+      metaDescription: custom.hero?.subheadline || 'Aryan Sharma Portfolio',
+      ogTitle: custom.meta.title || 'Aryan Sharma | Proof of Work Interface',
+      ogDescription: custom.hero?.subheadline || '',
+      ogImage: '',
+      favicon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2305070D'/%3E%3Crect x='8' y='8' width='48' height='48' fill='%23101826' stroke='%235DEBFF' stroke-width='2'/%3E%3Ctext x='32' y='38' text-anchor='middle' font-family='monospace' font-size='18' font-weight='700' fill='%235DEBFF'%3EAS%3C/text%3E%3C/svg%3E",
+      themeColor: '#05070d',
+    };
+  }
+
+  return partial;
 }

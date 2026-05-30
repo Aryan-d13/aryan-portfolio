@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { PortraitConfig } from '../../types/siteConfig';
+import Icon from '../icons/Icon';
 import PortraitFrame from './PortraitFrame';
 
 interface Props {
@@ -49,8 +50,8 @@ export default function PortraitBento({ portrait }: Props) {
 
       <div className="portrait-bento-cell cell-terminal">
         <div className="bento-terminal-header">
-          <span>system_log.sh</span>
-          <span>● streaming</span>
+          <span className="icon-align-inline"><Icon name="terminal" size="xs" tone="accent" />system_log.sh</span>
+          <span className="icon-align-status"><Icon name="signal" size="xs" tone="accent" />streaming</span>
         </div>
         <div className="bento-terminal-logs">
           {logs.map((log, idx) => {
@@ -68,7 +69,7 @@ export default function PortraitBento({ portrait }: Props) {
       </div>
 
       <div className="portrait-bento-cell cell-widget">
-        <div className="bento-widget-title">telemetry.data</div>
+        <div className="bento-widget-title icon-align-inline"><Icon name="status" size="xs" tone="accent" />telemetry.data</div>
         <div className="bento-widget-grid">
           <div className="bento-widget-stat">
             <span>sky_status</span>

@@ -90,31 +90,32 @@ export function useRemoteTheme({ onRemoteState }: UseRemoteThemeOptions): UseRem
       }
 
       try {
-        const remote = await fetchRemoteThemeState();
-        if (cancelled) return;
-
-        if (remote) {
-          applyRemote(remote, 'cloud');
-        } else {
-          const localActiveThemeId = loadActiveThemeId();
-          const localCustomThemes = loadCustomThemes();
-          const localActiveTheme = getThemeById(localActiveThemeId, localCustomThemes);
-          if (localActiveTheme || localCustomThemes.length) {
-            const migrated = await saveRemoteThemeState(createRemoteThemeState({
-              activeThemeId: localActiveThemeId,
-              customThemes: localCustomThemes,
-              activeTheme: localActiveTheme,
-            }));
-            if (!cancelled) applyRemote(migrated, 'cloud');
-          } else {
-            setSyncStatus(cached ? 'offline-cache' : 'synced');
-            setSyncSource(cached ? 'cache' : 'default');
-          }
-        }
-
+        let isFirstEmit = true;
         unsub = await subscribeRemoteThemeState(
-          state => applyRemote(state, 'cloud'),
+          async state => {
+            if (cancelled) return;
+            if (state) {
+              applyRemote(state, 'cloud');
+            } else if (isFirstEmit) {
+              isFirstEmit = false;
+              const localActiveThemeId = loadActiveThemeId();
+              const localCustomThemes = loadCustomThemes();
+              const localActiveTheme = getThemeById(localActiveThemeId, localCustomThemes);
+              if (localActiveTheme || localCustomThemes.length) {
+                const migrated = await saveRemoteThemeState(createRemoteThemeState({
+                  activeThemeId: localActiveThemeId,
+                  customThemes: localCustomThemes,
+                  activeTheme: localActiveTheme,
+                }));
+                if (!cancelled) applyRemote(migrated, 'cloud');
+              } else {
+                setSyncStatus(cached ? 'offline-cache' : 'synced');
+                setSyncSource(cached ? 'cache' : 'default');
+              }
+            }
+          },
           error => {
+            if (cancelled) return;
             setRemoteError(error.message);
             setSyncStatus('failed');
             setSyncSource(cached ? 'cache' : 'default');

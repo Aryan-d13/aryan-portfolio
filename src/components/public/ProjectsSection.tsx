@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { SiteConfig, SectionConfig, ProjectConfig } from '../../types/siteConfig';
+import Icon from '../icons/Icon';
+import { projectTabIconMap } from '../icons/iconRegistry';
 import MetadataText from '../typography/MetadataText';
 import ProjectTitle from '../typography/ProjectTitle';
 import SectionHeading from '../typography/SectionHeading';
@@ -14,6 +16,11 @@ function CaseFile({ config, project, isOpen: defaultOpen }: { config: SiteConfig
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [storyMode, setStoryMode] = useState<'story' | 'system'>('story');
   const [activeTab, setActiveTab] = useState('problem');
+  const caseBodyId = `${project.id}-case-body`;
+
+  useEffect(() => {
+    setIsOpen(defaultOpen);
+  }, [defaultOpen]);
 
   const tabs = [
     { key: 'problem', label: 'Problem', content: project.problem },
@@ -29,20 +36,33 @@ function CaseFile({ config, project, isOpen: defaultOpen }: { config: SiteConfig
         className="case-summary"
         type="button"
         aria-expanded={isOpen}
+        aria-controls={caseBodyId}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span className="case-index"><MetadataText config={config.typographySystem}>{project.caseNumber}</MetadataText></span>
+        <span className="case-index icon-align-chip">
+          <Icon name="archive" size="xs" tone={isOpen ? 'accent' : 'muted'} />
+          <MetadataText config={config.typographySystem}>{project.caseNumber}</MetadataText>
+        </span>
         <span className="case-name"><ProjectTitle config={config} project={project} /></span>
         <span className="case-type"><MetadataText config={config.typographySystem}>{project.type}</MetadataText></span>
-        <span className="case-indicator" aria-hidden="true"><MetadataText config={config.typographySystem}>{isOpen ? 'open' : 'closed'}</MetadataText></span>
+        <span className="case-indicator icon-align-status" aria-hidden="true">
+          <MetadataText config={config.typographySystem}>{isOpen ? 'open' : 'closed'}</MetadataText>
+          <Icon name="chevron" size="xs" tone="accent" state={isOpen ? 'active' : 'idle'} />
+        </span>
       </button>
 
-      <div className="case-body">
+      <div className="case-body" id={caseBodyId}>
         <div className="case-inner">
           <div className="case-narrative">
             <div className="project-mode" role="group" aria-label={`${project.name} project mode`}>
-              <button className={storyMode === 'story' ? 'is-active' : ''} type="button" onClick={() => setStoryMode('story')}>Story Mode</button>
-              <button className={storyMode === 'system' ? 'is-active' : ''} type="button" onClick={() => setStoryMode('system')}>System Mode</button>
+              <button className={`icon-align-inline${storyMode === 'story' ? ' is-active' : ''}`} type="button" aria-pressed={storyMode === 'story'} onClick={() => setStoryMode('story')}>
+                <Icon name="story" size="xs" tone={storyMode === 'story' ? 'accent' : 'muted'} />
+                Story Mode
+              </button>
+              <button className={`icon-align-inline${storyMode === 'system' ? ' is-active' : ''}`} type="button" aria-pressed={storyMode === 'system'} onClick={() => setStoryMode('system')}>
+                <Icon name="system" size="xs" tone={storyMode === 'system' ? 'accent' : 'muted'} />
+                System Mode
+              </button>
             </div>
 
             <div className={`mode-copy${storyMode === 'story' ? ' is-active' : ''}`}>
@@ -51,7 +71,12 @@ function CaseFile({ config, project, isOpen: defaultOpen }: { config: SiteConfig
 
             <div className={`mode-copy${storyMode === 'system' ? ' is-active' : ''}`}>
               <div className="system-flow" aria-label={`${project.name} system flow`}>
-                {project.systemFlow.map((step) => <span key={step}>{step}</span>)}
+                {project.systemFlow.map((step) => (
+                  <span key={step} className="icon-align-chip">
+                    <Icon name="trace" size="xs" tone="muted" />
+                    {step}
+                  </span>
+                ))}
               </div>
               <p>{project.systemDescription}</p>
             </div>
@@ -62,12 +87,15 @@ function CaseFile({ config, project, isOpen: defaultOpen }: { config: SiteConfig
               {tabs.map((tab) => (
                 <button
                   key={tab.key}
-                  className={activeTab === tab.key ? 'is-active' : ''}
+                  id={`${project.id}-${tab.key}-tab`}
+                  className={`icon-align-inline${activeTab === tab.key ? ' is-active' : ''}`}
                   type="button"
                   role="tab"
                   aria-selected={activeTab === tab.key}
+                  aria-controls={`${project.id}-${tab.key}-panel`}
                   onClick={() => setActiveTab(tab.key)}
                 >
+                  <Icon name={projectTabIconMap[tab.key] ?? 'trace'} size="xs" tone={activeTab === tab.key ? 'accent' : 'muted'} />
                   {tab.label}
                 </button>
               ))}
@@ -75,8 +103,10 @@ function CaseFile({ config, project, isOpen: defaultOpen }: { config: SiteConfig
             {tabs.map((tab) => (
               <div
                 key={tab.key}
+                id={`${project.id}-${tab.key}-panel`}
                 className={`tab-panel${activeTab === tab.key ? ' is-active' : ''}`}
                 role="tabpanel"
+                aria-labelledby={`${project.id}-${tab.key}-tab`}
               >
                 {tab.content}
               </div>

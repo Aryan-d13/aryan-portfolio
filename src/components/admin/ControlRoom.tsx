@@ -4,6 +4,7 @@ import { loadConfig, saveConfig, saveDraft, loadDraft, clearDraft, downloadConfi
 import { useThemeEngine } from '../../hooks/useThemeEngine';
 import type { ThemeDefinition } from '../../themes/themeTypes';
 import { mergeThemeIntoConfig } from '../../themes/utils/themeConfigBridge';
+import Icon from '../icons/Icon';
 import NavPanel from './NavPanel';
 import { toast, confirmDialog, ToastContainer, ConfirmModal } from '../ui/Toast';
 import ThemeEditorPanel from '../theme/ThemeEditorPanel';
@@ -164,25 +165,29 @@ export default function ControlRoom({ initialConfig }: Props) {
         <div className="cr-topbar-left">
           <span className="cr-topbar-glyph">CR</span>
           <span className="cr-topbar-title">Control Room</span>
-          <span className={`cr-topbar-status${unsaved ? ' unsaved' : ''}`}>
+          <span className={`cr-topbar-status icon-align-status${unsaved ? ' unsaved' : ''}`}>
+            <Icon name={unsaved ? 'warning' : 'success'} size="xs" tone={unsaved ? 'warning' : 'success'} state={unsaved ? 'warning' : 'success'} />
             {unsaved ? 'unsaved' : 'synced'}
           </span>
         </div>
         <div className="cr-topbar-actions">
-          <button className="cr-btn cr-btn-ghost" type="button" onClick={handleSaveDraft}>save draft</button>
-          <button className="cr-btn cr-btn-primary" type="button" onClick={handleApply}>apply to site</button>
-          <button className="cr-btn cr-btn-ghost" type="button" onClick={handleExport}>export</button>
-          <button className="cr-btn cr-btn-ghost" type="button" onClick={() => importRef.current?.click()}>import</button>
-          <button className="cr-btn cr-btn-danger" type="button" onClick={handleReset}>reset</button>
-          <a href="/" className="cr-btn cr-btn-ghost" target="_blank" rel="noreferrer">view site ↗</a>
+          <button className="cr-btn cr-btn-ghost icon-align-inline" type="button" onClick={handleSaveDraft}><Icon name="save" size="xs" tone="muted" />save draft</button>
+          <button className="cr-btn cr-btn-primary icon-align-inline" type="button" onClick={handleApply}><Icon name="success" size="xs" tone="accent" />apply to site</button>
+          <button className="cr-btn cr-btn-ghost icon-align-inline" type="button" onClick={handleExport}><Icon name="export" size="xs" tone="muted" />export</button>
+          <button className="cr-btn cr-btn-ghost icon-align-inline" type="button" onClick={() => importRef.current?.click()}><Icon name="import" size="xs" tone="muted" />import</button>
+          <button className="cr-btn cr-btn-danger icon-align-inline" type="button" onClick={handleReset}><Icon name="reset" size="xs" tone="error" />reset</button>
+          <a href="/" className="cr-btn cr-btn-ghost icon-align-inline" target="_blank" rel="noreferrer"><Icon name="externalLink" size="xs" tone="muted" />view site</a>
         </div>
       </header>
 
       {/* MOBILE TAB BAR */}
       <nav className="cr-mobile-tabs">
         {(['nav', 'editor', 'preview'] as const).map(tab => (
-          <button key={tab} className={mobileTab === tab ? 'is-active' : ''} type="button"
-            onClick={() => setMobileTab(tab)}>{tab.charAt(0).toUpperCase() + tab.slice(1)}</button>
+          <button key={tab} className={`icon-align-inline${mobileTab === tab ? ' is-active' : ''}`} type="button"
+            onClick={() => setMobileTab(tab)}>
+            <Icon name={tab === 'nav' ? 'menu' : tab === 'editor' ? 'edit' : 'layout'} size="xs" tone={mobileTab === tab ? 'accent' : 'muted'} />
+            {tab.charAt(0).toUpperCase() + tab.slice(1)}
+          </button>
         ))}
       </nav>
 
@@ -200,11 +205,14 @@ export default function ControlRoom({ initialConfig }: Props) {
 
         <aside className={`cr-panel cr-preview-panel${mobileTab === 'preview' ? ' is-visible' : ''}`}>
           <div className="cr-preview-toolbar">
-            <span className="cr-preview-label">live preview</span>
+            <span className="cr-preview-label icon-align-status"><Icon name="signal" size="xs" tone="accent" />live preview</span>
             <div className="cr-preview-devices">
               {(['desktop', 'tablet', 'mobile'] as const).map(device => (
-                <button key={device} className={previewDevice === device ? 'is-active' : ''}
-                  type="button" onClick={() => setPreviewDevice(device)}>{device}</button>
+                <button key={device} className={`icon-align-inline${previewDevice === device ? ' is-active' : ''}`}
+                  type="button" onClick={() => setPreviewDevice(device)}>
+                  <Icon name={device === 'desktop' ? 'layout' : device === 'tablet' ? 'image' : 'terminal'} size="xs" tone={previewDevice === device ? 'accent' : 'muted'} />
+                  {device}
+                </button>
               ))}
             </div>
           </div>

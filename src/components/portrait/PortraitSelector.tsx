@@ -1,4 +1,5 @@
 import type { SiteConfig } from '../../types/siteConfig';
+import Icon from '../icons/Icon';
 import PortraitFrame from './PortraitFrame';
 import PortraitIdentityCard from './PortraitIdentityCard';
 import PortraitBento from './PortraitBento';
@@ -26,11 +27,11 @@ export default function PortraitSelector({ config }: Props) {
           {portrait.showMetadata && portrait.metadata && (
             <div className="portrait-archive-footer">
               <div className="portrait-archive-line">
-                <span>FILE_ID</span>
+                <span className="icon-align-inline"><Icon name="archive" size="xs" tone="muted" />FILE_ID</span>
                 <span>{portrait.metadata[0]?.value || 'SYS_ARCHIVE'}</span>
               </div>
               <div className="portrait-archive-line">
-                <span>SIGNAL_TYPE</span>
+                <span className="icon-align-inline"><Icon name="signal" size="xs" tone="muted" />SIGNAL_TYPE</span>
                 <span>{portrait.metadata[3]?.value || 'CLASSIFIED'}</span>
               </div>
             </div>

@@ -1,4 +1,6 @@
 import type { SiteConfig, SectionConfig } from '../../types/siteConfig';
+import Icon from '../icons/Icon';
+import { skillIconMap } from '../icons/iconRegistry';
 import MetadataText from '../typography/MetadataText';
 import SectionHeading from '../typography/SectionHeading';
 
@@ -19,7 +21,13 @@ export default function StackSection({ config, section }: Props) {
         </SectionHeading>
         <div className="stack-matrix" aria-label="System skill clusters">
           {groups.map(g => (
-            <article key={g.id}><h3>{g.name}</h3><p>{g.description}</p></article>
+            <article key={g.id}>
+              <h3 className="icon-align-inline">
+                <Icon name={skillIconMap[g.id] ?? 'stack'} size="sm" tone="accent" />
+                {g.name}
+              </h3>
+              <p>{g.description}</p>
+            </article>
           ))}
         </div>
       </div>

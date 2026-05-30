@@ -1,4 +1,5 @@
 import type { SectionConfig, SiteConfig } from '../../types/siteConfig';
+import Icon from '../icons/Icon';
 import MetadataText from '../typography/MetadataText';
 import TextTreatment from '../typography/Text';
 
@@ -20,7 +21,7 @@ export default function StatementSection({ config, section }: Props) {
         </MetadataText>
       </div>
       <div className="section-rail">
-        <p className="section-kicker"><MetadataText config={config.typographySystem}>{section.kicker}</MetadataText></p>
+        <p className="section-kicker icon-align-inline"><Icon name="trace" size="xs" tone="accent" /><MetadataText config={config.typographySystem}>{section.kicker}</MetadataText></p>
         {section.railLabel && <span><MetadataText config={config.typographySystem}>{section.railLabel}</MetadataText></span>}
       </div>
       <div className="statement-panel">

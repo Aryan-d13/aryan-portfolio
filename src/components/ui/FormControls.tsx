@@ -1,3 +1,4 @@
+import { createContext, useContext, type ReactNode } from 'react';
 import type { SiteConfig } from '../../types/siteConfig';
 
 type Path = string;
@@ -20,18 +21,26 @@ function setPath(obj: unknown, path: Path, value: unknown): void {
 interface FieldProps {
   label: string;
   hint?: string;
-  children: React.ReactNode;
+  children: ReactNode;
+}
+
+const FieldLabelContext = createContext<string | null>(null);
+
+function useFieldLabel(fallback: string): string {
+  return useContext(FieldLabelContext) ?? fallback;
 }
 
 export function Field({ label, hint, children }: FieldProps) {
   return (
-    <div className="cr-field">
-      <label className="cr-label">
-        {label}
-        {hint && <span className="cr-label-hint">{hint}</span>}
-      </label>
-      {children}
-    </div>
+    <FieldLabelContext.Provider value={label}>
+      <div className="cr-field">
+        <span className="cr-label">
+          {label}
+          {hint && <span className="cr-label-hint">{hint}</span>}
+        </span>
+        {children}
+      </div>
+    </FieldLabelContext.Provider>
   );
 }
 
@@ -44,12 +53,14 @@ interface TextInputProps {
 
 export function TextInput({ config, path, placeholder, onChange }: TextInputProps) {
   const val = (getPath(config, path) as string) ?? '';
+  const label = useFieldLabel(path);
   return (
     <input
       type="text"
       className="cr-input"
       value={val}
       placeholder={placeholder}
+      aria-label={label}
       onChange={e => { setPath(config, path, e.target.value); onChange(); }}
     />
   );
@@ -65,12 +76,14 @@ interface TextAreaProps {
 
 export function TextArea({ config, path, placeholder, rows = 3, onChange }: TextAreaProps) {
   const val = (getPath(config, path) as string) ?? '';
+  const label = useFieldLabel(path);
   return (
     <textarea
       className="cr-textarea"
       value={val}
       placeholder={placeholder}
       rows={rows}
+      aria-label={label}
       onChange={e => { setPath(config, path, e.target.value); onChange(); }}
     />
   );
@@ -87,6 +100,7 @@ interface NumberInputProps {
 
 export function NumberInput({ config, path, min, max, step = 1, onChange }: NumberInputProps) {
   const val = (getPath(config, path) as number) ?? 0;
+  const label = useFieldLabel(path);
   return (
     <input
       type="number"
@@ -95,6 +109,7 @@ export function NumberInput({ config, path, min, max, step = 1, onChange }: Numb
       min={min}
       max={max}
       step={step}
+      aria-label={label}
       onChange={e => { setPath(config, path, parseFloat(e.target.value) || 0); onChange(); }}
     />
   );
@@ -109,12 +124,14 @@ interface ToggleProps {
 
 export function Toggle({ config, path, label, onChange }: ToggleProps) {
   const val = !!getPath(config, path);
+  const fieldLabel = useFieldLabel(label);
   return (
     <div className="cr-toggle">
       <input
         type="checkbox"
         className="cr-toggle-switch"
         checked={val}
+        aria-label={`${fieldLabel}: ${label}`}
         onChange={e => { setPath(config, path, e.target.checked); onChange(); }}
       />
       <span className="cr-toggle-label">{label}</span>
@@ -130,18 +147,21 @@ interface ColorFieldProps {
 
 export function ColorField({ config, path, onChange }: ColorFieldProps) {
   const val = (getPath(config, path) as string) || '#000000';
+  const label = useFieldLabel(path);
   return (
     <div className="cr-color-field">
       <input
         type="color"
         className="cr-color-swatch"
         value={val}
+        aria-label={`${label} color picker`}
         onChange={e => { setPath(config, path, e.target.value); onChange(); }}
       />
       <input
         type="text"
         className="cr-input cr-color-hex"
         value={val}
+        aria-label={`${label} hex value`}
         onChange={e => {
           if (/^#[0-9a-fA-F]{6}$/.test(e.target.value)) {
             setPath(config, path, e.target.value);
@@ -165,6 +185,7 @@ interface RangeProps {
 
 export function Range({ config, path, min, max, step = 1, suffix = '', onChange }: RangeProps) {
   const val = (getPath(config, path) as number) ?? min;
+  const label = useFieldLabel(path);
   return (
     <div className="cr-range-row">
       <input
@@ -174,6 +195,7 @@ export function Range({ config, path, min, max, step = 1, suffix = '', onChange 
         max={max}
         step={step}
         value={val}
+        aria-label={label}
         onChange={e => { setPath(config, path, parseFloat(e.target.value)); onChange(); }}
       />
       <span className="cr-range-value">{val}{suffix}</span>
@@ -190,10 +212,12 @@ interface SelectProps {
 
 export function Select({ config, path, options, onChange }: SelectProps) {
   const val = (getPath(config, path) as string) ?? '';
+  const label = useFieldLabel(path);
   return (
     <select
       className="cr-select"
       value={val}
+      aria-label={label}
       onChange={e => { setPath(config, path, e.target.value); onChange(); }}
     >
       {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
