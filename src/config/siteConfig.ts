@@ -239,5 +239,15 @@ export function getDefaultConfig(): SiteConfig {
         scrollReveal: true,
       },
     },
+
+    loader: {
+      enabled: true,
+      minimumDuration: 600,
+      maxWaitTime: 1500,
+      style: 'trace-boot',
+      statusVisible: true,
+      traceVisible: true,
+      themeAware: true,
+    },
   };
 }

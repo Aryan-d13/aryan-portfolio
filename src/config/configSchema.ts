@@ -65,6 +65,19 @@ export function validateConfig(config: unknown): { valid: boolean; errors: strin
     errors.push('portrait section is required');
   }
 
+  const loader = c.loader as Record<string, unknown> | undefined;
+  if (loader) {
+    if (typeof loader.enabled !== 'boolean') errors.push('loader.enabled must be a boolean');
+    if (typeof loader.minimumDuration !== 'number') errors.push('loader.minimumDuration must be a number');
+    if (typeof loader.maxWaitTime !== 'number') errors.push('loader.maxWaitTime must be a number');
+    if (loader.style !== 'trace-boot' && loader.style !== 'minimal' && loader.style !== 'console') {
+      errors.push("loader.style must be 'trace-boot', 'minimal', or 'console'");
+    }
+    if (typeof loader.statusVisible !== 'boolean') errors.push('loader.statusVisible must be a boolean');
+    if (typeof loader.traceVisible !== 'boolean') errors.push('loader.traceVisible must be a boolean');
+    if (typeof loader.themeAware !== 'boolean') errors.push('loader.themeAware must be a boolean');
+  }
+
   return { valid: errors.length === 0, errors };
 }
 

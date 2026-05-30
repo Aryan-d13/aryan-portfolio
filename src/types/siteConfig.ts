@@ -295,6 +295,16 @@ export interface PortraitConfig {
   effects: PortraitEffects;
 }
 
+export interface LoaderConfig {
+  enabled: boolean;
+  minimumDuration: number;
+  maxWaitTime: number;
+  style: 'trace-boot' | 'minimal' | 'console';
+  statusVisible: boolean;
+  traceVisible: boolean;
+  themeAware: boolean;
+}
+
 export interface SiteConfig {
   _version: number;
   _lastModified: string | null;
@@ -319,6 +329,7 @@ export interface SiteConfig {
   navigation: NavItem[];
   themeEngine: ThemeEngineConfig;
   portrait: PortraitConfig;
+  loader?: LoaderConfig;
 }
 
 // ─── EDITOR TYPES ───────────────────────────────────────────────

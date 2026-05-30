@@ -92,14 +92,17 @@ export function applyThemeTokens(theme: ThemeDefinition): void {
   setVar(root, '--background-dot-size', `${theme.background.dotSize}px`);
   setVar(root, '--background-dot-spacing', `${theme.background.dotSpacing}px`);
   setVar(root, '--background-dot-opacity', theme.background.dotOpacity);
+  setVar(root, '--background-dot-opacity-pct', `${Math.round(theme.background.dotOpacity * 100)}%`);
   setVar(root, '--background-dot-reveal-opacity', theme.background.dotRevealOpacity);
   setVar(root, '--background-dot-field-opacity', theme.background.dotFieldOpacity);
   setVar(root, '--background-radial-glow-color', theme.background.radialGlowColor);
   setVar(root, '--background-radial-glow-opacity', theme.background.radialGlowOpacity);
+  setVar(root, '--background-radial-glow-opacity-pct', `${Math.round(theme.background.radialGlowOpacity * 100)}%`);
   setVar(root, '--background-radial-glow-size', `${theme.background.radialGlowSize}%`);
   setVar(root, '--background-radial-glow-blur', `${theme.background.radialGlowBlur}px`);
   setVar(root, '--background-radial-glow-color-2', theme.background.radialGlowColor2);
   setVar(root, '--background-radial-glow-opacity-2', theme.background.radialGlowOpacity2);
+  setVar(root, '--background-radial-glow-opacity-2-pct', `${Math.round(theme.background.radialGlowOpacity2 * 100)}%`);
   setVar(root, '--background-noise-opacity', theme.background.noiseOpacity);
   setVar(root, '--background-vignette-opacity', theme.background.vignetteOpacity);
   setVar(root, '--background-animation-speed', `${theme.background.animationSpeed}s`);

@@ -58,11 +58,26 @@
           setVar('--font-mono', t.monoFont);
           setVar('--type-display', t.typeDisplay);
           setVar('--background-dot-opacity', b.dotOpacity);
+          setVar('--background-dot-opacity-pct', b.dotOpacity !== undefined ? Math.round(b.dotOpacity * 100) + '%' : undefined);
           setVar('--background-dot-field-opacity', b.dotFieldOpacity);
           setVar('--background-radial-glow-color', b.radialGlowColor);
           setVar('--background-radial-glow-color-2', b.radialGlowColor2);
           setVar('--background-radial-glow-opacity', b.radialGlowOpacity);
+          setVar('--background-radial-glow-opacity-pct', b.radialGlowOpacity !== undefined ? Math.round(b.radialGlowOpacity * 100) + '%' : undefined);
           setVar('--background-radial-glow-opacity-2', b.radialGlowOpacity2);
+          setVar('--background-radial-glow-opacity-2-pct', b.radialGlowOpacity2 !== undefined ? Math.round(b.radialGlowOpacity2 * 100) + '%' : undefined);
+          
+          const ts = theme.typographySystem || {};
+          const tc = ts.controls || {};
+          if (tc.glowIntensity !== undefined) {
+            setVar('--type-glow-opacity', tc.glowIntensity);
+            setVar('--type-glow-opacity-pct', Math.round(tc.glowIntensity * 100) + '%');
+          }
+          if (tc.strokeOpacity !== undefined) {
+            setVar('--type-outline-opacity', tc.strokeOpacity);
+            setVar('--type-outline-opacity-pct', Math.round(tc.strokeOpacity * 100) + '%');
+          }
+
           setVar('--admin-bg', c.bg);
           setVar('--admin-panel', c.surface || c.bgSecondary);
           setVar('--admin-border', c.borderStrong);

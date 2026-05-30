@@ -1,6 +1,7 @@
 import {
   type Unsubscribe,
 } from 'firebase/firestore';
+import type { SiteConfig } from '../types/siteConfig';
 import { firebaseConfigured, getFirebaseRuntime } from '../lib/firebase';
 import type { ThemeDefinition } from '../themes/themeTypes';
 import { DEFAULT_THEME_ID, builtInThemes, getThemeById } from '../themes/themeRegistry';
@@ -19,6 +20,7 @@ export interface RemoteThemeState {
   typographySystem: ThemeDefinition['typographySystem'] | null;
   backgroundSettings: ThemeDefinition['background'] | null;
   motionSettings: ThemeDefinition['motion'] | null;
+  siteConfig: SiteConfig | null;
   updatedAt: string;
   updatedBy: string | null;
   version: number;
@@ -75,6 +77,7 @@ export function createRemoteThemeState(params: {
   activeTheme?: ThemeDefinition;
   version?: number;
   updatedBy?: string | null;
+  siteConfig?: SiteConfig | null;
 }): RemoteThemeState {
   const activeTheme = params.activeTheme ? normalizeTheme(params.activeTheme) : null;
   return {
@@ -86,6 +89,7 @@ export function createRemoteThemeState(params: {
     typographySystem: activeTheme?.typographySystem ?? null,
     backgroundSettings: activeTheme?.background ?? null,
     motionSettings: activeTheme?.motion ?? null,
+    siteConfig: params.siteConfig ?? null,
     updatedAt: nowIso(),
     updatedBy: params.updatedBy ?? null,
     version: params.version ?? 1,
@@ -118,6 +122,7 @@ export function sanitizeRemoteThemeState(raw: unknown): RemoteThemeState | null 
     typographySystem: normalizeTypographySystem(data.typographySystem ?? activeTheme?.typographySystem),
     backgroundSettings: data.backgroundSettings ?? activeTheme?.background ?? null,
     motionSettings: data.motionSettings ?? activeTheme?.motion ?? null,
+    siteConfig: data.siteConfig ?? null,
     updatedAt: typeof data.updatedAt === 'string' ? data.updatedAt : nowIso(),
     updatedBy: typeof data.updatedBy === 'string' ? data.updatedBy : null,
     version: typeof data.version === 'number' ? data.version : 1,

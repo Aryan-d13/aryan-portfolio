@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Unsubscribe } from 'firebase/firestore';
 import type { ThemeDefinition } from '../themes/themeTypes';
+import type { SiteConfig } from '../types/siteConfig';
 import { getThemeById } from '../themes/themeRegistry';
 import { loadActiveThemeId, loadCustomThemes, saveActiveThemeId, saveCustomThemes } from '../themes/utils/themePersistence';
 import {
@@ -35,6 +36,7 @@ export interface UseRemoteThemeResult {
     activeTheme: ThemeDefinition;
     updatedBy?: string | null;
   }) => Promise<boolean>;
+  saveConfigGlobally: (config: SiteConfig) => Promise<boolean>;
   reloadRemoteTheme: () => Promise<boolean>;
   resetCloudTheme: () => Promise<boolean>;
   exportCloudConfig: () => string;
@@ -156,17 +158,49 @@ export function useRemoteTheme({ onRemoteState }: UseRemoteThemeOptions): UseRem
         customThemes,
         activeTheme,
         updatedBy,
+        siteConfig: current?.siteConfig ?? null,
         version: (current?.version ?? 0) + 1,
       });
       const saved = await saveRemoteThemeState(state);
       applyRemote(saved, 'cloud');
       return true;
     } catch (error) {
-      const fallback = createRemoteThemeState({ activeThemeId, customThemes, activeTheme, version: remoteStateRef.current?.version ?? 1 });
+      const fallback = createRemoteThemeState({
+        activeThemeId,
+        customThemes,
+        activeTheme,
+        siteConfig: remoteStateRef.current?.siteConfig ?? null,
+        version: remoteStateRef.current?.version ?? 1
+      });
       saveCachedRemoteTheme(fallback);
       setRemoteError((error as Error).message);
       setSyncStatus(firebaseConfigured ? 'failed' : 'offline-cache');
       setSyncSource('cache');
+      return false;
+    }
+  }, [applyRemote]);
+
+  const saveConfigGlobally = useCallback<UseRemoteThemeResult['saveConfigGlobally']>(async (config: SiteConfig) => {
+    setSyncStatus('saving');
+    setRemoteError(null);
+    try {
+      const current = remoteStateRef.current;
+      const activeThemeId = current?.activeThemeId || loadActiveThemeId();
+      const customThemes = current?.customThemes || loadCustomThemes();
+      const activeTheme = getThemeById(activeThemeId, customThemes);
+      const state = createRemoteThemeState({
+        activeThemeId,
+        customThemes,
+        activeTheme,
+        siteConfig: config,
+        version: (current?.version ?? 0) + 1,
+      });
+      const saved = await saveRemoteThemeState(state);
+      applyRemote(saved, 'cloud');
+      return true;
+    } catch (error) {
+      setRemoteError((error as Error).message);
+      setSyncStatus(firebaseConfigured ? 'failed' : 'offline-cache');
       return false;
     }
   }, [applyRemote]);
@@ -232,6 +266,7 @@ export function useRemoteTheme({ onRemoteState }: UseRemoteThemeOptions): UseRem
     remoteError,
     remoteState,
     saveThemeGlobally,
+    saveConfigGlobally,
     reloadRemoteTheme,
     resetCloudTheme,
     exportCloudConfig,

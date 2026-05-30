@@ -95,13 +95,22 @@ export default function ControlRoom({ initialConfig }: Props) {
 
   const handleSaveDraft = () => { saveDraft(draftConfig); toast('Draft saved', 'success'); };
 
-  const handleApply = () => {
+  const handleApply = async () => {
     const result = saveConfig(draftConfig);
     if (result.success) {
       clearDraft();
       markSaved();
       previewRef.current?.contentWindow?.postMessage({ type: 'CONFIG_UPDATE', config: draftConfig, theme: themeEngine.activeTheme }, '*');
-      toast('Applied to site', 'success');
+      toast('Applied to site locally', 'success');
+
+      // Async cloud sync
+      toast('Syncing with cloud database...', 'info');
+      const cloudSuccess = await themeEngine.saveConfigGlobally(draftConfig);
+      if (cloudSuccess) {
+        toast('Synced to cloud database', 'success');
+      } else {
+        toast('Local save ok. Cloud sync failed/offline.', 'warning');
+      }
     } else { toast(`Validation failed: ${result.errors[0]}`, 'error'); }
   };
 

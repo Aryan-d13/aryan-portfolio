@@ -36,6 +36,7 @@ interface ThemeEngineContextValue {
   lastSyncedAt: string | null;
   remoteError: string | null;
   saveThemeGlobally: () => Promise<boolean>;
+  saveConfigGlobally: (config: SiteConfig) => Promise<boolean>;
   reloadRemoteTheme: () => Promise<boolean>;
   resetCloudTheme: () => Promise<boolean>;
   exportCloudConfig: () => string;
@@ -117,11 +118,17 @@ export function ThemeEngineProvider({ children }: { children: ReactNode }) {
   const applyRemoteState = useCallback((state: RemoteThemeState) => {
     const remoteTheme = getThemeById(state.activeThemeId, state.customThemes);
     if (!remoteTheme) return;
+
+    if (state.siteConfig) {
+      localStorage.setItem('aryan_identity_site_config', JSON.stringify(state.siteConfig));
+      setConfig(state.siteConfig);
+    }
+
     setCustomThemes(state.customThemes);
     setActiveThemeIdState(state.activeThemeId);
     setDraftTheme(null);
     setUnsavedChanges(false);
-  }, []);
+  }, [setConfig]);
 
   const remoteTheme = useRemoteTheme({ onRemoteState: applyRemoteState });
 
@@ -319,6 +326,7 @@ export function ThemeEngineProvider({ children }: { children: ReactNode }) {
     lastSyncedAt: remoteTheme.lastSyncedAt,
     remoteError: remoteTheme.remoteError,
     saveThemeGlobally,
+    saveConfigGlobally: remoteTheme.saveConfigGlobally,
     reloadRemoteTheme: remoteTheme.reloadRemoteTheme,
     resetCloudTheme: remoteTheme.resetCloudTheme,
     exportCloudConfig: remoteTheme.exportCloudConfig,
@@ -348,6 +356,7 @@ export function ThemeEngineProvider({ children }: { children: ReactNode }) {
     remoteTheme.lastSyncedAt,
     remoteTheme.remoteError,
     saveThemeGlobally,
+    remoteTheme.saveConfigGlobally,
     remoteTheme.reloadRemoteTheme,
     remoteTheme.resetCloudTheme,
     remoteTheme.exportCloudConfig,
