@@ -104,14 +104,40 @@ export function IdentityEditor({ config, onChange }: EditorProps) {
       <Field label="Handle"><TextInput config={config} path="identity.handle" placeholder="@aryanteddys" onChange={onChange} /></Field>
 
       <div className="cr-section-label">Role Lines</div>
-      {config.identity.roleLines.map((_, i) => (
-        <div key={i} className="cr-list-item">
-          <input className="cr-input cr-flex-1" aria-label={`Role line ${i + 1}`} value={config.identity.roleLines[i]}
-            onChange={e => { config.identity.roleLines[i] = e.target.value; onChange(); }} />
-          <button className="cr-btn cr-btn-danger cr-btn-sm cr-btn-icon" type="button" aria-label={`Remove role line ${i + 1}`}
-            onClick={() => { config.identity.roleLines.splice(i, 1); onChange(); }}><Icon name="delete" size="xs" tone="error" /></button>
+      {config.identity.roleLines.length === 0 ? (
+        <div style={{ padding: '12px', textAlign: 'center', color: 'var(--cr-text-3)', fontFamily: 'var(--cr-font-mono)', fontSize: '11px' }}>
+          No role lines defined. Add one below.
         </div>
-      ))}
+      ) : (
+        <div className="cr-table-container" style={{ marginBottom: '12px' }}>
+          <table className="cr-table cr-table-soft density-compact cr-table-responsive">
+            <thead>
+              <tr>
+                <th style={{ width: '60px' }}>Index</th>
+                <th>Role Line Value</th>
+                <th className="num-col" style={{ width: '60px' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {config.identity.roleLines.map((_, i) => (
+                <tr key={i}>
+                  <td data-label="Index" style={{ fontFamily: 'var(--cr-font-mono)', fontSize: '11px', color: 'var(--cr-text-3)' }}>
+                    #{String(i + 1).padStart(2, '0')}
+                  </td>
+                  <td data-label="Role Line">
+                    <input className="cr-input" aria-label={`Role line ${i + 1}`} value={config.identity.roleLines[i]}
+                      onChange={e => { config.identity.roleLines[i] = e.target.value; onChange(); }} placeholder="e.g. Full Stack Engineer" />
+                  </td>
+                  <td data-label="Actions" className="num-col">
+                    <button className="cr-btn cr-btn-danger cr-btn-sm cr-btn-icon" type="button" aria-label={`Remove role line ${i + 1}`}
+                      onClick={() => { config.identity.roleLines.splice(i, 1); onChange(); }}><Icon name="delete" size="xs" tone="error" /></button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
       <button className="cr-list-add-btn" type="button" onClick={() => { config.identity.roleLines.push(''); onChange(); }}><Icon name="duplicate" size="xs" tone="accent" />add role line</button>
 
       <div className="cr-divider" />
@@ -135,9 +161,28 @@ export function IdentityEditor({ config, onChange }: EditorProps) {
       </div>
 
       <div className="cr-section-label">Metadata Labels</div>
-      {Object.keys(config.identity.metadata).map(key => (
-        <Field key={key} label={key}><TextInput config={config} path={`identity.metadata.${key}`} onChange={onChange} /></Field>
-      ))}
+      <div className="cr-table-container" style={{ marginBottom: '16px' }}>
+        <table className="cr-table cr-table-soft density-compact cr-table-responsive">
+          <thead>
+            <tr>
+              <th style={{ width: '180px' }}>Parameter / Key</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.keys(config.identity.metadata).map(key => (
+              <tr key={key}>
+                <td>
+                  <span style={{ fontFamily: 'var(--cr-font-mono)', fontSize: '11px', fontWeight: 600 }}>{key}</span>
+                </td>
+                <td data-label="Value">
+                  <TextInput config={config} path={`identity.metadata.${key}`} onChange={onChange} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <div className="cr-section-label">Portrait</div>
       <Field label="Caption Label"><TextInput config={config} path="identity.portraitCaption.label" onChange={onChange} /></Field>
@@ -315,24 +360,68 @@ export function PhilosophyEditor({ config, onChange }: EditorProps) {
   return (
     <div>
       <EditorHeader title="Philosophy" description="Operating principles and manifesto lines" config={config} onChange={onChange} />
-      {lines.map((line) => {
-        const idx = config.philosophy.indexOf(line);
-        return (
-          <div key={line.id} className="cr-list-item">
-            <div className="cr-list-item-content cr-flex-1">
-              <input className="cr-input" aria-label="Philosophy line text" value={line.text} onChange={e => { config.philosophy[idx].text = e.target.value; onChange(); }} />
-              <div className="cr-list-item-subcontrol">
-                <select className="cr-select cr-select-compact" aria-label="Philosophy line intensity" value={line.intensity}
-                  onChange={e => { config.philosophy[idx].intensity = e.target.value as 'quiet' | 'sharp' | 'loud'; onChange(); }}>
-                  <option value="quiet">quiet</option><option value="sharp">sharp</option><option value="loud">loud</option>
-                </select>
-              </div>
-            </div>
-            <button className="cr-btn cr-btn-danger cr-btn-sm cr-btn-icon" type="button" aria-label="Remove philosophy line"
-              onClick={() => { config.philosophy.splice(idx, 1); onChange(); }}><Icon name="delete" size="xs" tone="error" /></button>
-          </div>
-        );
-      })}
+      {lines.length === 0 ? (
+        <div style={{ padding: '24px', textAlign: 'center', color: 'var(--cr-text-3)', fontFamily: 'var(--cr-font-mono)' }}>
+          <Icon name="spark" size="md" tone="muted" style={{ marginBottom: '8px' }} />
+          <div>No philosophy principles defined. Add one below.</div>
+        </div>
+      ) : (
+        <div className="cr-table-container" style={{ marginTop: '16px' }}>
+          <table className="cr-table cr-table-soft density-balanced cr-table-responsive">
+            <thead>
+              <tr>
+                <th style={{ width: '60px' }}>Priority</th>
+                <th>Manifesto Principle Statement</th>
+                <th style={{ width: '130px' }}>Intensity</th>
+                <th className="num-col" style={{ width: '60px' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {lines.map((line, idx) => {
+                const realIdx = config.philosophy.indexOf(line);
+                return (
+                  <tr key={line.id}>
+                    <td data-label="Priority" style={{ fontFamily: 'var(--cr-font-mono)', fontSize: '11px', color: 'var(--cr-text-3)' }}>
+                      #{String(idx + 1).padStart(2, '0')}
+                    </td>
+                    <td data-label="Principle Statement">
+                      <input 
+                        className="cr-input" 
+                        aria-label="Philosophy line text" 
+                        value={line.text} 
+                        onChange={e => { config.philosophy[realIdx].text = e.target.value; onChange(); }} 
+                        placeholder="Type principle text..."
+                      />
+                    </td>
+                    <td data-label="Intensity">
+                      <select 
+                        className="cr-select" 
+                        aria-label="Philosophy line intensity" 
+                        value={line.intensity}
+                        onChange={e => { config.philosophy[realIdx].intensity = e.target.value as 'quiet' | 'sharp' | 'loud'; onChange(); }}
+                      >
+                        <option value="quiet">quiet</option>
+                        <option value="sharp">sharp</option>
+                        <option value="loud">loud</option>
+                      </select>
+                    </td>
+                    <td data-label="Actions" className="num-col">
+                      <button 
+                        className="cr-btn cr-btn-danger cr-btn-sm cr-btn-icon" 
+                        type="button" 
+                        aria-label="Remove philosophy line"
+                        onClick={() => { config.philosophy.splice(realIdx, 1); onChange(); }}
+                      >
+                        <Icon name="delete" size="xs" tone="error" />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
       <button className="cr-list-add-btn" type="button" onClick={() => {
         config.philosophy.push({ id: `p-${uid()}`, text: '', intensity: 'quiet', largeType: true, order: config.philosophy.length });
         onChange();
@@ -348,21 +437,70 @@ export function HumanEditor({ config, onChange }: EditorProps) {
   return (
     <div>
       <EditorHeader title="Human Layer" description="Personal motifs and atmospheric elements" config={config} onChange={onChange} />
-      {motifs.map((motif) => {
-        const idx = config.humanLayer.motifs.indexOf(motif);
-        return (
-          <div key={motif.id} className="cr-list-item">
-            <input className="cr-input cr-flex-1" aria-label="Human layer motif" value={motif.text}
-              onChange={e => { config.humanLayer.motifs[idx].text = e.target.value; onChange(); }} />
-            <div className="cr-toggle cr-toggle-compact">
-              <input type="checkbox" className="cr-toggle-switch" aria-label="Toggle motif visibility" checked={motif.visible}
-                onChange={e => { config.humanLayer.motifs[idx].visible = e.target.checked; onChange(); }} />
-            </div>
-            <button className="cr-btn cr-btn-danger cr-btn-sm cr-btn-icon" type="button" aria-label="Remove motif"
-              onClick={() => { config.humanLayer.motifs.splice(idx, 1); onChange(); }}><Icon name="delete" size="xs" tone="error" /></button>
-          </div>
-        );
-      })}
+      {motifs.length === 0 ? (
+        <div style={{ padding: '24px', textAlign: 'center', color: 'var(--cr-text-3)', fontFamily: 'var(--cr-font-mono)' }}>
+          <Icon name="person" size="md" tone="muted" style={{ marginBottom: '8px' }} />
+          <div>No personal motifs defined. Add one below.</div>
+        </div>
+      ) : (
+        <div className="cr-table-container" style={{ marginTop: '16px' }}>
+          <table className="cr-table cr-table-soft density-balanced cr-table-responsive">
+            <thead>
+              <tr>
+                <th style={{ width: '60px' }}>Index</th>
+                <th>Personal Motif Statement</th>
+                <th style={{ width: '120px' }}>Visible</th>
+                <th className="num-col" style={{ width: '60px' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {motifs.map((motif, idx) => {
+                const realIdx = config.humanLayer.motifs.indexOf(motif);
+                return (
+                  <tr key={motif.id}>
+                    <td data-label="Index" style={{ fontFamily: 'var(--cr-font-mono)', fontSize: '11px', color: 'var(--cr-text-3)' }}>
+                      #{String(idx + 1).padStart(2, '0')}
+                    </td>
+                    <td data-label="Motif Statement">
+                      <input 
+                        className="cr-input" 
+                        aria-label="Human layer motif" 
+                        value={motif.text}
+                        onChange={e => { config.humanLayer.motifs[realIdx].text = e.target.value; onChange(); }} 
+                        placeholder="Type personal motif text..."
+                      />
+                    </td>
+                    <td data-label="Visible">
+                      <div className="cr-toggle cr-toggle-compact">
+                        <input 
+                          type="checkbox" 
+                          className="cr-toggle-switch" 
+                          aria-label="Toggle motif visibility" 
+                          checked={motif.visible}
+                          onChange={e => { config.humanLayer.motifs[realIdx].visible = e.target.checked; onChange(); }} 
+                        />
+                        <span style={{ fontSize: '10px', color: motif.visible ? 'var(--table-accent)' : 'var(--table-text-muted)', fontFamily: 'var(--cr-font-mono)' }}>
+                          {motif.visible ? 'Visible' : 'Hidden'}
+                        </span>
+                      </div>
+                    </td>
+                    <td data-label="Actions" className="num-col">
+                      <button 
+                        className="cr-btn cr-btn-danger cr-btn-sm cr-btn-icon" 
+                        type="button" 
+                        aria-label="Remove motif"
+                        onClick={() => { config.humanLayer.motifs.splice(realIdx, 1); onChange(); }}
+                      >
+                        <Icon name="delete" size="xs" tone="error" />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
       <button className="cr-list-add-btn" type="button" onClick={() => {
         config.humanLayer.motifs.push({ id: `m-${uid()}`, text: '', symbol: '', visible: true, order: config.humanLayer.motifs.length });
         onChange();
@@ -374,34 +512,147 @@ export function HumanEditor({ config, onChange }: EditorProps) {
 // ─── 8. TIMELINE ────────────────────────────────────────────────
 
 export function TimelineEditor({ config, onChange }: EditorProps) {
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+
+  const toggleExpand = (id: string) => {
+    setExpandedIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
   const entries = [...config.timeline].sort((a, b) => a.order - b.order);
   return (
     <div>
       <EditorHeader title="Timeline / Build Log" description="Chronological entries" config={config} onChange={onChange} />
-      {entries.map((entry) => {
-        const idx = config.timeline.indexOf(entry);
-        return (
-          <SubEditor key={entry.id} title={`${entry.date || '...'} — ${entry.title || 'Untitled'}`}>
-            <Field label="Date / Range"><TextInput config={config} path={`timeline.${idx}.date`} onChange={onChange} /></Field>
-            <Field label="Title"><TextInput config={config} path={`timeline.${idx}.title`} onChange={onChange} /></Field>
-            <Field label="Description"><TextArea config={config} path={`timeline.${idx}.description`} rows={2} onChange={onChange} /></Field>
-            <Field label="Order"><NumberInput config={config} path={`timeline.${idx}.order`} min={0} max={20} onChange={onChange} /></Field>
-            <Field label="Visible"><Toggle config={config} path={`timeline.${idx}.visible`} label="Show this entry" onChange={onChange} /></Field>
-            <Field label="Tags (comma-separated)">
-              <input className="cr-input" value={entry.tags.join(', ')}
-                onChange={e => { config.timeline[idx].tags = e.target.value.split(',').map(s => s.trim()).filter(Boolean); onChange(); }} />
-            </Field>
-            <div className="cr-divider" />
-            <button className="cr-btn cr-btn-danger cr-btn-sm" type="button" onClick={async () => {
-              const ok = await confirmDialog('Delete Entry', `Delete "${entry.title}"?`);
-              if (ok) { config.timeline.splice(idx, 1); onChange(); }
-            }}>Delete Entry</button>
-          </SubEditor>
-        );
-      })}
+      {entries.length === 0 ? (
+        <div style={{ padding: '24px', textAlign: 'center', color: 'var(--cr-text-3)', fontFamily: 'var(--cr-font-mono)' }}>
+          <Icon name="log" size="md" tone="muted" style={{ marginBottom: '8px' }} />
+          <div>No timeline entries defined. Add one below.</div>
+        </div>
+      ) : (
+        <div className="cr-table-container" style={{ marginTop: '16px' }}>
+          <table className="cr-table cr-table-cards density-balanced cr-table-responsive">
+            <thead>
+              <tr>
+                <th style={{ width: '40px' }}></th>
+                <th style={{ width: '130px' }}>Date / Range</th>
+                <th>Event Title</th>
+                <th style={{ width: '70px' }} className="num-col">Order</th>
+                <th style={{ width: '100px' }}>Status</th>
+                <th className="num-col" style={{ width: '100px' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {entries.map((entry) => {
+                const realIdx = config.timeline.indexOf(entry);
+                const isExpanded = expandedIds.has(entry.id);
+                return (
+                  <tr key={entry.id} style={{ display: 'contents' }}>
+                    <td style={{ display: 'none' }}></td>
+                    <tr 
+                      className={`cr-expand-row ${isExpanded ? 'is-selected' : ''}`}
+                      onClick={() => toggleExpand(entry.id)}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <td data-label="Expand" className="center-col">
+                        <Icon 
+                          name="chevron" 
+                          size="xs" 
+                          tone="accent" 
+                          state={isExpanded ? 'active' : 'idle'} 
+                          style={{ 
+                            transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
+                            transition: 'transform 150ms ease',
+                            display: 'inline-block'
+                          }} 
+                        />
+                      </td>
+                      <td data-label="Date / Range" style={{ fontFamily: 'var(--cr-font-mono)', fontSize: '11px' }}>
+                        {entry.date || '—'}
+                      </td>
+                      <td data-label="Event Title" style={{ fontWeight: 600 }}>
+                        {entry.title || 'Untitled Entry'}
+                      </td>
+                      <td data-label="Order" className="num-col" style={{ fontFamily: 'var(--cr-font-mono)' }}>
+                        {entry.order}
+                      </td>
+                      <td data-label="Status">
+                        <span className={`cr-badge ${entry.visible ? 'cr-badge-success' : 'cr-badge-warning'}`}>
+                          <Icon name={entry.visible ? 'success' : 'warning'} size="xs" tone={entry.visible ? 'success' : 'warning'} />
+                          {entry.visible ? 'Visible' : 'Hidden'}
+                        </span>
+                      </td>
+                      <td data-label="Actions" className="num-col" onClick={e => e.stopPropagation()}>
+                        <div className="cr-row-actions">
+                          <button 
+                            className="cr-btn cr-btn-ghost cr-btn-sm cr-btn-icon" 
+                            type="button" 
+                            aria-label="Edit timeline entry"
+                            onClick={() => toggleExpand(entry.id)}
+                          >
+                            <Icon name="edit" size="xs" tone="muted" />
+                          </button>
+                          <button 
+                            className="cr-btn cr-btn-danger cr-btn-sm cr-btn-icon" 
+                            type="button" 
+                            aria-label="Delete entry"
+                            onClick={async () => {
+                              const ok = await confirmDialog('Delete Entry', `Delete "${entry.title}"?`);
+                              if (ok) { config.timeline.splice(realIdx, 1); onChange(); }
+                            }}
+                          >
+                            <Icon name="delete" size="xs" tone="error" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    {isExpanded && (
+                      <tr 
+                        className={`cr-detail-row is-expanded`}
+                        onClick={e => e.stopPropagation()}
+                      >
+                        <td colSpan={6} style={{ padding: '16px 20px', borderBottom: '1px solid var(--table-border)' }}>
+                          <div className="cr-detail-content" style={{ maxHeight: '500px', opacity: 1 }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
+                              <Field label="Date / Range"><TextInput config={config} path={`timeline.${realIdx}.date`} onChange={onChange} /></Field>
+                              <Field label="Title"><TextInput config={config} path={`timeline.${realIdx}.title`} onChange={onChange} /></Field>
+                            </div>
+                            
+                            <Field label="Description"><TextArea config={config} path={`timeline.${realIdx}.description`} rows={2} onChange={onChange} /></Field>
+                            
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginTop: '12px', alignItems: 'end' }}>
+                              <Field label="Order"><NumberInput config={config} path={`timeline.${realIdx}.order`} min={0} max={99} onChange={onChange} /></Field>
+                              <Field label="Visible"><Toggle config={config} path={`timeline.${realIdx}.visible`} label="Show this entry" onChange={onChange} /></Field>
+                              <Field label="Tags (comma-separated)">
+                                <input 
+                                  className="cr-input" 
+                                  value={entry.tags.join(', ')}
+                                  onChange={e => { 
+                                    config.timeline[realIdx].tags = e.target.value.split(',').map(s => s.trim()).filter(Boolean); 
+                                    onChange(); 
+                                  }} 
+                                />
+                              </Field>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
       <button className="cr-list-add-btn" type="button" onClick={() => {
-        config.timeline.push({ id: `t-${uid()}`, date: '', title: '', description: '', tags: [], visible: true, order: config.timeline.length });
+        const newId = `t-${uid()}`;
+        config.timeline.push({ id: newId, date: '', title: '', description: '', tags: [], visible: true, order: config.timeline.length });
         onChange();
+        toggleExpand(newId);
       }}><Icon name="log" size="xs" tone="accent" />add timeline entry</button>
     </div>
   );
@@ -597,21 +848,53 @@ export function TypographyEditor({ config, onChange }: EditorProps) {
 
 export function ColorsEditor({ config, onChange }: EditorProps) {
   const fields = [
-    { key: 'bg', label: 'Base Background' }, { key: 'bgSecondary', label: 'Secondary Background' },
-    { key: 'panel', label: 'Panel Background' }, { key: 'text', label: 'Primary Text' },
-    { key: 'textSecondary', label: 'Secondary Text' }, { key: 'textMuted', label: 'Muted Text' },
-    { key: 'accent', label: 'Primary Accent' }, { key: 'accentSecondary', label: 'Secondary Accent' },
-    { key: 'accentEmotional', label: 'Emotional Accent' }, { key: 'accentProof', label: 'Proof Accent' },
-    { key: 'border', label: 'Border' }, { key: 'borderSubtle', label: 'Border Subtle' },
-    { key: 'borderStrong', label: 'Border Strong' }, { key: 'glow', label: 'Glow Color' },
-    { key: 'selection', label: 'Selection Color' },
+    { key: 'bg', label: 'Base Background', variable: '--color-bg' },
+    { key: 'bgSecondary', label: 'Secondary Background', variable: '--color-bg-secondary' },
+    { key: 'panel', label: 'Panel Background', variable: '--color-panel' },
+    { key: 'text', label: 'Primary Text', variable: '--color-text' },
+    { key: 'textSecondary', label: 'Secondary Text', variable: '--color-text-secondary' },
+    { key: 'textMuted', label: 'Muted Text', variable: '--color-text-muted' },
+    { key: 'accent', label: 'Primary Accent', variable: '--color-accent' },
+    { key: 'accentSecondary', label: 'Secondary Accent', variable: '--color-accent-secondary' },
+    { key: 'accentEmotional', label: 'Emotional Accent', variable: '--color-accent-emotional' },
+    { key: 'accentProof', label: 'Proof Accent', variable: '--color-accent-proof' },
+    { key: 'border', label: 'Border', variable: '--color-border' },
+    { key: 'borderSubtle', label: 'Border Subtle', variable: '--color-border-subtle' },
+    { key: 'borderStrong', label: 'Border Strong', variable: '--color-border-strong' },
+    { key: 'glow', label: 'Glow Color', variable: '--color-glow' },
+    { key: 'selection', label: 'Selection Color', variable: '--color-selection' },
   ];
   return (
     <div>
       <EditorHeader title="Colors" description="Full theme color palette — all mapped to CSS variables" config={config} onChange={onChange} />
-      {fields.map(f => (
-        <Field key={f.key} label={f.label}><ColorField config={config} path={`colors.${f.key}`} onChange={onChange} /></Field>
-      ))}
+      <div className="cr-table-container" style={{ marginTop: '16px' }}>
+        <table className="cr-table cr-table-soft density-compact">
+          <thead>
+            <tr>
+              <th>Token Name</th>
+              <th>CSS Variable</th>
+              <th className="num-col">Hex Value / Color Picker</th>
+            </tr>
+          </thead>
+          <tbody>
+            {fields.map(f => (
+              <tr key={f.key}>
+                <td>
+                  <strong>{f.label}</strong>
+                </td>
+                <td>
+                  <code style={{ fontSize: '10px', opacity: 0.8 }}>{f.variable}</code>
+                </td>
+                <td className="num-col">
+                  <div style={{ display: 'inline-block', width: '220px', textAlign: 'left' }}>
+                    <ColorField config={config} path={`colors.${f.key}`} onChange={onChange} />
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
@@ -845,67 +1128,127 @@ export function PortraitEditor({ config, onChange }: EditorProps) {
       <Field label="Show HUD Metadata"><Toggle config={config} path="portrait.showMetadata" label="Display parameter tags" onChange={onChange} /></Field>
 
       <div className="cr-section-label">HUD Metadata Tags</div>
-      {config.portrait.metadata.map((item, idx) => (
-        <div key={idx} className="cr-list-item cr-list-item-edit-row">
-          <div className="cr-inline-fields">
-            <input className="cr-input cr-flex-1" aria-label="Portrait metadata label" placeholder="Label (e.g. mode)" value={item.label}
-              onChange={e => { config.portrait.metadata[idx].label = e.target.value; onChange(); }} />
-            <input className="cr-input cr-flex-2" aria-label="Portrait metadata value" placeholder="Value (e.g. nocturnal)" value={item.value}
-              onChange={e => { config.portrait.metadata[idx].value = e.target.value; onChange(); }} />
-          </div>
-          <button className="cr-btn cr-btn-danger cr-btn-sm cr-btn-icon" type="button" aria-label="Remove portrait metadata row"
-            onClick={() => { config.portrait.metadata.splice(idx, 1); onChange(); }}><Icon name="delete" size="xs" tone="error" /></button>
+      {config.portrait.metadata.length === 0 ? (
+        <div style={{ padding: '16px', textAlign: 'center', color: 'var(--cr-text-3)', fontFamily: 'var(--cr-font-mono)', fontSize: '11px' }}>
+          No HUD metadata tags defined. Add one below.
         </div>
-      ))}
+      ) : (
+        <div className="cr-table-container" style={{ marginTop: '12px', marginBottom: '12px' }}>
+          <table className="cr-table cr-table-soft density-compact cr-table-responsive">
+            <thead>
+              <tr>
+                <th>Metadata Label</th>
+                <th>Metadata Value</th>
+                <th className="num-col" style={{ width: '60px' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {config.portrait.metadata.map((item, idx) => (
+                <tr key={idx}>
+                  <td data-label="Label">
+                    <input className="cr-input" aria-label="Portrait metadata label" placeholder="Label (e.g. mode)" value={item.label}
+                      onChange={e => { config.portrait.metadata[idx].label = e.target.value; onChange(); }} />
+                  </td>
+                  <td data-label="Value">
+                    <input className="cr-input" aria-label="Portrait metadata value" placeholder="Value (e.g. nocturnal)" value={item.value}
+                      onChange={e => { config.portrait.metadata[idx].value = e.target.value; onChange(); }} />
+                  </td>
+                  <td data-label="Actions" className="num-col">
+                    <button className="cr-btn cr-btn-danger cr-btn-sm cr-btn-icon" type="button" aria-label="Remove portrait metadata row"
+                      onClick={() => { config.portrait.metadata.splice(idx, 1); onChange(); }}><Icon name="delete" size="xs" tone="error" /></button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
       <button className="cr-list-add-btn" type="button" onClick={() => { config.portrait.metadata.push({ label: '', value: '' }); onChange(); }}><Icon name="trace" size="xs" tone="accent" />add metadata row</button>
 
       <div className="cr-divider" />
       <div className="cr-section-label">Theme Portraits Mapping</div>
+      
       <div className="theme-portraits-lab">
-        <div className="theme-portrait-active">
-          <div className="theme-portrait-thumb theme-portrait-thumb-lg">
+        <div className="cr-rich-row-card" style={{ marginBottom: '16px', display: 'flex', gap: '16px', alignItems: 'center' }}>
+          <div className="theme-portrait-thumb theme-portrait-thumb-lg" style={{ width: '70px', height: '88px', borderRadius: '4px' }}>
             <img src={activeThemeSrc} alt="Active theme portrait" />
           </div>
-          <div className="theme-portrait-copy">
-            <span className="theme-portrait-label">active theme portrait</span>
-            <strong>{themeEngine.activeTheme.name}</strong>
-            <code>{activeThemeSrc}</code>
+          <div className="theme-portrait-copy" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <span className="theme-portrait-label" style={{ fontSize: '10px', color: 'var(--table-text-muted)', fontFamily: 'var(--cr-font-mono)' }}>active theme portrait</span>
+            <strong style={{ fontSize: '16px' }}>{themeEngine.activeTheme.name}</strong>
+            <code style={{ fontSize: '11px', color: 'var(--table-accent)' }}>{activeThemeSrc}</code>
           </div>
         </div>
 
-        <div className="theme-portrait-grid">
-          {themeEngine.builtInThemes.map(t => {
-            const src = themePortraitMap[t.id];
-            const hasError = imageErrors[t.id] || !src;
-            const isActiveTheme = themeEngine.activeThemeId === t.id;
-            return (
-              <div key={t.id} className={`theme-portrait-card${isActiveTheme ? ' is-active' : ''}${hasError ? ' has-error' : ''}`}>
-                <div className="theme-portrait-thumb">
-                  {src ? (
-                    <img 
-                      src={src} 
-                      alt={`${t.name} portrait`} 
-                      onError={() => setImageErrors(prev => ({ ...prev, [t.id]: true }))}
-                    />
-                  ) : (
-                    <div className="theme-portrait-empty">NO MAP</div>
-                  )}
-                </div>
-                <div className="theme-portrait-body">
-                  <div>
-                    <strong>{t.name}</strong>
-                    <span>{t.id}</span>
-                  </div>
-                  {hasError ? (
-                    <em>MISSING FILE</em>
-                  ) : (
-                    <code>{src}</code>
-                  )}
-                </div>
-                {isActiveTheme && <span className="theme-portrait-chip">active</span>}
-              </div>
-            );
-          })}
+        <div className="cr-table-container">
+          <table className="cr-table cr-table-cards density-balanced cr-table-responsive">
+            <thead>
+              <tr>
+                <th style={{ width: '80px' }} className="center-col">Preview</th>
+                <th>Theme / System ID</th>
+                <th>Portrait Asset Path</th>
+                <th style={{ width: '140px' }}>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {themeEngine.builtInThemes.map(t => {
+                const src = themePortraitMap[t.id];
+                const hasError = imageErrors[t.id] || !src;
+                const isActiveTheme = themeEngine.activeThemeId === t.id;
+                return (
+                  <tr key={t.id} className={isActiveTheme ? 'is-selected' : ''}>
+                    <td data-label="Preview" className="center-col">
+                      <div className="theme-portrait-thumb" style={{ width: '42px', height: '52px', margin: '0 auto', borderRadius: '2px' }}>
+                        {src ? (
+                          <img 
+                            src={src} 
+                            alt={`${t.name} portrait`} 
+                            onError={() => setImageErrors(prev => ({ ...prev, [t.id]: true }))}
+                          />
+                        ) : (
+                          <span style={{ fontSize: '8px', color: 'var(--table-text-muted)' }}>NO MAP</span>
+                        )}
+                      </div>
+                    </td>
+                    <td data-label="Theme">
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                        <strong style={{ fontSize: '12px' }}>{t.name}</strong>
+                        <code style={{ fontSize: '9px', color: 'var(--table-text-muted)' }}>{t.id}</code>
+                      </div>
+                    </td>
+                    <td data-label="Path">
+                      {src ? (
+                        <code style={{ color: 'var(--table-accent)', fontSize: '11px' }}>{src}</code>
+                      ) : (
+                        <span style={{ color: 'var(--table-text-muted)', fontStyle: 'italic', fontSize: '11px' }}>Unassigned fallback</span>
+                      )}
+                    </td>
+                    <td data-label="Status">
+                      <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+                        {isActiveTheme && (
+                          <span className="cr-badge cr-badge-info">
+                            <Icon name="success" size="xs" tone="accent" />
+                            active
+                          </span>
+                        )}
+                        {hasError ? (
+                          <span className="cr-badge cr-badge-error">
+                            <Icon name="error" size="xs" tone="error" />
+                            missing file
+                          </span>
+                        ) : (
+                          <span className="cr-badge cr-badge-success">
+                            <Icon name="success" size="xs" tone="success" />
+                            mapped
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

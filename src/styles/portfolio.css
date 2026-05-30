@@ -241,7 +241,7 @@ textarea {
 
 .dot-field,
 .dot-reveal {
-  background-image: radial-gradient(circle, color-mix(in srgb, var(--text-primary) var(--background-dot-opacity-pct, calc(var(--background-dot-opacity) * 100%)), transparent) 0 var(--background-dot-size), transparent calc(var(--background-dot-size) + 0.2px));
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--text-primary) var(--background-dot-opacity-pct), transparent) 0 var(--background-dot-size), transparent calc(var(--background-dot-size) + 0.2px));
   background-position: center;
   background-size: var(--background-dot-spacing) var(--background-dot-spacing);
 }
@@ -263,8 +263,8 @@ textarea {
   inset: -22vmax;
   opacity: 1;
   background:
-    radial-gradient(circle at 40% 44%, color-mix(in srgb, var(--background-radial-glow-color) var(--background-radial-glow-opacity-pct, calc(var(--background-radial-glow-opacity) * 100%)), transparent), transparent 28%),
-    radial-gradient(circle at 46% 48%, color-mix(in srgb, var(--background-radial-glow-color-2) var(--background-radial-glow-opacity-2-pct, calc(var(--background-radial-glow-opacity-2) * 100%)), transparent), transparent 36%);
+    radial-gradient(circle at 40% 44%, color-mix(in srgb, var(--background-radial-glow-color) var(--background-radial-glow-opacity-pct), transparent), transparent 28%),
+    radial-gradient(circle at 46% 48%, color-mix(in srgb, var(--background-radial-glow-color-2) var(--background-radial-glow-opacity-2-pct), transparent), transparent 36%);
   filter: blur(var(--background-radial-glow-blur));
   animation: radialGlowDrift 52s var(--ease-standard) infinite alternate;
   transform: translate3d(-3vw, -2vh, 0);
@@ -1530,7 +1530,7 @@ main {
 .stack-matrix article {
   display: grid;
   min-height: 144px;
-  grid-template-columns: minmax(120px, 0.34fr) minmax(0, 1fr);
+  grid-template-columns: minmax(170px, 0.34fr) minmax(0, 1fr);
   align-content: start;
   align-items: start;
   gap: var(--space-5);
@@ -1640,12 +1640,16 @@ main {
   color: var(--text-muted);
   font-size: var(--type-sm);
   font-weight: 700;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
 }
 
 .timeline li > span:not(.timeline-icon) {
   color: var(--text-primary);
   font-size: var(--type-md);
-  text-align: right;
+  flex: 1;
+  text-align: left;
 }
 
 .contact-shell {

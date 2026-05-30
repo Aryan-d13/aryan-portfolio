@@ -197,18 +197,77 @@ export default function ThemeEditorPanel({ config, onConfigChange, onThemeChange
       <div className="cr-editor-header">
         <h2><Icon name="theme" size="md" tone="accent" />Theme Engine</h2>
         <p>Saved visual identity systems. Default themes stay immutable; custom variants hold your edits.</p>
-        <div className="theme-engine-status">
-          <span className="icon-align-status"><Icon name={activeTheme.source === 'custom' ? 'edit' : 'lock'} size="xs" tone="muted" />{activeTheme.source === 'custom' ? 'custom editable theme' : 'built-in source preset'}</span>
-          <span className={`icon-align-status is-${syncStatus}`}>
-            <Icon name={syncIcon(syncStatus)} size="xs" tone={syncStatus === 'synced' ? 'success' : syncStatus === 'failed' ? 'error' : syncStatus === 'saving' ? 'accent' : 'warning'} state={syncStatus === 'saving' ? 'loading' : syncStatus === 'synced' ? 'success' : syncStatus === 'failed' ? 'error' : 'idle'} />
-            cloud: {syncStatus}
-          </span>
-          <span className="icon-align-status"><Icon name="database" size="xs" tone="muted" />source: {syncSource}</span>
-          {lastSyncedAt && <span className="icon-align-status"><Icon name="log" size="xs" tone="muted" />last sync: {new Date(lastSyncedAt).toLocaleString()}</span>}
-          {unsavedChanges && <span className="icon-align-status is-dirty"><Icon name="warning" size="xs" tone="warning" state="warning" />unsaved theme changes</span>}
-          {syncStatus === 'synced' && <span className="icon-align-status"><Icon name="success" size="xs" tone="success" state="success" />Theme synced across clients</span>}
+        <div className="cr-table-container" style={{ margin: '14px 0', maxWidth: '580px' }}>
+          <table className="cr-table cr-table-soft density-compact">
+            <thead>
+              <tr>
+                <th style={{ width: '180px' }}>System Metric / Parameter</th>
+                <th>Diagnostic Value / Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Theme Type</td>
+                <td>
+                  <span className="cr-badge cr-badge-info" style={{ textTransform: 'none' }}>
+                    <Icon name={activeTheme.source === 'custom' ? 'edit' : 'lock'} size="xs" tone="accent" />
+                    {activeTheme.source === 'custom' ? 'custom editable theme' : 'built-in source preset'}
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>Cloud Database Sync</td>
+                <td>
+                  <span className={`cr-badge ${syncStatus === 'synced' ? 'cr-badge-success' : syncStatus === 'failed' ? 'cr-badge-error' : syncStatus === 'saving' ? 'cr-badge-info' : 'cr-badge-warning'}`}>
+                    <Icon name={syncIcon(syncStatus)} size="xs" tone={syncStatus === 'synced' ? 'success' : syncStatus === 'failed' ? 'error' : syncStatus === 'saving' ? 'accent' : 'warning'} state={syncStatus === 'saving' ? 'loading' : 'idle'} />
+                    cloud: {syncStatus}
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>Config Source</td>
+                <td>
+                  <code style={{ fontSize: '11px', color: 'var(--table-text-muted)', fontFamily: 'var(--cr-font-mono)' }}>{syncSource}</code>
+                </td>
+              </tr>
+              {lastSyncedAt && (
+                <tr>
+                  <td>Last Synced At</td>
+                  <td style={{ fontFamily: 'var(--cr-font-mono)', fontSize: '11px', color: 'var(--table-text-secondary)' }}>
+                    {new Date(lastSyncedAt).toLocaleString()}
+                  </td>
+                </tr>
+              )}
+              {unsavedChanges && (
+                <tr>
+                  <td>Local Cache State</td>
+                  <td>
+                    <span className="cr-badge cr-badge-warning">
+                      <Icon name="warning" size="xs" tone="warning" state="warning" />
+                      unsaved local changes
+                    </span>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
-        {remoteError && <div className="theme-validation-errors"><span><Icon name="error" size="xs" tone="error" state="error" />{remoteError}</span></div>}
+        {remoteError && (
+          <div className="cr-table-container" style={{ margin: '8px 0', maxWidth: '580px', borderColor: 'color-mix(in srgb, var(--table-error) 40%, var(--table-border))' }}>
+            <table className="cr-table">
+              <tbody>
+                <tr style={{ background: 'color-mix(in srgb, var(--table-error) 4%, var(--table-bg))' }}>
+                  <td style={{ width: '130px' }}>
+                    <span className="cr-badge cr-badge-error">CLOUD ERROR</span>
+                  </td>
+                  <td style={{ color: 'var(--table-error)', fontSize: '11px', fontFamily: 'var(--cr-font-mono)' }}>
+                    {remoteError}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       <section className="theme-engine-block">
@@ -271,9 +330,30 @@ export default function ThemeEditorPanel({ config, onConfigChange, onThemeChange
         </div>
 
         {!validation.valid && (
-          <div className="theme-validation-errors">
-            <strong><Icon name="warning" size="xs" tone="warning" state="warning" />Validation errors</strong>
-            {validation.errors.map(error => <span key={error}><Icon name="error" size="xs" tone="error" />{error}</span>)}
+          <div className="cr-table-container" style={{ margin: '14px 0', borderColor: 'color-mix(in srgb, var(--table-error) 40%, var(--table-border))' }}>
+            <table className="cr-table cr-table-soft density-compact">
+              <thead>
+                <tr style={{ background: 'color-mix(in srgb, var(--table-error) 4%, var(--table-bg))' }}>
+                  <th style={{ color: 'var(--table-error)', width: '130px' }}>Diagnostic Status</th>
+                  <th style={{ color: 'var(--table-error)' }}>Validation Error Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {validation.errors.map((error, idx) => (
+                  <tr key={idx} style={{ background: 'color-mix(in srgb, var(--table-error) 2%, var(--table-bg))' }}>
+                    <td>
+                      <span className="cr-badge cr-badge-error">
+                        <Icon name="error" size="xs" tone="error" />
+                        ERROR
+                      </span>
+                    </td>
+                    <td style={{ color: 'var(--table-error)', fontSize: '11px', fontFamily: 'var(--cr-font-mono)' }}>
+                      {error}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </section>

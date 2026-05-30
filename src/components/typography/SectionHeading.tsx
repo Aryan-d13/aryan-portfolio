@@ -11,16 +11,11 @@ interface SectionHeadingProps {
   children?: ReactNode;
 }
 
-function ghostLabel(section: SectionConfig, heading?: string): string {
-  const raw = section.railLabel || section.sectionId || heading || section.kicker;
-  return raw.replace(/[_/]+/g, ' ').toUpperCase();
-}
-
 export default function SectionHeading({ config, section, heading, children }: SectionHeadingProps) {
   if (!heading) return null;
 
   return (
-    <div className="section-heading type-section-heading" data-ghost={ghostLabel(section, heading)}>
+    <div className="section-heading type-section-heading">
       <div className="section-heading-title">
         <span className="section-heading-icon icon-align-heading" aria-hidden="true">
           <Icon name={sectionIconMap[section.type] ?? 'trace'} size="md" tone="accent" />
