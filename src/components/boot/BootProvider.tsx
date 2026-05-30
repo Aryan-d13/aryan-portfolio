@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import { useSiteConfig } from '../../hooks/useSiteConfig';
 import { useBootSequence, type BootStep } from '../../hooks/useBootSequence';
 import BootLoader from './BootLoader';
@@ -29,12 +29,25 @@ export function BootProvider({ children }: { children: ReactNode }) {
     return loaderConfig?.enabled ?? true;
   });
 
+  const [transitionDone, setTransitionDone] = useState(false);
+
+  useEffect(() => {
+    if (isReady) {
+      const reduceMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const duration = reduceMotion ? 100 : 600;
+      const timer = setTimeout(() => {
+        setTransitionDone(true);
+      }, duration + 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isReady]);
+
   const handleExitComplete = () => {
     setLoaderMounted(false);
   };
 
   const reduceMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const contentStyle = {
+  const contentStyle = transitionDone ? {} : {
     opacity: isReady ? 1 : 0,
     transform: isReady ? 'scale(1)' : 'scale(1.01)',
     transition: reduceMotion
