@@ -1,5 +1,22 @@
-import type { SiteConfig } from '../types/siteConfig';
+import type { ProofDrawerConfig, SiteConfig } from '../types/siteConfig';
 import { getTypographySystemForTheme } from '../utils/textEffects';
+
+function getProofDrawerDefaults(): ProofDrawerConfig {
+  return {
+    enabled: true,
+    label: 'Open Proof File',
+    title: 'Proof slots ready.',
+    description: 'Evidence stays visibly incomplete until a real artifact or reference is attached.',
+    items: [
+      { id: 'architecture', label: 'Add architecture notes', description: 'Document boundaries, services, and state flow.', status: 'placeholder', href: '', icon: 'flow', order: 0 },
+      { id: 'diagram', label: 'Add diagram', description: 'Attach a system map when it is ready to inspect.', status: 'placeholder', href: '', icon: 'system', order: 1 },
+      { id: 'commits', label: 'Add commit references', description: 'Link implementation history without manufacturing receipts.', status: 'placeholder', href: '', icon: 'trace', order: 2 },
+      { id: 'tests', label: 'Add test cases', description: 'Record behavior checks and failure-path coverage.', status: 'placeholder', href: '', icon: 'proof', order: 3 },
+      { id: 'failure-modes', label: 'Add failure modes', description: 'List the cases the system is expected to survive.', status: 'placeholder', href: '', icon: 'warning', order: 4 },
+      { id: 'constraints', label: 'Add production constraints', description: 'Capture scale, latency, and operational boundaries.', status: 'placeholder', href: '', icon: 'status', order: 5 },
+    ],
+  };
+}
 
 export function getDefaultConfig(): SiteConfig {
   return {
@@ -39,14 +56,87 @@ export function getDefaultConfig(): SiteConfig {
     sections: [
       { id: 'trace-begins', sectionId: 'trace_begins', signal: 'cold_boot', proofLevel: 'identity', systemStatus: 'awake', type: 'hero', title: 'Hero', kicker: 'THE PROOF OF WORK INTERFACE', visible: true, order: 0, animationStyle: 'reveal', backgroundIntensity: 1.0 },
       { id: 'identity', sectionId: 'not_template_developer', signal: 'anti_template', proofLevel: 'positioning', systemStatus: 'clear', type: 'statement', title: 'Identity Statement', kicker: 'IDENTITY', railLabel: 'not_a_template_developer', visible: true, order: 1, animationStyle: 'reveal', backgroundIntensity: 1.0, bodyAtmospheric: "I'm not interested in looking like another startup landing page wearing a developer badge. I build from first principles, chase traceability, and care about whether the thing survives contact with production.", bodyDirect: 'I build production-minded systems from first principles: traceable, testable, observable, and maintainable.' },
-      { id: 'systems-built', sectionId: 'systems_built', signal: 'case_files', proofLevel: 'high', systemStatus: 'inspectable', type: 'projects', title: 'Systems Built', kicker: 'SYSTEMS BUILT', railLabel: 'case_files', heading: 'Work as dossiers, not tiles.', descriptionAtmospheric: 'Each project opens as a system record: problem, machinery, stack, proof themes, and what the build demonstrates under pressure.', descriptionDirect: 'Two dossiers: AI media automation and AI creative production.', visible: true, order: 2, animationStyle: 'reveal', backgroundIntensity: 1.0 },
-      { id: 'proof-layer', sectionId: 'proof_layer', signal: 'receipts_not_vibes', proofLevel: 'black_box', systemStatus: 'recording', type: 'proof', title: 'Proof Layer', kicker: 'PROOF LAYER', railLabel: 'receipts_not_vibes', heading: 'A black-box inspection panel.', descriptionAtmospheric: 'The rules Aryan trusts when production stops behaving politely.', descriptionDirect: 'Reliability principles used as product and engineering constraints.', visible: true, order: 3, animationStyle: 'reveal', backgroundIntensity: 1.0 },
-      { id: 'stack', sectionId: 'stack_clusters', signal: 'tools_with_context', proofLevel: 'practical', systemStatus: 'available', type: 'stack', title: 'Stack', kicker: 'STACK', railLabel: 'tools_i_think_with', heading: 'No progress bars. Working surfaces.', descriptionAtmospheric: 'Tools are grouped by the kind of system pressure they help Aryan reason through.', descriptionDirect: 'Interface, backend, cloud, media, AI, and reliability clusters.', visible: true, order: 4, animationStyle: 'reveal', backgroundIntensity: 1.0 },
-      { id: 'philosophy', sectionId: 'operating_principles', signal: 'manifesto', proofLevel: 'values', systemStatus: 'stable', type: 'philosophy', title: 'Philosophy', kicker: 'PHILOSOPHY', railLabel: 'operating_principles', visible: true, order: 5, animationStyle: 'reveal', backgroundIntensity: 1.0 },
-      { id: 'human-layer', sectionId: 'weather_inside_machine', signal: 'human_layer', proofLevel: 'subtle', systemStatus: 'breathing', type: 'human', title: 'Human Layer', kicker: 'HUMAN LAYER', railLabel: 'weather_inside_machine', heading: 'Cold weather. Blue light. A little silence.', descriptionAtmospheric: 'I like systems because chaos gets quieter when it has shape. I like night because everything fake loses volume.', descriptionDirect: 'Motifs: rain, night, blue, neon, space, mysteries, skylines, basketball, gymnastics, fiction, dry humor.', visible: true, order: 6, animationStyle: 'reveal', backgroundIntensity: 1.0 },
-      { id: 'build-log', sectionId: 'build_log', signal: 'timeline', proofLevel: 'receipts', systemStatus: 'indexed', type: 'timeline', title: 'Build Log', kicker: 'BUILD LOG', railLabel: 'timeline', heading: 'Not a resume timeline. A trace.', visible: true, order: 7, animationStyle: 'reveal', backgroundIntensity: 1.0 },
-      { id: 'open-channel', sectionId: 'open_channel', signal: 'contact', proofLevel: 'direct', systemStatus: 'listening', type: 'contact', title: 'Contact', kicker: 'CONTACT / OPEN CHANNEL', heading: 'For AI-native media systems, full-stack cloud engineering, automation, or strange high-leverage product ideas:', visible: true, order: 8, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+      { id: 'signal-profile', sectionId: 'signal_profile', signal: 'identity_diagnostic', proofLevel: 'personal', systemStatus: 'calibrated', type: 'signal-profile', title: 'Signal Profile', kicker: 'SIGNAL PROFILE', icon: 'signal', railLabel: 'personality_debug', heading: 'A working style, rendered as a diagnostic.', visible: true, order: 2, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+      { id: 'systems-built', sectionId: 'systems_built', signal: 'case_files', proofLevel: 'high', systemStatus: 'inspectable', type: 'projects', title: 'Systems Built', kicker: 'SYSTEMS BUILT', railLabel: 'case_files', heading: 'Work as dossiers, not tiles.', descriptionAtmospheric: 'Each project opens as a system record: problem, machinery, stack, proof themes, and what the build demonstrates under pressure.', descriptionDirect: 'Two dossiers: AI media automation and AI creative production.', visible: true, order: 3, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+      { id: 'proof-layer', sectionId: 'proof_layer', signal: 'receipts_not_vibes', proofLevel: 'black_box', systemStatus: 'recording', type: 'proof', title: 'Proof Layer', kicker: 'PROOF LAYER', railLabel: 'receipts_not_vibes', heading: 'A black-box inspection panel.', descriptionAtmospheric: 'The rules Aryan trusts when production stops behaving politely.', descriptionDirect: 'Reliability principles used as product and engineering constraints.', visible: true, order: 4, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+      { id: 'anti-patterns', sectionId: 'anti_patterns', signal: 'refusal_list', proofLevel: 'taste', systemStatus: 'enforced', type: 'anti-patterns', title: 'Anti-Patterns', kicker: 'ANTI-PATTERNS', icon: 'warning', railLabel: 'things_i_avoid', heading: 'Things I do not ship on purpose.', visible: false, order: 5, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+      { id: 'stack', sectionId: 'stack_clusters', signal: 'tools_with_context', proofLevel: 'practical', systemStatus: 'available', type: 'stack', title: 'Stack', kicker: 'STACK', railLabel: 'tools_i_think_with', heading: 'No progress bars. Working surfaces.', descriptionAtmospheric: 'Tools are grouped by the kind of system pressure they help Aryan reason through.', descriptionDirect: 'Interface, backend, cloud, media, AI, and reliability clusters.', visible: true, order: 6, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+      { id: 'field-notes', sectionId: 'field_notes', signal: 'build_floor_fragments', proofLevel: 'working_notes', systemStatus: 'collecting', type: 'field-notes', title: 'Field Notes', kicker: 'FIELD NOTES', icon: 'log', railLabel: 'fragments_from_the_floor', heading: 'Small notes from systems that refused to stay simple.', visible: false, order: 7, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+      { id: 'philosophy', sectionId: 'operating_principles', signal: 'manifesto', proofLevel: 'values', systemStatus: 'stable', type: 'philosophy', title: 'Philosophy', kicker: 'PHILOSOPHY', railLabel: 'operating_principles', visible: true, order: 8, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+      { id: 'operating-manual', sectionId: 'operating_manual', signal: 'collaboration_protocol', proofLevel: 'practical', systemStatus: 'readable', type: 'operating-manual', title: 'Operating Manual', kicker: 'OPERATING MANUAL', icon: 'person', railLabel: 'how_to_work_with_me', heading: 'Useful defaults for working together.', visible: false, order: 9, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+      { id: 'human-layer', sectionId: 'weather_inside_machine', signal: 'human_layer', proofLevel: 'subtle', systemStatus: 'breathing', type: 'human', title: 'Human Layer', kicker: 'HUMAN LAYER', railLabel: 'weather_inside_machine', heading: 'Cold weather. Blue light. A little silence.', descriptionAtmospheric: 'I like systems because chaos gets quieter when it has shape. I like night because everything fake loses volume.', descriptionDirect: 'Motifs: rain, night, blue, neon, space, mysteries, skylines, basketball, gymnastics, fiction, dry humor.', visible: true, order: 10, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+      { id: 'build-log', sectionId: 'build_log', signal: 'timeline', proofLevel: 'receipts', systemStatus: 'indexed', type: 'timeline', title: 'Build Log', kicker: 'BUILD LOG', railLabel: 'timeline', heading: 'Not a resume timeline. A trace.', visible: true, order: 11, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+      { id: 'open-channel', sectionId: 'open_channel', signal: 'contact', proofLevel: 'direct', systemStatus: 'listening', type: 'contact', title: 'Contact', kicker: 'CONTACT / OPEN CHANNEL', heading: 'For AI-native media systems, full-stack cloud engineering, automation, or strange high-leverage product ideas:', visible: true, order: 12, animationStyle: 'reveal', backgroundIntensity: 1.0 },
     ],
+
+    signalProfile: {
+      enabled: true,
+      sectionLabel: 'personality_debug',
+      title: 'A working style, rendered as a diagnostic.',
+      description: 'A compact read on how I turn unclear product pressure into inspectable systems.',
+      items: [
+        { id: 'ambiguity', label: 'input', description: 'ambiguity in / structure out', visible: true, order: 0, icon: 'trace' },
+        { id: 'confidence', label: 'confidence', description: 'proof before confidence', visible: true, order: 1, icon: 'proof' },
+        { id: 'taste', label: 'taste', description: 'taste matters / behavior matters more', visible: true, order: 2, icon: 'spark' },
+        { id: 'evidence', label: 'systems', description: 'leave evidence behind', visible: true, order: 3, icon: 'status' },
+        { id: 'humor', label: 'survival tool', description: 'dry humor / carefully rate-limited', visible: true, order: 4, icon: 'terminal' },
+      ],
+    },
+
+    antiPatterns: {
+      enabled: true,
+      sectionLabel: 'refusal_list',
+      title: 'Things I do not ship on purpose.',
+      description: 'Taste is easier to inspect when the refusal list is visible.',
+      items: [
+        { id: 'fragile-demos', label: 'fragile demos', description: 'Demos that collapse under real users.', visible: true, order: 0, icon: 'warning' },
+        { id: 'empty-polish', label: 'empty polish', description: 'Pretty screens with no system underneath.', visible: true, order: 1, icon: 'layout' },
+        { id: 'ai-wrappers', label: 'ai wrappers', description: 'Prompt windows pretending to be products.', visible: true, order: 2, icon: 'ai' },
+        { id: 'hidden-failures', label: 'hidden failures', description: 'Failure states that disappear instead of explaining themselves.', visible: true, order: 3, icon: 'error' },
+        { id: 'untraceable-jobs', label: 'untraceable jobs', description: 'Async work with no trail, owner, or answer.', visible: true, order: 4, icon: 'trace' },
+        { id: 'corporate-fog', label: 'corporate fog', description: 'Language that consumes space and says nothing.', visible: true, order: 5, icon: 'terminal' },
+      ],
+    },
+
+    fieldNotes: {
+      enabled: true,
+      sectionLabel: 'build_floor_fragments',
+      title: 'Small notes from systems that refused to stay simple.',
+      description: 'Short fragments. No keynote voice.',
+      items: [
+        { id: 'retry-cost', label: 'note_01', description: 'A retry is not safe until duplicate cost is impossible.', visible: true, order: 0, icon: 'sync' },
+        { id: 'preview-promise', label: 'note_02', description: 'A preview is a promise. The render should keep it.', visible: true, order: 1, icon: 'media' },
+        { id: 'missing-job', label: 'note_03', description: 'If a job disappears, the system should know where it went.', visible: true, order: 2, icon: 'trace' },
+        { id: 'logs', label: 'note_04', description: 'Logs are not decoration. They are the crime scene tape.', visible: true, order: 3, icon: 'log' },
+        { id: 'calm-ui', label: 'note_05', description: 'The best UI makes the machine feel calm.', visible: true, order: 4, icon: 'layout' },
+      ],
+    },
+
+    operatingManual: {
+      enabled: true,
+      sectionLabel: 'collaboration_protocol',
+      title: 'Useful defaults for working together.',
+      description: 'For founders, collaborators, and anyone deciding how much ownership to hand over.',
+      items: [
+        { id: 'real-problem', label: 'problem framing', description: 'Give me the real problem, not just the ticket.', visible: true, order: 0, icon: 'problem' },
+        { id: 'ownership', label: 'ownership', description: 'I work best with clear stakes and room to own the outcome.', visible: true, order: 1, icon: 'work' },
+        { id: 'feedback', label: 'feedback', description: 'Direct feedback beats polite confusion.', visible: true, order: 2, icon: 'signal' },
+        { id: 'verification', label: 'verification', description: 'I like proving behavior with tests, logs, and working demos.', visible: true, order: 3, icon: 'proof' },
+        { id: 'certainty', label: 'communication', description: 'I can explain the system without faking certainty.', visible: true, order: 4, icon: 'person' },
+        { id: 'experience', label: 'finish line', description: 'The final user experience still counts as engineering.', visible: true, order: 5, icon: 'spark' },
+      ],
+    },
+
+    builderModes: {
+      enabled: true,
+      sectionLabel: 'two_lenses',
+      title: 'Read each case file in two modes.',
+      description: 'Story Mode keeps the stakes legible. System Mode opens the machinery.',
+      modes: [
+        { id: 'story', label: 'Story Mode', description: 'Problem, stakes, product feel, and what changed.', icon: 'story' },
+        { id: 'system', label: 'System Mode', description: 'Architecture, workers, retries, state, rendering, and failure behavior.', icon: 'system' },
+      ],
+    },
 
     projects: [
       {
@@ -60,6 +150,7 @@ export function getDefaultConfig(): SiteConfig {
         proofThemes: 'Distributed workers, queue systems, lease tokens, heartbeats, golden-thread job IDs, render parity, observability.',
         shows: 'Aryan can reason across media, backend orchestration, infra, state, and the reliability work that makes automation credible.',
         links: {},
+        proofDrawer: getProofDrawerDefaults(),
       },
       {
         id: 'content-lab', name: 'CONTENT LAB', caseNumber: '02', type: 'AI-native creative production system', featured: true, status: 'active', confidenceLabel: 'high',
@@ -72,8 +163,35 @@ export function getDefaultConfig(): SiteConfig {
         proofThemes: 'Idempotency, state transitions, sequential carousel generation, brand consistency, provider abstraction.',
         shows: 'Aryan can turn AI generation into a governed product workflow with contracts, state, review surfaces, and production semantics.',
         links: {},
+        proofDrawer: getProofDrawerDefaults(),
       },
     ],
+
+    tasteLayer: {
+      enabled: true,
+      sectionLabel: 'visual_taste',
+      title: 'Visual taste',
+      description: 'Details should feel discovered, not announced.',
+      items: [
+        { id: 'cold-light', label: 'cold light', description: 'clear edges / low noise', visible: true, order: 0, icon: 'spark' },
+        { id: 'quiet-interfaces', label: 'quiet interfaces', description: 'calm surfaces / visible machinery', visible: true, order: 1, icon: 'layout' },
+        { id: 'night-skies', label: 'night skies', description: 'scale without spectacle', visible: true, order: 2, icon: 'signal' },
+        { id: 'system-diagrams', label: 'system diagrams', description: 'structure worth inspecting', visible: true, order: 3, icon: 'system' },
+      ],
+    },
+
+    controlRoomModules: {
+      title: 'Basement lab index',
+      description: 'The private operating interface behind the public site.',
+      items: [
+        { id: 'theme-controls', title: 'Theme controls', description: 'Tune the ten-theme visual system and its typography behavior.', status: 'online', targetPanel: 'theme', href: '', visible: true, order: 0, icon: 'theme' },
+        { id: 'proof-files', title: 'Proof drawer management', description: 'Stage real artifacts and keep missing evidence visibly missing.', status: 'ready', targetPanel: 'projects', href: '', visible: true, order: 1, icon: 'proof' },
+        { id: 'identity-layer', title: 'Identity mechanics', description: 'Edit diagnostics, refusals, field notes, collaboration defaults, and taste.', status: 'ready', targetPanel: 'identity-layer', href: '', visible: true, order: 2, icon: 'signal' },
+        { id: 'site-settings', title: 'Site settings', description: 'Control section order, motion, layout, metadata, and visibility.', status: 'online', targetPanel: 'sections', href: '', visible: true, order: 3, icon: 'settings' },
+        { id: 'resume', title: 'Resume download', description: 'Open the current resume artifact from the public asset bundle.', status: 'attached', targetPanel: '', href: '/Aryan_Sharma_Resume.pdf', visible: true, order: 4, icon: 'resume' },
+        { id: 'now-building', title: 'Now building', description: 'Proof-first identity systems, AI-native workflows, and calmer interfaces.', status: 'current', targetPanel: '', href: '', visible: true, order: 5, icon: 'current' },
+      ],
+    },
 
     proofCards: [
       { id: 'idempotency', index: '01', title: 'idempotency', description: 'Because retries should not become duplicates.', accentColor: null, visible: true, order: 0 },
@@ -104,6 +222,8 @@ export function getDefaultConfig(): SiteConfig {
     ],
 
     humanLayer: {
+      glitchesSectionLabel: 'human_glitches',
+      glitchesTitle: 'Small calibrations',
       motifs: [
         { id: 'm1', text: 'rain', symbol: '🌧', visible: true, order: 0 },
         { id: 'm2', text: 'night', symbol: '🌙', visible: true, order: 1 },
@@ -117,6 +237,13 @@ export function getDefaultConfig(): SiteConfig {
         { id: 'm10', text: 'gymnastics', symbol: '🤸', visible: true, order: 9 },
         { id: 'm11', text: 'meaningful fiction', symbol: '📖', visible: true, order: 10 },
         { id: 'm12', text: 'dry humor', symbol: '😐', visible: true, order: 11 },
+      ],
+      glitches: [
+        { id: 'basketball', label: 'basketball', description: 'gave me tempo', visible: true, order: 0, icon: 'status' },
+        { id: 'gymnastics', label: 'gymnastics', description: 'gave me body control', visible: true, order: 1, icon: 'motion' },
+        { id: 'friends', label: 'friends', description: 'gave me defensive humor', visible: true, order: 2, icon: 'person' },
+        { id: 'space', label: 'space', description: 'made scale feel normal', visible: true, order: 3, icon: 'spark' },
+        { id: 'rain-night', label: 'rain / night', description: 'make thinking easier', visible: true, order: 4, icon: 'signal' },
       ],
     },
 

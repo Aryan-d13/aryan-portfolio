@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { SiteConfig, SectionConfig, ProjectConfig } from '../../types/siteConfig';
 import Icon from '../icons/Icon';
-import { projectTabIconMap } from '../icons/iconRegistry';
+import { projectTabIconMap, resolveIconName } from '../icons/iconRegistry';
 import MetadataText from '../typography/MetadataText';
 import ProjectTitle from '../typography/ProjectTitle';
 import SectionHeading from '../typography/SectionHeading';
@@ -16,7 +16,11 @@ function CaseFile({ config, project, isOpen: defaultOpen }: { config: SiteConfig
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [storyMode, setStoryMode] = useState<'story' | 'system'>('story');
   const [activeTab, setActiveTab] = useState('problem');
+  const [proofOpen, setProofOpen] = useState(false);
   const caseBodyId = `${project.id}-case-body`;
+  const proofDrawerId = `${project.id}-proof-drawer`;
+  const drawer = project.proofDrawer;
+  const builderModes = config.builderModes.modes;
 
   useEffect(() => {
     setIsOpen(defaultOpen);
@@ -55,14 +59,12 @@ function CaseFile({ config, project, isOpen: defaultOpen }: { config: SiteConfig
         <div className="case-inner">
           <div className="case-narrative">
             <div className="project-mode" role="group" aria-label={`${project.name} project mode`}>
-              <button className={`icon-align-inline${storyMode === 'story' ? ' is-active' : ''}`} type="button" aria-pressed={storyMode === 'story'} onClick={() => setStoryMode('story')}>
-                <Icon name="story" size="xs" tone={storyMode === 'story' ? 'accent' : 'muted'} />
-                Story Mode
-              </button>
-              <button className={`icon-align-inline${storyMode === 'system' ? ' is-active' : ''}`} type="button" aria-pressed={storyMode === 'system'} onClick={() => setStoryMode('system')}>
-                <Icon name="system" size="xs" tone={storyMode === 'system' ? 'accent' : 'muted'} />
-                System Mode
-              </button>
+              {builderModes.map(mode => (
+                <button key={mode.id} className={`icon-align-inline${storyMode === mode.id ? ' is-active' : ''}`} type="button" aria-pressed={storyMode === mode.id} onClick={() => setStoryMode(mode.id)}>
+                  <Icon name={resolveIconName(mode.icon, mode.id === 'story' ? 'story' : 'system')} size="xs" tone={storyMode === mode.id ? 'accent' : 'muted'} />
+                  {mode.label}
+                </button>
+              ))}
             </div>
 
             <div className={`mode-copy${storyMode === 'story' ? ' is-active' : ''}`}>
@@ -112,6 +114,51 @@ function CaseFile({ config, project, isOpen: defaultOpen }: { config: SiteConfig
               </div>
             ))}
           </div>
+
+          {drawer.enabled && (
+            <div className={`proof-drawer${proofOpen ? ' is-open' : ''}`}>
+              <button
+                className="proof-drawer-trigger"
+                type="button"
+                aria-expanded={proofOpen}
+                aria-controls={proofDrawerId}
+                onClick={() => setProofOpen(!proofOpen)}
+              >
+                <span className="icon-align-inline">
+                  <Icon name="proof" size="sm" tone="accent" />
+                  {drawer.label}
+                </span>
+                <span className="icon-align-status">
+                  <MetadataText config={config.typographySystem}>{proofOpen ? 'close' : 'inspect'}</MetadataText>
+                  <Icon name="chevron" size="xs" tone="accent" state={proofOpen ? 'active' : 'idle'} />
+                </span>
+              </button>
+              <div className="proof-drawer-body" id={proofDrawerId} aria-hidden={!proofOpen}>
+                {proofOpen && (
+                  <div>
+                    <div className="proof-drawer-inner">
+                      <div className="proof-drawer-heading">
+                        <h4>{drawer.title}</h4>
+                        <p>{drawer.description}</p>
+                      </div>
+                      <div className="proof-slot-grid">
+                        {[...drawer.items].sort((a, b) => a.order - b.order).map(item => (
+                          <article className={`proof-slot is-${item.status}`} key={item.id}>
+                            <span className="proof-slot-icon"><Icon name={resolveIconName(item.icon, 'proof')} size="xs" tone={item.status === 'ready' ? 'accent' : 'muted'} /></span>
+                            <div>
+                              <h5>{item.href ? <a href={item.href} target="_blank" rel="noreferrer">{item.label}</a> : item.label}</h5>
+                              <p>{item.description}</p>
+                            </div>
+                            <span className="proof-slot-status"><MetadataText config={config.typographySystem}>{item.status === 'ready' ? 'attached' : 'slot_ready'}</MetadataText></span>
+                          </article>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </article>
@@ -144,6 +191,26 @@ export default function ProjectsSection({ config, section, openProjectId }: Prop
             {section.descriptionDirect && <p data-direct="">{section.descriptionDirect}</p>}
           </div>
         </SectionHeading>
+        {config.builderModes.enabled && (
+          <aside className="builder-mode-guide" aria-label="Project reading modes">
+            <div>
+              <span><MetadataText config={config.typographySystem}>{config.builderModes.sectionLabel}</MetadataText></span>
+              <h3>{config.builderModes.title}</h3>
+              <p>{config.builderModes.description}</p>
+            </div>
+            <div className="builder-mode-list">
+              {config.builderModes.modes.map(mode => (
+                <article key={mode.id}>
+                  <Icon name={resolveIconName(mode.icon, mode.id === 'story' ? 'story' : 'system')} size="sm" tone="accent" />
+                  <div>
+                    <h4>{mode.label}</h4>
+                    <p>{mode.description}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </aside>
+        )}
         <div className="case-files" aria-label="Project case files">
           {config.projects.map((project, idx) => (
             <CaseFile

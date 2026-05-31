@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
 import type { SiteConfig } from '../types/siteConfig';
-import { loadConfig, applyConfigToCSS } from '../config/configManager';
+import { loadConfig, applyConfigToCSS, normalizeSiteConfig } from '../config/configManager';
 
 interface ConfigContextValue {
   config: SiteConfig;
@@ -13,8 +13,9 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
   const [config, setConfigState] = useState<SiteConfig>(() => loadConfig());
 
   const setConfig = useCallback((newConfig: SiteConfig) => {
-    setConfigState(newConfig);
-    applyConfigToCSS(newConfig);
+    const normalized = normalizeSiteConfig(newConfig);
+    setConfigState(normalized);
+    applyConfigToCSS(normalized);
   }, []);
 
   useEffect(() => {

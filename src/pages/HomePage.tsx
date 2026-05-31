@@ -10,6 +10,7 @@ import ProjectsSection from '../components/public/ProjectsSection';
 import ProofSection from '../components/public/ProofSection';
 import StackSection from '../components/public/StackSection';
 import { PhilosophySection, HumanSection, TimelineSection, ContactSection } from '../components/public/Sections';
+import { AntiPatternsSection, FieldNotesSection, OperatingManualSection, SignalProfileSection } from '../components/public/IdentitySections';
 import type { SectionConfig, SiteConfig } from '../types/siteConfig';
 import { applyConfigToCSS } from '../config/configManager';
 import { applyTheme } from '../themes/utils/applyThemeTokens';
@@ -18,10 +19,14 @@ import { validateTheme } from '../themes/utils/themeValidation';
 const SECTION_COMPONENTS: Record<string, React.FC<{ config: SiteConfig; section: SectionConfig; openProjectId: string | null }>> = {
   hero: ({ config, section }) => <HeroSection config={config} section={section} />,
   statement: ({ config, section }) => <StatementSection config={config} section={section} />,
+  'signal-profile': ({ config, section }) => <SignalProfileSection config={config} section={section} />,
   projects: ({ config, section, openProjectId }) => <ProjectsSection config={config} section={section} openProjectId={openProjectId} />,
   proof: ({ config, section }) => <ProofSection config={config} section={section} />,
+  'anti-patterns': ({ config, section }) => <AntiPatternsSection config={config} section={section} />,
   stack: ({ config, section }) => <StackSection config={config} section={section} />,
+  'field-notes': ({ config, section }) => <FieldNotesSection config={config} section={section} />,
   philosophy: ({ config, section }) => <PhilosophySection config={config} section={section} />,
+  'operating-manual': ({ config, section }) => <OperatingManualSection config={config} section={section} />,
   human: ({ config, section }) => <HumanSection config={config} section={section} />,
   timeline: ({ config, section }) => <TimelineSection config={config} section={section} />,
   contact: ({ config, section }) => <ContactSection config={config} section={section} />,

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import type { SectionConfig, SiteConfig } from '../../types/siteConfig';
 import Icon from '../icons/Icon';
-import { sectionIconMap } from '../icons/iconRegistry';
+import { resolveIconName, sectionIconMap } from '../icons/iconRegistry';
 import TextTreatment from './Text';
 
 interface SectionHeadingProps {
@@ -18,7 +18,7 @@ export default function SectionHeading({ config, section, heading, children }: S
     <div className="section-heading type-section-heading">
       <div className="section-heading-title">
         <span className="section-heading-icon icon-align-heading" aria-hidden="true">
-          <Icon name={sectionIconMap[section.type] ?? 'trace'} size="md" tone="accent" />
+          <Icon name={resolveIconName(section.icon, sectionIconMap[section.type] ?? 'trace')} size="md" tone="accent" />
         </span>
         <TextTreatment as="h2" slot="sectionTitle" config={config.typographySystem}>
           {heading}

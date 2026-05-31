@@ -1,6 +1,6 @@
 import type { SiteConfig, SectionConfig } from '../../types/siteConfig';
 import Icon, { type IconName } from '../icons/Icon';
-import { timelineIconMap } from '../icons/iconRegistry';
+import { resolveIconName, timelineIconMap } from '../icons/iconRegistry';
 import PortraitSelector from '../portrait/PortraitSelector';
 import ManifestoLine from '../typography/ManifestoLine';
 import MetadataText from '../typography/MetadataText';
@@ -29,6 +29,8 @@ export function PhilosophySection({ config, section }: Props) {
 
 export function HumanSection({ config, section }: Props) {
   const motifs = [...(config.humanLayer?.motifs || [])].filter(m => m.visible !== false).sort((a, b) => a.order - b.order);
+  const tasteItems = [...(config.tasteLayer?.items || [])].filter(item => item.visible !== false).sort((a, b) => a.order - b.order);
+  const glitches = [...(config.humanLayer?.glitches || [])].filter(item => item.visible !== false).sort((a, b) => a.order - b.order);
   return (
     <section className="section-shell section-frame" id={section.id} data-section-id={section.sectionId} data-signal={section.signal} data-proof-level={section.proofLevel} data-system-status={section.systemStatus}>
       <div className="trace-label" aria-hidden="true"><MetadataText config={config.typographySystem}>section_id: {section.sectionId} / signal: {section.signal} / proof_level: {section.proofLevel} / system_status: {section.systemStatus}</MetadataText></div>
@@ -42,6 +44,36 @@ export function HumanSection({ config, section }: Props) {
         </SectionHeading>
         <div className="motif-line" aria-label="Personal motifs">
           {motifs.map(m => <span key={m.id}>{m.text}</span>)}
+        </div>
+        <div className="human-module-grid">
+          {config.tasteLayer?.enabled && (
+            <article className="human-module">
+              <span className="human-module-label"><MetadataText config={config.typographySystem}>{config.tasteLayer.sectionLabel}</MetadataText></span>
+              <h3>{config.tasteLayer.title}</h3>
+              <p>{config.tasteLayer.description}</p>
+              <div className="taste-list">
+                {tasteItems.map(item => (
+                  <span className="icon-align-chip" key={item.id}>
+                    <Icon name={resolveIconName(item.icon, 'spark')} size="xs" tone="muted" />
+                    {item.label}
+                  </span>
+                ))}
+              </div>
+            </article>
+          )}
+          <article className="human-module">
+            <span className="human-module-label"><MetadataText config={config.typographySystem}>{config.humanLayer.glitchesSectionLabel}</MetadataText></span>
+            <h3>{config.humanLayer.glitchesTitle}</h3>
+            <ul className="glitch-list">
+              {glitches.map(item => (
+                <li key={item.id}>
+                  <Icon name={resolveIconName(item.icon, 'signal')} size="xs" tone="muted" />
+                  <span>{item.label}</span>
+                  <small>{item.description}</small>
+                </li>
+              ))}
+            </ul>
+          </article>
         </div>
         {config.portrait?.enabled && config.portrait?.placement === 'human-layer' && (
           <div className={`human-portrait-wrapper${config.portrait.variant === 'bento' ? ' is-bento' : ''}`}>

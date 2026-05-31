@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import type { SiteConfig } from '../../../types/siteConfig';
+import type { IdentityModuleConfig, SiteConfig } from '../../../types/siteConfig';
 import { getDefaultConfig } from '../../../config/siteConfig';
 import { validateConfig } from '../../../config/configSchema';
 import { Field, TextInput, TextArea, NumberInput, Toggle, ColorField, Range, Select, getPath } from '../../ui/FormControls';
@@ -48,25 +48,31 @@ function editorIcon(title: string): IconName {
   if (key.includes('asset')) return controlNavIconMap.assets;
   if (key.includes('json')) return controlNavIconMap.json;
   if (key.includes('portrait')) return controlNavIconMap.portrait;
+  if (key.includes('lab')) return 'database';
   return 'settings';
 }
 
 function EditorHeader({ title, description, config, onChange }: { title: string; description: string; config: SiteConfig; onChange: () => void }) {
-  const keyMap: Record<string, keyof SiteConfig> = {
+  const keyMap: Record<string, keyof SiteConfig | Array<keyof SiteConfig>> = {
     'Global Identity': 'identity', 'Sections': 'sections', 'Projects / Case Files': 'projects',
     'Proof Cards': 'proofCards', 'Skills / Stack': 'skillGroups', 'Philosophy': 'philosophy',
     'Human Layer': 'humanLayer', 'Timeline / Build Log': 'timeline', 'Contact / Links': 'contact',
     'Typography': 'typography', 'Typography Lab': 'typography', 'Colors': 'colors', 'Background / Soft Trace Grid': 'background',
     'Motion / Animation': 'motion', 'Layout / Spacing': 'layout', 'SEO / Meta': 'seo', 'Assets': 'assets',
+    'Identity Mechanics': ['signalProfile', 'antiPatterns', 'fieldNotes', 'operatingManual', 'builderModes', 'tasteLayer'],
+    'Lab Modules': 'controlRoomModules',
   };
 
   const resetGroup = async () => {
     const ok = await confirmDialog('Reset Group', `Reset "${title}" to defaults?`);
     if (ok) {
       const defaults = getDefaultConfig();
-      const configKey = keyMap[title] as string;
-      if (configKey) {
-        (config as unknown as Record<string, unknown>)[configKey] = JSON.parse(JSON.stringify((defaults as unknown as Record<string, unknown>)[configKey]));
+      const configKeys = keyMap[title];
+      if (configKeys) {
+        const keys = Array.isArray(configKeys) ? configKeys : [configKeys];
+        keys.forEach(configKey => {
+          (config as unknown as Record<string, unknown>)[configKey] = JSON.parse(JSON.stringify((defaults as unknown as Record<string, unknown>)[configKey]));
+        });
         onChange();
         toast(`${title} reset to defaults`, 'info');
       }
@@ -95,6 +101,71 @@ function SubEditor({ title, defaultOpen, children }: { title: string; defaultOpe
 }
 
 // ─── 1. IDENTITY ────────────────────────────────────────────────
+
+function IdentityModuleEditor({ config, modulePath, title, onChange }: EditorProps & { modulePath: keyof SiteConfig; title: string }) {
+  const module = config[modulePath] as IdentityModuleConfig;
+  const items = [...module.items].sort((a, b) => a.order - b.order);
+
+  return (
+    <SubEditor title={title}>
+      <Field label="Enabled"><Toggle config={config} path={`${modulePath}.enabled`} label="Show this module" onChange={onChange} /></Field>
+      <Field label="Section Label"><TextInput config={config} path={`${modulePath}.sectionLabel`} onChange={onChange} /></Field>
+      <Field label="Title"><TextInput config={config} path={`${modulePath}.title`} onChange={onChange} /></Field>
+      <Field label="Description"><TextArea config={config} path={`${modulePath}.description`} rows={2} onChange={onChange} /></Field>
+      <div className="cr-section-label">Items</div>
+      {items.map(item => {
+        const idx = module.items.indexOf(item);
+        return (
+          <SubEditor key={item.id} title={`${String(item.order + 1).padStart(2, '0')} - ${item.label || 'Untitled item'}`}>
+            <div className="cr-field-row">
+              <Field label="Label"><TextInput config={config} path={`${modulePath}.items.${idx}.label`} onChange={onChange} /></Field>
+              <Field label="Icon"><TextInput config={config} path={`${modulePath}.items.${idx}.icon`} onChange={onChange} /></Field>
+              <Field label="Order"><NumberInput config={config} path={`${modulePath}.items.${idx}.order`} min={0} max={99} onChange={onChange} /></Field>
+            </div>
+            <Field label="Description"><TextArea config={config} path={`${modulePath}.items.${idx}.description`} rows={2} onChange={onChange} /></Field>
+            <Field label="Visible"><Toggle config={config} path={`${modulePath}.items.${idx}.visible`} label="Show this item" onChange={onChange} /></Field>
+            <button className="cr-btn cr-btn-danger cr-btn-sm icon-align-inline" type="button" onClick={() => { module.items.splice(idx, 1); onChange(); }}>
+              <Icon name="delete" size="xs" tone="error" />delete item
+            </button>
+          </SubEditor>
+        );
+      })}
+      <button className="cr-list-add-btn" type="button" onClick={() => {
+        module.items.push({ id: `${String(modulePath)}-${uid()}`, label: '', description: '', visible: true, order: module.items.length, icon: 'trace' });
+        onChange();
+      }}><Icon name="duplicate" size="xs" tone="accent" />add item</button>
+    </SubEditor>
+  );
+}
+
+export function IdentityLayerEditor({ config, onChange }: EditorProps) {
+  return (
+    <div>
+      <EditorHeader title="Identity Mechanics" description="Public diagnostics, refusal list, builder fragments, collaboration defaults, and visual taste" config={config} onChange={onChange} />
+      <IdentityModuleEditor config={config} modulePath="signalProfile" title="Signal Profile" onChange={onChange} />
+      <IdentityModuleEditor config={config} modulePath="antiPatterns" title="Anti-Patterns" onChange={onChange} />
+      <IdentityModuleEditor config={config} modulePath="fieldNotes" title="Field Notes" onChange={onChange} />
+      <IdentityModuleEditor config={config} modulePath="operatingManual" title="Operating Manual" onChange={onChange} />
+      <IdentityModuleEditor config={config} modulePath="tasteLayer" title="Taste Layer" onChange={onChange} />
+
+      <SubEditor title="Builder Modes" defaultOpen>
+        <Field label="Enabled"><Toggle config={config} path="builderModes.enabled" label="Show builder mode guide" onChange={onChange} /></Field>
+        <Field label="Section Label"><TextInput config={config} path="builderModes.sectionLabel" onChange={onChange} /></Field>
+        <Field label="Title"><TextInput config={config} path="builderModes.title" onChange={onChange} /></Field>
+        <Field label="Description"><TextArea config={config} path="builderModes.description" rows={2} onChange={onChange} /></Field>
+        {config.builderModes.modes.map((mode, idx) => (
+          <SubEditor key={mode.id} title={mode.label || mode.id}>
+            <div className="cr-field-row">
+              <Field label="Label"><TextInput config={config} path={`builderModes.modes.${idx}.label`} onChange={onChange} /></Field>
+              <Field label="Icon"><TextInput config={config} path={`builderModes.modes.${idx}.icon`} onChange={onChange} /></Field>
+            </div>
+            <Field label="Description"><TextArea config={config} path={`builderModes.modes.${idx}.description`} rows={2} onChange={onChange} /></Field>
+          </SubEditor>
+        ))}
+      </SubEditor>
+    </div>
+  );
+}
 
 export function IdentityEditor({ config, onChange }: EditorProps) {
   return (
@@ -207,6 +278,7 @@ export function SectionsEditor({ config, onChange }: EditorProps) {
             <Field label="Order"><NumberInput config={config} path={`sections.${si}.order`} min={0} max={20} onChange={onChange} /></Field>
             <Field label="Title"><TextInput config={config} path={`sections.${si}.title`} onChange={onChange} /></Field>
             <Field label="Kicker"><TextInput config={config} path={`sections.${si}.kicker`} onChange={onChange} /></Field>
+            <Field label="Icon" hint="Optional icon registry key"><TextInput config={config} path={`sections.${si}.icon`} onChange={onChange} /></Field>
             {sec.heading !== undefined && <Field label="Heading"><TextInput config={config} path={`sections.${si}.heading`} onChange={onChange} /></Field>}
             {sec.descriptionAtmospheric !== undefined && <Field label="Description (Cinematic)"><TextArea config={config} path={`sections.${si}.descriptionAtmospheric`} rows={2} onChange={onChange} /></Field>}
             {sec.descriptionDirect !== undefined && <Field label="Description (No-Fluff)"><TextArea config={config} path={`sections.${si}.descriptionDirect`} rows={2} onChange={onChange} /></Field>}
@@ -262,6 +334,36 @@ export function ProjectsEditor({ config, onChange }: EditorProps) {
           <Field label="Proof Themes"><TextArea config={config} path={`projects.${idx}.proofThemes`} rows={2} onChange={onChange} /></Field>
           <Field label="What It Shows"><TextArea config={config} path={`projects.${idx}.shows`} rows={2} onChange={onChange} /></Field>
 
+          <div className="cr-section-label">Proof Drawer</div>
+          <Field label="Enabled"><Toggle config={config} path={`projects.${idx}.proofDrawer.enabled`} label="Show proof drawer" onChange={onChange} /></Field>
+          <Field label="Trigger Label"><TextInput config={config} path={`projects.${idx}.proofDrawer.label`} onChange={onChange} /></Field>
+          <Field label="Title"><TextInput config={config} path={`projects.${idx}.proofDrawer.title`} onChange={onChange} /></Field>
+          <Field label="Description"><TextArea config={config} path={`projects.${idx}.proofDrawer.description`} rows={2} onChange={onChange} /></Field>
+          {project.proofDrawer.items.map((item, proofIdx) => (
+            <SubEditor key={item.id} title={`${String(proofIdx + 1).padStart(2, '0')} - ${item.label || 'Proof slot'}`}>
+              <div className="cr-field-row">
+                <Field label="Label"><TextInput config={config} path={`projects.${idx}.proofDrawer.items.${proofIdx}.label`} onChange={onChange} /></Field>
+                <Field label="Icon"><TextInput config={config} path={`projects.${idx}.proofDrawer.items.${proofIdx}.icon`} onChange={onChange} /></Field>
+                <Field label="Order"><NumberInput config={config} path={`projects.${idx}.proofDrawer.items.${proofIdx}.order`} min={0} max={99} onChange={onChange} /></Field>
+              </div>
+              <Field label="Description"><TextArea config={config} path={`projects.${idx}.proofDrawer.items.${proofIdx}.description`} rows={2} onChange={onChange} /></Field>
+              <div className="cr-field-row">
+                <Field label="Status"><Select config={config} path={`projects.${idx}.proofDrawer.items.${proofIdx}.status`} options={[
+                  { value: 'placeholder', label: 'Placeholder / slot ready' },
+                  { value: 'ready', label: 'Attached / ready' },
+                ]} onChange={onChange} /></Field>
+                <Field label="Artifact Link"><TextInput config={config} path={`projects.${idx}.proofDrawer.items.${proofIdx}.href`} placeholder="Leave empty until proof exists" onChange={onChange} /></Field>
+              </div>
+              <button className="cr-btn cr-btn-danger cr-btn-sm icon-align-inline" type="button" onClick={() => { config.projects[idx].proofDrawer.items.splice(proofIdx, 1); onChange(); }}>
+                <Icon name="delete" size="xs" tone="error" />delete proof slot
+              </button>
+            </SubEditor>
+          ))}
+          <button className="cr-list-add-btn" type="button" onClick={() => {
+            project.proofDrawer.items.push({ id: `proof-slot-${uid()}`, label: 'Add proof artifact', description: '', status: 'placeholder', href: '', icon: 'proof', order: project.proofDrawer.items.length });
+            onChange();
+          }}><Icon name="proof" size="xs" tone="accent" />add proof slot</button>
+
           <div className="cr-divider" />
           <button className="cr-btn cr-btn-danger cr-btn-sm" type="button" onClick={async () => {
             const ok = await confirmDialog('Delete Project', `Delete "${project.name}"?`);
@@ -275,6 +377,7 @@ export function ProjectsEditor({ config, onChange }: EditorProps) {
           type: '', featured: false, status: 'draft', confidenceLabel: '',
           storyDescription: [''], systemDescription: '', systemFlow: [],
           problem: '', system: '', stack: '', proofThemes: '', shows: '', links: {},
+          proofDrawer: JSON.parse(JSON.stringify(getDefaultConfig().projects[0].proofDrawer)),
         });
         onChange(); toast('New project added', 'success');
       }}><Icon name="archive" size="xs" tone="accent" />add project</button>
@@ -505,6 +608,28 @@ export function HumanEditor({ config, onChange }: EditorProps) {
         config.humanLayer.motifs.push({ id: `m-${uid()}`, text: '', symbol: '', visible: true, order: config.humanLayer.motifs.length });
         onChange();
       }}><Icon name="person" size="xs" tone="accent" />add motif</button>
+
+      <div className="cr-section-label">Human Glitches</div>
+      <Field label="Section Label"><TextInput config={config} path="humanLayer.glitchesSectionLabel" onChange={onChange} /></Field>
+      <Field label="Title"><TextInput config={config} path="humanLayer.glitchesTitle" onChange={onChange} /></Field>
+      {config.humanLayer.glitches.map((item, idx) => (
+        <SubEditor key={item.id} title={`${String(idx + 1).padStart(2, '0')} - ${item.label || 'Human glitch'}`}>
+          <div className="cr-field-row">
+            <Field label="Label"><TextInput config={config} path={`humanLayer.glitches.${idx}.label`} onChange={onChange} /></Field>
+            <Field label="Icon"><TextInput config={config} path={`humanLayer.glitches.${idx}.icon`} onChange={onChange} /></Field>
+            <Field label="Order"><NumberInput config={config} path={`humanLayer.glitches.${idx}.order`} min={0} max={99} onChange={onChange} /></Field>
+          </div>
+          <Field label="Description"><TextInput config={config} path={`humanLayer.glitches.${idx}.description`} onChange={onChange} /></Field>
+          <Field label="Visible"><Toggle config={config} path={`humanLayer.glitches.${idx}.visible`} label="Show this item" onChange={onChange} /></Field>
+          <button className="cr-btn cr-btn-danger cr-btn-sm icon-align-inline" type="button" onClick={() => { config.humanLayer.glitches.splice(idx, 1); onChange(); }}>
+            <Icon name="delete" size="xs" tone="error" />delete item
+          </button>
+        </SubEditor>
+      ))}
+      <button className="cr-list-add-btn" type="button" onClick={() => {
+        config.humanLayer.glitches.push({ id: `glitch-${uid()}`, label: '', description: '', visible: true, order: config.humanLayer.glitches.length, icon: 'signal' });
+        onChange();
+      }}><Icon name="signal" size="xs" tone="accent" />add human glitch</button>
     </div>
   );
 }
@@ -692,6 +817,44 @@ export function ContactEditor({ config, onChange }: EditorProps) {
 }
 
 // ─── 10. TYPOGRAPHY ─────────────────────────────────────────────
+
+export function LabModulesEditor({ config, onChange }: EditorProps) {
+  const modules = [...config.controlRoomModules.items].sort((a, b) => a.order - b.order);
+
+  return (
+    <div>
+      <EditorHeader title="Lab Modules" description="Control the private Control Room overview and its operating shortcuts" config={config} onChange={onChange} />
+      <Field label="Title"><TextInput config={config} path="controlRoomModules.title" onChange={onChange} /></Field>
+      <Field label="Description"><TextArea config={config} path="controlRoomModules.description" rows={2} onChange={onChange} /></Field>
+      {modules.map(module => {
+        const idx = config.controlRoomModules.items.indexOf(module);
+        return (
+          <SubEditor key={module.id} title={`${String(module.order + 1).padStart(2, '0')} - ${module.title || 'Lab module'}`}>
+            <div className="cr-field-row">
+              <Field label="Title"><TextInput config={config} path={`controlRoomModules.items.${idx}.title`} onChange={onChange} /></Field>
+              <Field label="Status"><TextInput config={config} path={`controlRoomModules.items.${idx}.status`} onChange={onChange} /></Field>
+              <Field label="Icon"><TextInput config={config} path={`controlRoomModules.items.${idx}.icon`} onChange={onChange} /></Field>
+            </div>
+            <Field label="Description"><TextArea config={config} path={`controlRoomModules.items.${idx}.description`} rows={2} onChange={onChange} /></Field>
+            <div className="cr-field-row">
+              <Field label="Target Panel"><TextInput config={config} path={`controlRoomModules.items.${idx}.targetPanel`} placeholder="e.g. projects" onChange={onChange} /></Field>
+              <Field label="External Href"><TextInput config={config} path={`controlRoomModules.items.${idx}.href`} placeholder="Optional asset or URL" onChange={onChange} /></Field>
+              <Field label="Order"><NumberInput config={config} path={`controlRoomModules.items.${idx}.order`} min={0} max={99} onChange={onChange} /></Field>
+            </div>
+            <Field label="Visible"><Toggle config={config} path={`controlRoomModules.items.${idx}.visible`} label="Show on lab overview" onChange={onChange} /></Field>
+            <button className="cr-btn cr-btn-danger cr-btn-sm icon-align-inline" type="button" onClick={() => { config.controlRoomModules.items.splice(idx, 1); onChange(); }}>
+              <Icon name="delete" size="xs" tone="error" />delete module
+            </button>
+          </SubEditor>
+        );
+      })}
+      <button className="cr-list-add-btn" type="button" onClick={() => {
+        config.controlRoomModules.items.push({ id: `lab-${uid()}`, title: 'New module', description: '', status: 'draft', targetPanel: '', href: '', visible: true, order: config.controlRoomModules.items.length, icon: 'settings' });
+        onChange();
+      }}><Icon name="database" size="xs" tone="accent" />add lab module</button>
+    </div>
+  );
+}
 
 export function TypographyEditor({ config, onChange }: EditorProps) {
   const themeEngine = useThemeEngine();

@@ -460,10 +460,14 @@ export type IconName = keyof typeof iconRegistry;
 export const sectionIconMap: Record<string, IconName> = {
   hero: 'signal',
   statement: 'trace',
+  'signal-profile': 'signal',
   projects: 'archive',
   proof: 'proof',
+  'anti-patterns': 'warning',
   stack: 'stack',
+  'field-notes': 'log',
   philosophy: 'spark',
+  'operating-manual': 'person',
   human: 'person',
   timeline: 'log',
   contact: 'mail',
@@ -515,6 +519,9 @@ export const controlNavIconMap: Record<string, IconName> = {
   identity: 'person',
   sections: 'layout',
   projects: 'archive',
+  'identity-layer': 'signal',
+  overview: 'terminal',
+  'lab-modules': 'database',
   proof: 'proof',
   skills: 'stack',
   philosophy: 'spark',
@@ -534,7 +541,12 @@ export const controlNavIconMap: Record<string, IconName> = {
 };
 
 export const controlGroupIconMap: Record<string, IconName> = {
+  Lab: 'terminal',
   Content: 'archive',
   Design: 'palette',
   System: 'database',
 };
+
+export function resolveIconName(name: string | undefined, fallback: IconName = 'trace'): IconName {
+  return name && name in iconRegistry ? name as IconName : fallback;
+}

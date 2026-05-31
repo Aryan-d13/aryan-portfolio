@@ -6,12 +6,48 @@ import { applyTypographyVars } from '../utils/textEffects';
 const STORAGE_KEY = 'aryan_identity_site_config';
 const DRAFT_KEY = 'aryan_identity_site_config_draft';
 
+export function normalizeSiteConfig(config: SiteConfig): SiteConfig {
+  const defaults = getDefaultConfig();
+  const normalized = mergeConfig(
+    defaults as unknown as Record<string, unknown>,
+    config as unknown as Record<string, unknown>,
+  ) as unknown as SiteConfig;
+
+  const identitySectionIds = new Set(['signal-profile', 'anti-patterns', 'field-notes', 'operating-manual']);
+  const configuredSections = Array.isArray(normalized.sections) ? normalized.sections : [];
+  const hasIdentitySections = configuredSections.some(section => identitySectionIds.has(section.id));
+
+  if (!hasIdentitySections) {
+    configuredSections.forEach(section => {
+      const defaultSection = defaults.sections.find(candidate => candidate.id === section.id);
+      if (defaultSection) section.order = defaultSection.order;
+    });
+  }
+
+  normalized.sections = [
+    ...configuredSections,
+    ...defaults.sections
+      .filter(section => !configuredSections.some(candidate => candidate.id === section.id))
+      .map(section => JSON.parse(JSON.stringify(section))),
+  ];
+
+  normalized.projects = normalized.projects.map(project => {
+    if (project.proofDrawer) return project;
+    const defaultProject = defaults.projects.find(candidate => candidate.id === project.id) ?? defaults.projects[0];
+    return {
+      ...project,
+      proofDrawer: JSON.parse(JSON.stringify(defaultProject.proofDrawer)),
+    };
+  });
+
+  return normalized;
+}
+
 export function loadConfig(): SiteConfig {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
-      const parsed = JSON.parse(raw);
-      return mergeConfig(getDefaultConfig() as unknown as Record<string, unknown>, parsed) as unknown as SiteConfig;
+      return normalizeSiteConfig(JSON.parse(raw) as SiteConfig);
     }
   } catch (e) { console.warn('[configManager] Failed to load config:', e); }
   return getDefaultConfig();
@@ -34,7 +70,7 @@ export function saveDraft(config: SiteConfig): void {
 export function loadDraft(): SiteConfig | null {
   try {
     const raw = localStorage.getItem(DRAFT_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) return normalizeSiteConfig(JSON.parse(raw) as SiteConfig);
   } catch (e) { console.warn('[configManager] Failed to load draft:', e); }
   return null;
 }
@@ -63,7 +99,7 @@ export function importConfig(jsonString: string): { success: boolean; config: Si
   const { valid, errors } = validateConfig(finalConfigToValidate);
   if (!valid) return { success: false, config: null, errors };
 
-  return { success: true, config: finalConfigToValidate as SiteConfig, errors: [] };
+  return { success: true, config: normalizeSiteConfig(finalConfigToValidate as SiteConfig), errors: [] };
 }
 
 export function resetToDefaults(): SiteConfig {
@@ -282,6 +318,7 @@ function mapCustomToSiteConfig(custom: any): Partial<SiteConfig> {
       proofThemes: '',
       shows: '',
       links: {},
+      proofDrawer: JSON.parse(JSON.stringify(getDefaultConfig().projects[0].proofDrawer)),
     }));
   }
 
@@ -329,6 +366,7 @@ function mapCustomToSiteConfig(custom: any): Partial<SiteConfig> {
       'meaningful fiction': '📖', 'dry humor': '😐'
     };
     partial.humanLayer = {
+      ...getDefaultConfig().humanLayer,
       motifs: custom.human_layer.interests.map((text: string, idx: number) => ({
         id: `m${idx + 1}`,
         text,

@@ -6,11 +6,12 @@ import type { ThemeDefinition } from '../../themes/themeTypes';
 import { mergeThemeIntoConfig } from '../../themes/utils/themeConfigBridge';
 import Icon from '../icons/Icon';
 import NavPanel from './NavPanel';
+import ControlRoomOverview from './ControlRoomOverview';
 import { toast, confirmDialog, ToastContainer, ConfirmModal } from '../ui/Toast';
 import ThemeEditorPanel from '../theme/ThemeEditorPanel';
 import {
   IdentityEditor, SectionsEditor, ProjectsEditor, ProofEditor, SkillsEditor,
-  PhilosophyEditor, HumanEditor, TimelineEditor, ContactEditor,
+  PhilosophyEditor, HumanEditor, TimelineEditor, ContactEditor, IdentityLayerEditor, LabModulesEditor,
   TypographyEditor, ColorsEditor, BackgroundEditor, MotionEditor, LayoutEditor,
   SeoEditor, AssetsEditor, JsonEditor, PortraitEditor,
 } from './editors/AllEditors';
@@ -28,7 +29,7 @@ export default function ControlRoom({ initialConfig }: Props) {
     if (draft) { toast('Resumed from unsaved draft', 'info'); return draft; }
     return mergeThemeIntoConfig(deepClone(initialConfig), themeEngine.activeTheme);
   });
-  const [activePanel, setActivePanel] = useState('theme');
+  const [activePanel, setActivePanel] = useState('overview');
   const [unsaved, setUnsaved] = useState(() => !!loadDraft());
   const [mobileTab, setMobileTab] = useState<'nav' | 'editor' | 'preview'>('editor');
   const [previewDevice, setPreviewDevice] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
@@ -144,7 +145,9 @@ export default function ControlRoom({ initialConfig }: Props) {
 
   // Editor panel router
   const editors: Record<string, React.ReactNode> = {
+    overview: <ControlRoomOverview config={draftConfig} onSelect={setActivePanel} />,
     identity: <IdentityEditor config={draftConfig} onChange={markUnsaved} />,
+    'identity-layer': <IdentityLayerEditor config={draftConfig} onChange={markUnsaved} />,
     sections: <SectionsEditor config={draftConfig} onChange={markUnsaved} />,
     projects: <ProjectsEditor config={draftConfig} onChange={markUnsaved} />,
     proof: <ProofEditor config={draftConfig} onChange={markUnsaved} />,
@@ -162,6 +165,7 @@ export default function ControlRoom({ initialConfig }: Props) {
     layout: <LayoutEditor config={draftConfig} onChange={markThemeDesignUnsaved} />,
     seo: <SeoEditor config={draftConfig} onChange={markUnsaved} />,
     assets: <AssetsEditor config={draftConfig} onChange={markUnsaved} />,
+    'lab-modules': <LabModulesEditor config={draftConfig} onChange={markUnsaved} />,
     json: <JsonEditor config={draftConfig} onChange={markUnsaved} />,
   };
 

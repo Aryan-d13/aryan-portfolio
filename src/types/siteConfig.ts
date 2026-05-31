@@ -36,9 +36,10 @@ export interface SectionConfig {
   signal: string;
   proofLevel: string;
   systemStatus: string;
-  type: 'hero' | 'statement' | 'projects' | 'proof' | 'stack' | 'philosophy' | 'human' | 'timeline' | 'contact';
+  type: 'hero' | 'statement' | 'signal-profile' | 'projects' | 'proof' | 'anti-patterns' | 'stack' | 'field-notes' | 'philosophy' | 'operating-manual' | 'human' | 'timeline' | 'contact';
   title: string;
   kicker: string;
+  icon?: string;
   railLabel?: string;
   heading?: string;
   descriptionAtmospheric?: string;
@@ -68,6 +69,57 @@ export interface ProjectConfig {
   proofThemes: string;
   shows: string;
   links: Record<string, string>;
+  proofDrawer: ProofDrawerConfig;
+}
+
+export interface IdentityModuleItem {
+  id: string;
+  label: string;
+  description: string;
+  visible: boolean;
+  order: number;
+  icon: string;
+}
+
+export interface IdentityModuleConfig {
+  enabled: boolean;
+  sectionLabel: string;
+  title: string;
+  description: string;
+  items: IdentityModuleItem[];
+}
+
+export interface BuilderMode {
+  id: 'story' | 'system';
+  label: string;
+  description: string;
+  icon: string;
+}
+
+export interface BuilderModesConfig {
+  enabled: boolean;
+  sectionLabel: string;
+  title: string;
+  description: string;
+  modes: BuilderMode[];
+}
+
+export interface ProofDrawerItem {
+  id: string;
+  label: string;
+  description: string;
+  status: 'placeholder' | 'ready';
+  href: string;
+  icon: string;
+  order: number;
+}
+
+export interface ProofDrawerConfig {
+  enabled: boolean;
+  label: string;
+  title: string;
+  description: string;
+  items: ProofDrawerItem[];
 }
 
 export interface ProofCard {
@@ -107,6 +159,29 @@ export interface Motif {
 
 export interface HumanLayerConfig {
   motifs: Motif[];
+  glitchesSectionLabel: string;
+  glitchesTitle: string;
+  glitches: IdentityModuleItem[];
+}
+
+export interface TasteLayerConfig extends IdentityModuleConfig {}
+
+export interface ControlRoomModuleItem {
+  id: string;
+  title: string;
+  description: string;
+  status: string;
+  targetPanel: string;
+  href: string;
+  visible: boolean;
+  order: number;
+  icon: string;
+}
+
+export interface ControlRoomModulesConfig {
+  title: string;
+  description: string;
+  items: ControlRoomModuleItem[];
 }
 
 export interface TimelineEntry {
@@ -311,6 +386,13 @@ export interface SiteConfig {
   identity: IdentityConfig;
   sections: SectionConfig[];
   projects: ProjectConfig[];
+  signalProfile: IdentityModuleConfig;
+  antiPatterns: IdentityModuleConfig;
+  fieldNotes: IdentityModuleConfig;
+  operatingManual: IdentityModuleConfig;
+  builderModes: BuilderModesConfig;
+  tasteLayer: TasteLayerConfig;
+  controlRoomModules: ControlRoomModulesConfig;
   proofCards: ProofCard[];
   skillGroups: SkillGroup[];
   philosophy: PhilosophyLine[];
