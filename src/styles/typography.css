@@ -151,18 +151,6 @@ body {
     0 0 calc(var(--type-shadow-depth) * 1.1) color-mix(in srgb, var(--type-gradient-mid) var(--type-glow-opacity-pct), transparent);
 }
 
-.text-effect-outline-layered::before,
-.text-effect-editorial-ghost::before,
-.text-effect-casefile-solid-with-metadata::before {
-  content: attr(data-text);
-  position: absolute;
-  inset: 0 auto auto 0;
-  z-index: -1;
-  color: transparent;
-  -webkit-text-stroke: var(--type-outline-width) color-mix(in srgb, var(--accent-secondary) var(--type-outline-opacity-pct), transparent);
-  opacity: var(--type-treatment-outline);
-  transform: translate3d(0.06em, 0.055em, 0);
-}
 
 .text-effect-soft-luxury {
   font-weight: 600;
