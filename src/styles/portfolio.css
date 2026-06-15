@@ -123,6 +123,9 @@
 
 html {
   background: var(--surface-base);
+}
+
+html:not(.lenis) {
   scroll-behavior: smooth;
 }
 
