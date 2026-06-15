@@ -1,6 +1,8 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, type CSSProperties, type ReactNode } from 'react';
 import { useSiteConfig } from '../../hooks/useSiteConfig';
 import { useBootSequence, type BootStep } from '../../hooks/useBootSequence';
+import { useThemeEngine } from '../../hooks/useThemeEngine';
+import { getThemeBootstrapSnapshot } from '../../utils/themeBootstrap';
 import BootLoader from './BootLoader';
 import type { ThemeDefinition } from '../../themes/themeTypes';
 
@@ -17,49 +19,80 @@ const BootContext = createContext<BootContextValue | null>(null);
 
 export function BootProvider({ children }: { children: ReactNode }) {
   const { config } = useSiteConfig();
+  const { activeTheme: currentTheme } = useThemeEngine();
+  const [bootstrapSnapshot] = useState(() => getThemeBootstrapSnapshot());
   const loaderConfig = config.loader;
+  const loaderEnabled = loaderConfig?.enabled ?? true;
+  const portraitSrc = bootstrapSnapshot?.portraitSrc
+    || config.portrait?.src
+    || config.assets?.profileImage
+    || undefined;
 
   const { isReady, step, statusText, progress, activeTheme, offline } = useBootSequence({
-    enabled: loaderConfig?.enabled ?? true,
-    minimumDuration: loaderConfig?.minimumDuration ?? 600,
+    enabled: loaderEnabled,
+    minimumDuration: loaderConfig?.minimumDuration ?? 0,
     maxWaitTime: loaderConfig?.maxWaitTime ?? 1500,
+    activeTheme: currentTheme,
+    portraitSrc,
   });
 
   const [loaderMounted, setLoaderMounted] = useState(() => {
-    return loaderConfig?.enabled ?? true;
+    return loaderEnabled;
   });
 
-  const [transitionDone, setTransitionDone] = useState(false);
+  const [transitionDone, setTransitionDone] = useState(!loaderEnabled);
+
+  useEffect(() => {
+    if (!loaderEnabled) {
+      setLoaderMounted(false);
+      setTransitionDone(true);
+      return;
+    }
+
+    if (!isReady) {
+      setLoaderMounted(true);
+      setTransitionDone(false);
+      return;
+    }
+
+    const reduceMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const duration = reduceMotion ? 100 : 380;
+    const timer = window.setTimeout(() => {
+      setTransitionDone(true);
+    }, duration + 100);
+    return () => window.clearTimeout(timer);
+  }, [isReady, loaderEnabled]);
 
   useEffect(() => {
     if (isReady) {
-      const reduceMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const duration = reduceMotion ? 100 : 600;
-      const timer = setTimeout(() => {
-        setTransitionDone(true);
-      }, duration + 100);
-      return () => clearTimeout(timer);
+      setLoaderMounted(loaderEnabled);
     }
+  }, [isReady, loaderEnabled]);
+
+  useEffect(() => {
+    document.documentElement.dataset.appBootReady = isReady ? 'true' : 'false';
   }, [isReady]);
 
   const handleExitComplete = () => {
     setLoaderMounted(false);
   };
 
-  const reduceMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const contentStyle = transitionDone ? {} : {
-    opacity: isReady ? 1 : 0,
-    transform: isReady ? 'scale(1)' : 'scale(1.01)',
-    transition: reduceMotion
-      ? 'opacity 100ms linear'
-      : 'opacity 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+  const contentClassName = [
+    'app-boot-content-wrap',
+    isReady ? 'is-ready' : 'is-booting',
+    transitionDone ? 'is-settled' : '',
+  ].filter(Boolean).join(' ');
+  const contentStyle: CSSProperties = {
+    opacity: 1,
+    transform: 'none',
+    pointerEvents: isReady ? 'auto' : 'none',
+    transition: 'none',
   };
 
   return (
     <BootContext.Provider value={{ isReady, step, statusText, progress, activeTheme, offline }}>
-      {/* Cinematic fade-in wrap */}
       <div 
-        className="app-boot-content-wrap" 
+        className={contentClassName}
         style={contentStyle}
       >
         {children}

@@ -32,7 +32,7 @@
   --cr-status-warning: var(--cr-warning);
   --cr-status-error: var(--cr-danger);
   --cr-focus-ring: 0 0 0 1px var(--cr-bg), 0 0 0 3px color-mix(in srgb, var(--cr-accent-cyan) 58%, transparent);
-  --cr-hover-glow: 0 0 24px color-mix(in srgb, var(--cr-accent-cyan) 14%, transparent);
+  --cr-hover-glow: 0 0 18px color-mix(in srgb, var(--cr-accent-cyan) 8%, transparent);
   --cr-press-scale: 0.985;
   --cr-font-body: 'Inter', system-ui, sans-serif;
   --cr-font-mono: 'JetBrains Mono', 'Consolas', monospace;
@@ -333,7 +333,7 @@ html.cr-active, body.cr-active {
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
   text-decoration: none;
   cursor: pointer;
   transition:
@@ -351,7 +351,7 @@ html.cr-active, body.cr-active {
   border-color: var(--cr-border-2);
   background: var(--cr-bg-4);
   color: var(--cr-text);
-  box-shadow: var(--cr-hover-glow);
+  box-shadow: none;
 }
 
 .cr-btn:active:not(:disabled) {
@@ -404,8 +404,8 @@ html.cr-active, body.cr-active {
 
 .cr-btn-danger {
   color: var(--cr-danger);
-  background: var(--cr-danger-bg);
-  border-color: color-mix(in srgb, var(--cr-danger) 24%, transparent);
+  background: transparent;
+  border-color: transparent;
 }
 
 .cr-btn-danger:hover:not(:disabled),
@@ -449,7 +449,7 @@ html.cr-active, body.cr-active {
   font-weight: 600;
   text-transform: uppercase;
   cursor: pointer;
-  transition: all var(--cr-transition);
+  transition: color var(--cr-transition), border-color var(--cr-transition), background var(--cr-transition);
 }
 
 .cr-mobile-tabs button.is-active {
@@ -460,7 +460,7 @@ html.cr-active, body.cr-active {
 /* ─── THREE-PANEL LAYOUT ─────────────────────────────────────── */
 .cr-panels {
   display: grid;
-  grid-template-columns: 220px 1fr 420px;
+  grid-template-columns: 232px minmax(620px, 1fr) minmax(340px, 28vw);
   min-height: 0;
   height: calc(100vh - var(--cr-topbar-h) - var(--cr-mobile-tabs-h));
   overflow: hidden;
@@ -593,7 +593,7 @@ html.cr-active, body.cr-active {
   font-size: 12px;
   text-align: left;
   cursor: pointer;
-  transition: all var(--cr-transition);
+  transition: color var(--cr-transition), background var(--cr-transition), border-color var(--cr-transition);
   border-left: 2px solid transparent;
 }
 
@@ -624,9 +624,9 @@ html.cr-active, body.cr-active {
 
 /* ─── EDITOR PANEL ───────────────────────────────────────────── */
 .cr-editor-content {
-  max-width: 760px;
+  max-width: 860px;
   margin: 0 auto;
-  padding: 24px 32px;
+  padding: 28px 36px;
 }
 
 .cr-editor-header {
@@ -713,7 +713,7 @@ html.cr-active, body.cr-active {
   border-radius: var(--cr-radius);
   background: var(--cr-bg-2);
   color: var(--cr-text);
-  font-family: var(--cr-font-mono);
+  font-family: var(--cr-font-body);
   font-size: 12px;
   transition:
     border-color var(--cr-transition),
@@ -745,6 +745,13 @@ html.cr-active, body.cr-active {
   padding: 8px 10px;
   resize: vertical;
   line-height: 1.5;
+  font-size: 13px;
+}
+
+.cr-select,
+.cr-input[type="number"],
+.cr-color-hex {
+  font-family: var(--cr-font-mono);
 }
 
 .cr-select {
@@ -1864,6 +1871,10 @@ html.cr-active, body.cr-active {
   letter-spacing: 0.06em;
 }
 
+.cr-overview-module-status {
+  color: var(--cr-text-3);
+}
+
 .cr-overview-heading h1 {
   margin: 8px 0 0;
   color: var(--cr-text);
@@ -1886,15 +1897,15 @@ html.cr-active, body.cr-active {
 .cr-overview-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  gap: 12px;
 }
 
 .cr-overview-module {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto 1fr auto;
   gap: 8px 12px;
-  min-height: 172px;
-  padding: 18px;
+  min-height: 146px;
+  padding: 16px;
   border: 1px solid var(--cr-border);
   border-radius: var(--cr-radius);
   background: color-mix(in srgb, var(--cr-bg-3) 78%, transparent);
@@ -1902,7 +1913,7 @@ html.cr-active, body.cr-active {
   cursor: default;
   text-align: left;
   text-decoration: none;
-  transition: border-color var(--cr-transition), background var(--cr-transition), transform var(--cr-transition), box-shadow var(--cr-transition);
+  transition: border-color var(--cr-transition), background var(--cr-transition), transform var(--cr-transition);
 }
 
 button.cr-overview-module,
@@ -1914,31 +1925,30 @@ a.cr-overview-module {
 .cr-overview-module:focus-visible {
   border-color: color-mix(in srgb, var(--cr-accent-cyan) 42%, var(--cr-border-2));
   background: var(--cr-bg-3);
-  box-shadow: var(--cr-hover-glow);
   transform: translateY(-1px);
 }
 
 .cr-overview-module-icon {
   display: grid;
-  grid-row: span 2;
-  width: 38px;
-  height: 38px;
+  width: 30px;
+  height: 30px;
   place-items: center;
-  border: 1px solid color-mix(in srgb, var(--cr-accent-cyan) 24%, var(--cr-border));
-  background: color-mix(in srgb, var(--cr-accent-cyan) 6%, transparent);
+  border: 1px solid var(--cr-border);
+  background: color-mix(in srgb, var(--cr-bg-4) 54%, transparent);
 }
 
 .cr-overview-module h2 {
-  align-self: end;
+  grid-column: 2 / 3;
+  align-self: center;
   margin: 0;
   color: var(--cr-text);
   font-family: var(--cr-font-display);
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .cr-overview-module p {
   grid-column: 1 / -1;
-  margin: 10px 0 0;
+  margin: 8px 0 0;
 }
 
 .cr-overview-module-action {
@@ -2025,3 +2035,24 @@ a.cr-overview-module {
     transition-duration: 1ms !important;
   }
 }
+
+/* ─── OPERATIONAL MICROSTATES (CONTROL ROOM FOCUS) ────────── */
+.cr-btn.is-saving {
+  background: color-mix(in srgb, var(--cr-accent) 25%, transparent) !important;
+  border-color: var(--cr-accent-cyan) !important;
+  color: var(--cr-accent-cyan) !important;
+  pointer-events: none;
+  animation: crSavePulse 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes crSavePulse {
+  0% {
+    box-shadow: 0 0 4px color-mix(in srgb, var(--cr-accent-cyan) 20%, transparent);
+    opacity: 0.85;
+  }
+  100% {
+    box-shadow: 0 0 16px color-mix(in srgb, var(--cr-accent-cyan) 60%, transparent);
+    opacity: 1;
+  }
+}
+

@@ -2,12 +2,16 @@ import type { SectionConfig, SiteConfig } from '../../types/siteConfig';
 import Icon from '../icons/Icon';
 import MetadataText from '../typography/MetadataText';
 import TextTreatment from '../typography/Text';
+import { useInView } from '../../hooks/useInView';
 
 interface Props { config: SiteConfig; section: SectionConfig; }
 
 export default function StatementSection({ config, section }: Props) {
+  const ref = useInView<HTMLElement>({ threshold: 0.15, once: true });
+
   return (
     <section
+      ref={ref}
       className="statement-shell section-frame"
       id={section.id}
       data-section-id={section.sectionId}
@@ -15,6 +19,7 @@ export default function StatementSection({ config, section }: Props) {
       data-proof-level={section.proofLevel}
       data-system-status={section.systemStatus}
     >
+      <span className="section-atmospheric-label" aria-hidden="true">SIGNAL</span>
       <div className="trace-label" aria-hidden="true">
         <MetadataText config={config.typographySystem}>
           section_id: {section.sectionId} / signal: {section.signal} / proof_level: {section.proofLevel} / system_status: {section.systemStatus}

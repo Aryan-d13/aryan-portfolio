@@ -32,6 +32,7 @@ export default function ControlRoom({ initialConfig }: Props) {
   const [activePanel, setActivePanel] = useState('overview');
   const [unsaved, setUnsaved] = useState(() => !!loadDraft());
   const [mobileTab, setMobileTab] = useState<'nav' | 'editor' | 'preview'>('editor');
+  const [isSaving, setIsSaving] = useState(false);
   const [previewDevice, setPreviewDevice] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
   const importRef = useRef<HTMLInputElement>(null);
   const previewRef = useRef<HTMLIFrameElement>(null);
@@ -99,21 +100,29 @@ export default function ControlRoom({ initialConfig }: Props) {
   const handleApply = async () => {
     const result = saveConfig(draftConfig);
     if (result.success) {
-      clearDraft();
-      markSaved();
-      previewRef.current?.contentWindow?.postMessage({ type: 'CONFIG_UPDATE', config: draftConfig, theme: themeEngine.activeTheme }, '*');
-      toast('Applied to site locally', 'success');
+      setIsSaving(true);
+      try {
+        clearDraft();
+        markSaved();
+        previewRef.current?.contentWindow?.postMessage({ type: 'CONFIG_UPDATE', config: draftConfig, theme: themeEngine.activeTheme }, '*');
+        toast('Applied to site locally', 'success');
 
-      // Async cloud sync
-      toast('Syncing with cloud database...', 'info');
-      const cloudSuccess = await themeEngine.saveConfigGlobally(draftConfig);
-      if (cloudSuccess) {
-        toast('Synced to cloud database', 'success');
-      } else {
-        toast('Local save ok. Cloud sync failed/offline.', 'warning');
+        // Async cloud sync
+        toast('Syncing with cloud database...', 'info');
+        const cloudSuccess = await themeEngine.saveConfigGlobally(draftConfig);
+        if (cloudSuccess) {
+          toast('Synced to cloud database', 'success');
+        } else {
+          toast('Local save ok. Cloud sync failed/offline.', 'warning');
+        }
+      } catch (err) {
+        toast('An error occurred during save', 'error');
+      } finally {
+        setIsSaving(false);
       }
     } else { toast(`Validation failed: ${result.errors[0]}`, 'error'); }
   };
+
 
   const handleExport = () => { downloadConfig(draftConfig); toast('Config exported', 'success'); };
 
@@ -184,12 +193,21 @@ export default function ControlRoom({ initialConfig }: Props) {
           </span>
         </div>
         <div className="cr-topbar-actions">
-          <button className="cr-btn cr-btn-ghost icon-align-inline" type="button" onClick={handleSaveDraft}><Icon name="save" size="xs" tone="muted" />save draft</button>
-          <button className="cr-btn cr-btn-primary icon-align-inline" type="button" onClick={handleApply}><Icon name="success" size="xs" tone="accent" />apply to site</button>
+          <button 
+            className={`cr-btn cr-btn-primary icon-align-inline${isSaving ? ' is-saving' : ''}`} 
+            type="button" 
+            onClick={handleApply}
+            disabled={isSaving}
+          >
+            <Icon name={isSaving ? 'sync' : 'success'} size="xs" tone="accent" state={isSaving ? 'loading' : 'idle'} />
+            {isSaving ? 'applying...' : 'apply to site'}
+          </button>
+          <button className="cr-btn cr-btn-ghost icon-align-inline" type="button" onClick={handleSaveDraft} disabled={isSaving}><Icon name="save" size="xs" tone="muted" />save draft</button>
+
           <button className="cr-btn cr-btn-ghost icon-align-inline" type="button" onClick={handleExport}><Icon name="export" size="xs" tone="muted" />export</button>
           <button className="cr-btn cr-btn-ghost icon-align-inline" type="button" onClick={() => importRef.current?.click()}><Icon name="import" size="xs" tone="muted" />import</button>
-          <button className="cr-btn cr-btn-danger icon-align-inline" type="button" onClick={handleReset}><Icon name="reset" size="xs" tone="error" />reset</button>
           <a href="/" className="cr-btn cr-btn-ghost icon-align-inline" target="_blank" rel="noreferrer"><Icon name="externalLink" size="xs" tone="muted" />view site</a>
+          <button className="cr-btn cr-btn-danger icon-align-inline" type="button" onClick={handleReset}><Icon name="reset" size="xs" tone="error" />reset</button>
         </div>
       </header>
 

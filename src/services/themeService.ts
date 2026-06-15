@@ -1,8 +1,5 @@
-import {
-  type Unsubscribe,
-} from 'firebase/firestore';
+export type Unsubscribe = () => void;
 import type { SiteConfig } from '../types/siteConfig';
-import { firebaseConfigured, getFirebaseRuntime } from '../lib/firebase';
 import type { ThemeDefinition } from '../themes/themeTypes';
 import { DEFAULT_THEME_ID, builtInThemes, getThemeById } from '../themes/themeRegistry';
 import { validateTheme } from '../themes/utils/themeValidation';
@@ -32,8 +29,7 @@ export interface CachedThemeState {
   cachedAt: string;
 }
 
-const COLLECTION = 'portfolioConfig';
-const DOC_ID = 'main';
+
 const CACHE_KEY = 'aryan_theme_engine_remote_cache';
 
 function nowIso(): string {
@@ -153,63 +149,112 @@ export function saveCachedRemoteTheme(state: RemoteThemeState): void {
   localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
 }
 
-async function themeDocRef() {
-  if (!firebaseConfigured) return null;
-  const runtime = await getFirebaseRuntime();
-  if (!runtime) return null;
-  return {
-    ref: runtime.api.doc(runtime.firestore, COLLECTION, DOC_ID),
-    api: runtime.api,
-  };
+function readPublishSecret(): string {
+  if (typeof window === 'undefined') return '';
+  return (
+    window.sessionStorage.getItem('aryan_theme_publish_secret')
+    || window.localStorage.getItem('aryan_theme_publish_secret')
+    || 'trace'
+  );
 }
 
 export async function fetchRemoteThemeState(): Promise<RemoteThemeState | null> {
-  const runtime = await themeDocRef();
-  if (!runtime) return null;
-  const snap = await runtime.api.getDoc(runtime.ref);
-  if (!snap.exists()) return null;
-  return sanitizeRemoteThemeState(snap.data());
+  try {
+    const response = await fetch('/api/theme/config');
+    if (!response.ok) {
+      throw new Error(`Failed to fetch config (${response.status})`);
+    }
+    const data = await response.json();
+    return sanitizeRemoteThemeState(data);
+  } catch {
+    return null;
+  }
 }
 
 export async function subscribeRemoteThemeState(
   onNext: (state: RemoteThemeState | null) => void,
   onError: (error: Error) => void,
 ): Promise<Unsubscribe | null> {
-  const runtime = await themeDocRef();
-  if (!runtime) return null;
-  return runtime.api.onSnapshot(
-    runtime.ref,
-    snapshot => {
-      if (!snapshot.exists()) {
-        onNext(null);
-        return;
+  let active = true;
+  const poll = async () => {
+    try {
+      const response = await fetch('/api/theme/config');
+      if (!active) return;
+      if (!response.ok) {
+        throw new Error(`Failed to fetch config (${response.status})`);
       }
-      const state = sanitizeRemoteThemeState(snapshot.data());
-      onNext(state);
-    },
-    error => onError(error),
-  );
+      const data = await response.json();
+      onNext(sanitizeRemoteThemeState(data));
+    } catch (err) {
+      if (active) onError(err as Error);
+    }
+  };
+
+  void poll();
+  const interval = setInterval(poll, 15000);
+
+  return () => {
+    active = false;
+    clearInterval(interval);
+  };
 }
 
 export async function saveRemoteThemeState(next: RemoteThemeState): Promise<RemoteThemeState> {
-  const runtime = await themeDocRef();
-  if (!runtime) throw new Error('Firebase is not configured');
   const state: RemoteThemeState = {
     ...next,
     updatedAt: nowIso(),
   };
-  await runtime.api.setDoc(runtime.ref, stripUndefined(state), { merge: false });
-  saveCachedRemoteTheme(state);
-  return state;
+  return publishRemoteThemeState(state, resolveActiveTheme(state));
+}
+
+export async function publishRemoteThemeState(
+  next: RemoteThemeState,
+  activeTheme: ThemeDefinition,
+): Promise<RemoteThemeState> {
+  const state: RemoteThemeState = {
+    ...next,
+    updatedAt: nowIso(),
+  };
+  const headers: Record<string, string> = {
+    'content-type': 'application/json',
+  };
+  const publishSecret = readPublishSecret();
+  if (publishSecret) headers['x-theme-publish-secret'] = publishSecret;
+
+  const response = await fetch('/api/theme/publish', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      state: stripUndefined(state),
+      activeTheme: stripUndefined(normalizeTheme(activeTheme)),
+    }),
+  });
+
+  const payload = await response.json().catch(() => null) as {
+    ok?: boolean;
+    state?: unknown;
+    snapshot?: { remoteState?: unknown };
+    error?: string;
+  } | null;
+
+  if (!response.ok || payload?.ok === false) {
+    throw new Error(payload?.error || `Theme publish failed (${response.status})`);
+  }
+
+  const saved = sanitizeRemoteThemeState(payload?.state ?? payload?.snapshot?.remoteState ?? state);
+  if (!saved) throw new Error('Published theme state was invalid');
+  saveCachedRemoteTheme(saved);
+  return saved;
 }
 
 export async function resetRemoteThemeState(): Promise<RemoteThemeState> {
-  return saveRemoteThemeState(createRemoteThemeState({
+  const state = createRemoteThemeState({
     activeThemeId: DEFAULT_THEME_ID,
     customThemes: [],
     activeTheme: builtInThemes[0],
     version: 1,
-  }));
+  });
+  return publishRemoteThemeState(state, builtInThemes[0]);
 }
 
 export function exportRemoteThemeState(state: RemoteThemeState | null): string {

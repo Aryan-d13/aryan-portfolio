@@ -244,6 +244,7 @@ export function applyTheme(theme: ThemeDefinition, options: ApplyThemeOptions = 
 
   const root = document.documentElement;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const bootReady = root.dataset.appBootReady === 'true';
   const style = reduceMotion ? 'crossfade' : resolveTransitionStyle(theme);
   const duration = reduceMotion ? 140 : Math.min(Math.max(theme.motion.transitionDuration + 180, 300), 520);
   const apply = () => {
@@ -252,7 +253,7 @@ export function applyTheme(theme: ThemeDefinition, options: ApplyThemeOptions = 
     applyThemeTokens(theme);
   };
 
-  if (options.transition === false || reduceMotion) {
+  if (options.transition === false || reduceMotion || !bootReady) {
     apply();
     return true;
   }

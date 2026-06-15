@@ -6,6 +6,8 @@ import ManifestoLine from '../typography/ManifestoLine';
 import MetadataText from '../typography/MetadataText';
 import SectionHeading from '../typography/SectionHeading';
 import TextTreatment from '../typography/Text';
+import { useInView } from '../../hooks/useInView';
+
 
 interface Props { config: SiteConfig; section: SectionConfig; }
 
@@ -15,24 +17,27 @@ function timelineIcon(tags: string[]): IconName {
 }
 
 export function PhilosophySection({ config, section }: Props) {
+  const ref = useInView<HTMLElement>({ threshold: 0.1, once: true });
   const lines = [...(config.philosophy || [])].sort((a, b) => a.order - b.order);
   return (
-    <section className="principle-shell section-frame" id={section.id} data-section-id={section.sectionId} data-signal={section.signal} data-proof-level={section.proofLevel} data-system-status={section.systemStatus}>
+    <section ref={ref} className="principle-shell section-frame" id={section.id} data-section-id={section.sectionId} data-signal={section.signal} data-proof-level={section.proofLevel} data-system-status={section.systemStatus}>
       <div className="trace-label" aria-hidden="true"><MetadataText config={config.typographySystem}>section_id: {section.sectionId} / signal: {section.signal} / proof_level: {section.proofLevel} / system_status: {section.systemStatus}</MetadataText></div>
       <div className="section-rail"><p className="section-kicker icon-align-inline"><Icon name="spark" size="xs" tone="accent" /><MetadataText config={config.typographySystem}>{section.kicker}</MetadataText></p>{section.railLabel && <span><MetadataText config={config.typographySystem}>{section.railLabel}</MetadataText></span>}</div>
       <ul className="principles" aria-label="Operating principles">
-        {lines.map(l => <ManifestoLine key={l.id} config={config} line={l} />)}
+        {lines.map((l, index) => <ManifestoLine key={l.id} config={config} line={l} index={index} />)}
       </ul>
     </section>
   );
 }
 
+
 export function HumanSection({ config, section }: Props) {
+  const ref = useInView<HTMLElement>({ threshold: 0.1, once: true });
   const motifs = [...(config.humanLayer?.motifs || [])].filter(m => m.visible !== false).sort((a, b) => a.order - b.order);
   const tasteItems = [...(config.tasteLayer?.items || [])].filter(item => item.visible !== false).sort((a, b) => a.order - b.order);
   const glitches = [...(config.humanLayer?.glitches || [])].filter(item => item.visible !== false).sort((a, b) => a.order - b.order);
   return (
-    <section className="section-shell section-frame" id={section.id} data-section-id={section.sectionId} data-signal={section.signal} data-proof-level={section.proofLevel} data-system-status={section.systemStatus}>
+    <section ref={ref} className="section-shell section-frame" id={section.id} data-section-id={section.sectionId} data-signal={section.signal} data-proof-level={section.proofLevel} data-system-status={section.systemStatus}>
       <div className="trace-label" aria-hidden="true"><MetadataText config={config.typographySystem}>section_id: {section.sectionId} / signal: {section.signal} / proof_level: {section.proofLevel} / system_status: {section.systemStatus}</MetadataText></div>
       <div className="section-rail"><p className="section-kicker"><MetadataText config={config.typographySystem}>{section.kicker}</MetadataText></p>{section.railLabel && <span><MetadataText config={config.typographySystem}>{section.railLabel}</MetadataText></span>}</div>
       <div className="section-main">
@@ -47,7 +52,7 @@ export function HumanSection({ config, section }: Props) {
         </div>
         <div className="human-module-grid">
           {config.tasteLayer?.enabled && (
-            <article className="human-module">
+            <article className="human-module" style={{ '--stagger-index': 0 } as React.CSSProperties}>
               <span className="human-module-label"><MetadataText config={config.typographySystem}>{config.tasteLayer.sectionLabel}</MetadataText></span>
               <h3>{config.tasteLayer.title}</h3>
               <p>{config.tasteLayer.description}</p>
@@ -61,7 +66,7 @@ export function HumanSection({ config, section }: Props) {
               </div>
             </article>
           )}
-          <article className="human-module">
+          <article className="human-module" style={{ '--stagger-index': config.tasteLayer?.enabled ? 1 : 0 } as React.CSSProperties}>
             <span className="human-module-label"><MetadataText config={config.typographySystem}>{config.humanLayer.glitchesSectionLabel}</MetadataText></span>
             <h3>{config.humanLayer.glitchesTitle}</h3>
             <ul className="glitch-list">
@@ -85,17 +90,19 @@ export function HumanSection({ config, section }: Props) {
   );
 }
 
+
 export function TimelineSection({ config, section }: Props) {
+  const ref = useInView<HTMLElement>({ threshold: 0.1, once: true });
   const entries = [...(config.timeline || [])].filter(t => t.visible !== false).sort((a, b) => a.order - b.order);
   return (
-    <section className="section-shell section-frame" id={section.id} data-section-id={section.sectionId} data-signal={section.signal} data-proof-level={section.proofLevel} data-system-status={section.systemStatus}>
+    <section ref={ref} className="section-shell section-frame" id={section.id} data-section-id={section.sectionId} data-signal={section.signal} data-proof-level={section.proofLevel} data-system-status={section.systemStatus}>
       <div className="trace-label" aria-hidden="true"><MetadataText config={config.typographySystem}>section_id: {section.sectionId} / signal: {section.signal} / proof_level: {section.proofLevel} / system_status: {section.systemStatus}</MetadataText></div>
       <div className="section-rail"><p className="section-kicker"><MetadataText config={config.typographySystem}>{section.kicker}</MetadataText></p>{section.railLabel && <span><MetadataText config={config.typographySystem}>{section.railLabel}</MetadataText></span>}</div>
       <div className="section-main">
         <SectionHeading config={config} section={section} heading={section.heading} />
         <ol className="timeline">
-          {entries.map(e => (
-            <li key={e.id}>
+          {entries.map((e, index) => (
+            <li key={e.id} style={{ '--stagger-index': index } as React.CSSProperties}>
               <span className="timeline-icon icon-align-heading" aria-hidden="true">
                 <Icon name={timelineIcon(e.tags)} size="sm" tone="accent" />
               </span>
@@ -109,10 +116,12 @@ export function TimelineSection({ config, section }: Props) {
   );
 }
 
+
 export function ContactSection({ config, section }: Props) {
+  const ref = useInView<HTMLElement>({ threshold: 0.1, once: true });
   const ct = config.contact;
   return (
-    <section className="contact-shell section-frame" id={section.id} data-section-id={section.sectionId} data-signal={section.signal} data-proof-level={section.proofLevel} data-system-status={section.systemStatus}>
+    <section ref={ref} className="contact-shell section-frame" id={section.id} data-section-id={section.sectionId} data-signal={section.signal} data-proof-level={section.proofLevel} data-system-status={section.systemStatus}>
       <div className="trace-label" aria-hidden="true"><MetadataText config={config.typographySystem}>section_id: {section.sectionId} / signal: {section.signal} / proof_level: {section.proofLevel} / system_status: {section.systemStatus}</MetadataText></div>
       <div className="contact-copy">
         <p className="section-kicker icon-align-inline"><Icon name="mail" size="xs" tone="accent" /><MetadataText config={config.typographySystem}>{section.kicker}</MetadataText></p>
@@ -131,3 +140,4 @@ export function ContactSection({ config, section }: Props) {
     </section>
   );
 }
+

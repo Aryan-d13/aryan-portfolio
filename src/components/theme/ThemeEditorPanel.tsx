@@ -85,6 +85,12 @@ export default function ThemeEditorPanel({ config, onConfigChange, onThemeChange
   const importRef = useRef<HTMLInputElement>(null);
   const cloudImportRef = useRef<HTMLInputElement>(null);
   const [renameValue, setRenameValue] = useState(activeTheme.name);
+  const [publishSecret, setPublishSecret] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('aryan_theme_publish_secret') || 'trace';
+    }
+    return 'trace';
+  });
   const isCloudSaving = syncStatus === 'saving';
 
   useEffect(() => {
@@ -271,15 +277,33 @@ export default function ThemeEditorPanel({ config, onConfigChange, onThemeChange
       </div>
 
       <section className="theme-engine-block">
-        <div className="theme-cloud-actions">
-          <button className="cr-btn cr-btn-primary icon-align-inline" type="button" onClick={handleGlobalSave} disabled={isCloudSaving} aria-busy={isCloudSaving}>
-            <Icon name="sync" size="xs" tone="accent" state={isCloudSaving ? 'loading' : 'idle'} />
-            {isCloudSaving ? 'saving theme' : 'save theme globally'}
-          </button>
-          <button className="cr-btn cr-btn-ghost icon-align-inline" type="button" onClick={handleCloudReload} disabled={isCloudSaving}><Icon name="download" size="xs" tone="muted" />reload from cloud</button>
-          <button className="cr-btn cr-btn-ghost icon-align-inline" type="button" onClick={handleCloudExport}><Icon name="export" size="xs" tone="muted" />export cloud config</button>
-          <button className="cr-btn cr-btn-ghost icon-align-inline" type="button" onClick={() => cloudImportRef.current?.click()} disabled={isCloudSaving}><Icon name="import" size="xs" tone="muted" />import and upload config</button>
-          <button className="cr-btn cr-btn-danger icon-align-inline" type="button" onClick={handleCloudReset} disabled={isCloudSaving}><Icon name="reset" size="xs" tone="error" />reset cloud theme</button>
+        <div className="theme-cloud-actions" style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '16px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+            <button className="cr-btn cr-btn-primary icon-align-inline" type="button" onClick={handleGlobalSave} disabled={isCloudSaving} aria-busy={isCloudSaving}>
+              <Icon name="sync" size="xs" tone="accent" state={isCloudSaving ? 'loading' : 'idle'} />
+              {isCloudSaving ? 'saving theme' : 'save theme globally'}
+            </button>
+            <button className="cr-btn cr-btn-ghost icon-align-inline" type="button" onClick={handleCloudReload} disabled={isCloudSaving}><Icon name="download" size="xs" tone="muted" />reload from cloud</button>
+            <button className="cr-btn cr-btn-ghost icon-align-inline" type="button" onClick={handleCloudExport} disabled={isCloudSaving}><Icon name="export" size="xs" tone="muted" />export cloud config</button>
+            <button className="cr-btn cr-btn-ghost icon-align-inline" type="button" onClick={() => cloudImportRef.current?.click()} disabled={isCloudSaving}><Icon name="import" size="xs" tone="muted" />import and upload config</button>
+            <button className="cr-btn cr-btn-danger icon-align-inline" type="button" onClick={handleCloudReset} disabled={isCloudSaving}><Icon name="reset" size="xs" tone="error" />reset cloud theme</button>
+          </div>
+          <div className="cr-field" style={{ maxWidth: '460px', margin: '4px 0 0' }}>
+            <label className="cr-label" htmlFor="publish-secret-input">Production Publish Secret (THEME_PUBLISH_SECRET)</label>
+            <input 
+              id="publish-secret-input"
+              className="cr-input" 
+              type="password" 
+              placeholder="Enter your custom Vercel authorization secret key" 
+              value={publishSecret}
+              onChange={e => {
+                const val = e.target.value;
+                setPublishSecret(val);
+                localStorage.setItem('aryan_theme_publish_secret', val);
+              }}
+            />
+            <span className="cr-label-hint">Required to authenticate and push theme changes to your live site in production.</span>
+          </div>
         </div>
         <input ref={cloudImportRef} type="file" accept=".json" hidden onChange={handleCloudImport} />
 

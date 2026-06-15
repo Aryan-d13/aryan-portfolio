@@ -2,7 +2,13 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /portfolioConfig/{document} {
-      allow read, write: if true;
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /portfolioBootstrap/{document} {
+      allow read: if true;
+      allow write: if false;
     }
   }
 }

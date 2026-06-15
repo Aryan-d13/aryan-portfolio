@@ -109,7 +109,7 @@ export const DEFAULT_TYPOGRAPHY_SYSTEM: TypographySystemConfig = {
     lineHeight: 1.6,
     headingScale: 1,
     caseBehavior: 'theme',
-    pathTextEnabled: true,
+    pathTextEnabled: false,
     glitchEnabled: false,
     readingMode: false,
     reducedMotionBehavior: 'respect-system',

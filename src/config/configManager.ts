@@ -239,24 +239,24 @@ function mapCustomToSiteConfig(custom: any): Partial<SiteConfig> {
       name: custom.hero?.brand?.name || 'Aryan Sharma',
       handle: custom.contact?.handle || '@aryanteddys',
       roleLines: custom.hero?.roles || custom.hero?.tags || [
-        'AI-native media systems builder',
-        'Full Stack Developer',
-        'AI & Automation Engineer',
+        'AI-native media systems',
+        'Full-stack cloud + automation',
+        'Proof-first production systems',
       ],
       location: custom.contact?.location || 'India',
       email: custom.contact?.email || 'aryanteddys@gmail.com',
-      shortBio: custom.hero?.headline || 'I build systems that turn messy ideas into working products.',
-      heroStatement: custom.hero?.subheadline || '',
-      heroStatementDirect: custom.hero?.subheadline || '',
-      heroKicker: custom.hero?.brand?.label || 'THE PROOF OF WORK INTERFACE',
-      brandSubtitle: 'proof.interface',
+      shortBio: custom.hero?.headline || 'I build AI-native media systems that are cinematic on the surface and traceable underneath.',
+      heroStatement: custom.hero?.subheadline || 'AI-native media systems, built like production infrastructure and directed with taste.',
+      heroStatementDirect: custom.hero?.subheadline || 'Full-stack engineering for media automation, AI workflows, cloud infra, observability, rendering, and review surfaces.',
+      heroKicker: custom.hero?.brand?.label || 'PROOF-FIRST MEDIA SYSTEMS',
+      brandSubtitle: 'systems / media / AI',
       brandGlyph: custom.hero?.brand?.initials || 'AS',
       ctaPrimary: {
-        text: custom.hero?.cta?.[0]?.label || 'Inspect Work',
+        text: custom.hero?.cta?.[0]?.label || 'Inspect Case Files',
         href: custom.hero?.cta?.[0]?.href || '#systems-built'
       },
       ctaSecondary: {
-        text: custom.hero?.cta?.[1]?.label || 'Open Channel',
+        text: custom.hero?.cta?.[1]?.label || 'Email Aryan',
         href: custom.hero?.cta?.[1]?.href || '#open-channel'
       },
       metadata: {
@@ -279,10 +279,10 @@ function mapCustomToSiteConfig(custom: any): Partial<SiteConfig> {
       src: 'assets/aryan-profile.png',
       alt: custom.hero?.identity_trace?.description || 'Aryan Sharma in cold outdoor light wearing winter layers and sunglasses.',
       placement: 'hero',
-      variant: 'identity-card',
+      variant: 'cinematic-panel',
       aspectRatio: '4 / 5',
       objectPosition: '52% 50%',
-      showMetadata: true,
+      showMetadata: false,
       metadata: [
         { label: 'trace_id', value: custom.hero?.identity_trace?.trace_id || 'aryan.sharma' },
         { label: 'mode', value: custom.hero?.identity_trace?.mode || 'builder' },
@@ -290,10 +290,10 @@ function mapCustomToSiteConfig(custom: any): Partial<SiteConfig> {
         { label: 'signal', value: custom.hero?.identity_trace?.signal || 'proof over noise' },
       ],
       effects: {
-        vignette: 0.45,
-        glow: 0.25,
-        grain: 0.08,
-        hoverLift: true,
+        vignette: 0.34,
+        glow: 0.14,
+        grain: 0.04,
+        hoverLift: false,
         scrollReveal: true,
       }
     };
@@ -360,17 +360,12 @@ function mapCustomToSiteConfig(custom: any): Partial<SiteConfig> {
 
   // Mapping human layer (interests)
   if (custom.human_layer?.interests) {
-    const symbolMap: Record<string, string> = {
-      rain: '🌧', night: '🌙', blue: '🔵', 'cold weather': '❄', neon: '💡', space: '🚀',
-      mysteries: '🔍', skylines: '🏙', basketball: '🏀', gymnastics: '🤸',
-      'meaningful fiction': '📖', 'dry humor': '😐'
-    };
     partial.humanLayer = {
       ...getDefaultConfig().humanLayer,
       motifs: custom.human_layer.interests.map((text: string, idx: number) => ({
         id: `m${idx + 1}`,
         text,
-        symbol: symbolMap[text.toLowerCase()] || '❄',
+        symbol: '',
         visible: true,
         order: idx,
       }))
@@ -396,36 +391,36 @@ function mapCustomToSiteConfig(custom: any): Partial<SiteConfig> {
       email: custom.contact.email || 'aryanteddys@gmail.com',
       handle: custom.contact.handle || '@aryanteddys',
       location: custom.contact.location || 'India',
-      ctaText: 'open_channel()',
-      ctaLink: custom.contact.links?.[0]?.href || `mailto:${custom.contact.email}`,
+      ctaText: 'Email Aryan',
+      ctaLink: custom.contact.links?.[0]?.href || `mailto:${custom.contact.email || 'aryanteddys@gmail.com'}`,
       resumeLink: custom.contact.links?.[1]?.href || 'Aryan_Sharma_Resume.pdf',
-      resumeLabel: custom.contact.links?.[1]?.label || 'view_resume',
+      resumeLabel: custom.contact.links?.[1]?.label || 'View Resume',
       githubLink: '',
       linkedinLink: '',
       socialLinks: [],
-      customLinks: custom.contact.links?.slice(2).map((l: any) => ({ label: l.label, href: l.href })) || [],
+      customLinks: custom.contact.links?.slice(2).map((l: any) => ({ label: l.label, href: l.href })) || [{ label: 'Inspect Case Files', href: '#systems-built' }],
     };
   }
 
   // Map sections metadata (section titles/kickers)
   partial.sections = [
-    { id: 'trace-begins', sectionId: 'trace_begins', signal: 'cold_boot', proofLevel: 'identity', systemStatus: 'awake', type: 'hero', title: 'Hero', kicker: custom.hero?.brand?.label || 'THE PROOF OF WORK INTERFACE', visible: true, order: 0, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+    { id: 'trace-begins', sectionId: 'trace_begins', signal: 'cold_boot', proofLevel: 'identity', systemStatus: 'awake', type: 'hero', title: 'Hero', kicker: custom.hero?.brand?.label || 'PROOF-FIRST MEDIA SYSTEMS', visible: true, order: 0, animationStyle: 'reveal', backgroundIntensity: 1.0 },
     { id: 'identity', sectionId: 'not_template_developer', signal: 'anti_template', proofLevel: 'positioning', systemStatus: 'clear', type: 'statement', title: 'Identity Statement', kicker: custom.identity?.section_label || 'IDENTITY', railLabel: 'not_a_template_developer', visible: true, order: 1, animationStyle: 'reveal', backgroundIntensity: 1.0, bodyAtmospheric: custom.identity?.description || '', bodyDirect: custom.identity?.description || '' },
-    { id: 'systems-built', sectionId: 'systems_built', signal: 'case_files', proofLevel: 'high', systemStatus: 'inspectable', type: 'projects', title: 'Systems Built', kicker: custom.case_files?.section_label || 'SYSTEMS BUILT', railLabel: 'case_files', heading: custom.case_files?.title || 'Selected work', descriptionAtmospheric: custom.case_files?.subtitle || '', descriptionDirect: custom.case_files?.description || '', visible: true, order: 2, animationStyle: 'reveal', backgroundIntensity: 1.0 },
-    { id: 'proof-layer', sectionId: 'proof_layer', signal: 'receipts_not_vibes', proofLevel: 'black_box', systemStatus: 'recording', type: 'proof', title: 'Proof Layer', kicker: custom.proof_layer?.section_label || 'PROOF LAYER', railLabel: 'receipts_not_vibes', heading: custom.proof_layer?.title || 'How I judge systems', descriptionAtmospheric: custom.proof_layer?.subtitle || '', descriptionDirect: custom.proof_layer?.description || '', visible: true, order: 3, animationStyle: 'reveal', backgroundIntensity: 1.0 },
-    { id: 'stack', sectionId: 'stack_clusters', signal: 'tools_with_context', proofLevel: 'practical', systemStatus: 'available', type: 'stack', title: 'Stack', kicker: custom.stack?.section_label || 'STACK', railLabel: 'tools_i_think_with', heading: custom.stack?.title || 'Tools I work with', descriptionAtmospheric: custom.stack?.subtitle || '', descriptionDirect: custom.stack?.description || '', visible: true, order: 4, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+    { id: 'systems-built', sectionId: 'systems_built', signal: 'case_files', proofLevel: 'high', systemStatus: 'inspectable', type: 'projects', title: 'Systems Built', kicker: custom.case_files?.section_label || 'SYSTEMS BUILT', railLabel: 'case_files', heading: custom.case_files?.title || 'Inspectable systems, not project tiles.', descriptionAtmospheric: custom.case_files?.subtitle || 'Each case file shows the problem, system shape, stack, proof themes, and what the build proves.', descriptionDirect: custom.case_files?.description || 'Case files for AI media automation and controlled AI creative production.', visible: true, order: 2, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+    { id: 'proof-layer', sectionId: 'proof_layer', signal: 'receipts_not_vibes', proofLevel: 'black_box', systemStatus: 'recording', type: 'proof', title: 'Proof Layer', kicker: custom.proof_layer?.section_label || 'PROOF LAYER', railLabel: 'receipts_not_vibes', heading: custom.proof_layer?.title || 'Reliability rules I build around.', descriptionAtmospheric: custom.proof_layer?.subtitle || 'The principles that keep media and AI systems useful when jobs fail, retry, render, or drift.', descriptionDirect: custom.proof_layer?.description || 'Idempotency, observability, render parity, state machines, golden-thread tracing, and tests.', visible: true, order: 3, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+    { id: 'stack', sectionId: 'stack_clusters', signal: 'tools_with_context', proofLevel: 'practical', systemStatus: 'available', type: 'stack', title: 'Stack', kicker: custom.stack?.section_label || 'STACK', railLabel: 'tools_i_think_with', heading: custom.stack?.title || 'Tools grouped by the pressure they solve.', descriptionAtmospheric: custom.stack?.subtitle || 'A stack map organized by system responsibility, not logo collecting.', descriptionDirect: custom.stack?.description || 'Interface, backend, cloud, media, AI, and reliability clusters.', visible: true, order: 4, animationStyle: 'reveal', backgroundIntensity: 1.0 },
     { id: 'philosophy', sectionId: 'operating_principles', signal: 'manifesto', proofLevel: 'values', systemStatus: 'stable', type: 'philosophy', title: 'Philosophy', kicker: custom.philosophy?.section_label || 'PHILOSOPHY', railLabel: 'operating_principles', visible: true, order: 5, animationStyle: 'reveal', backgroundIntensity: 1.0 },
-    { id: 'human-layer', sectionId: 'weather_inside_machine', signal: 'human_layer', proofLevel: 'subtle', systemStatus: 'breathing', type: 'human', title: 'Human Layer', kicker: custom.human_layer?.section_label || 'HUMAN LAYER', railLabel: 'weather_inside_machine', heading: custom.human_layer?.title || 'Outside the work', descriptionAtmospheric: custom.human_layer?.subtitle || '', descriptionDirect: custom.human_layer?.description || '', visible: true, order: 6, animationStyle: 'reveal', backgroundIntensity: 1.0 },
-    { id: 'build-log', sectionId: 'build_log', signal: 'timeline', proofLevel: 'receipts', systemStatus: 'indexed', type: 'timeline', title: 'Build Log', kicker: custom.timeline?.section_label || 'BUILD LOG', railLabel: 'timeline', heading: custom.timeline?.title || 'Timeline', visible: true, order: 7, animationStyle: 'reveal', backgroundIntensity: 1.0 },
-    { id: 'open-channel', sectionId: 'open_channel', signal: 'contact', proofLevel: 'direct', systemStatus: 'listening', type: 'contact', title: 'Contact', kicker: custom.contact?.section_label || 'CONTACT', heading: custom.contact?.description || '', visible: true, order: 8, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+    { id: 'human-layer', sectionId: 'weather_inside_machine', signal: 'human_layer', proofLevel: 'subtle', systemStatus: 'breathing', type: 'human', title: 'Human Layer', kicker: custom.human_layer?.section_label || 'HUMAN LAYER', railLabel: 'weather_inside_machine', heading: custom.human_layer?.title || 'A colder signal, still human.', descriptionAtmospheric: custom.human_layer?.subtitle || 'Night, rain, blue light, sport, fiction, and dry humor. Texture, not a personality maze.', descriptionDirect: custom.human_layer?.description || 'Personal motifs that shape the interface without replacing the proof.', visible: true, order: 6, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+    { id: 'build-log', sectionId: 'build_log', signal: 'timeline', proofLevel: 'receipts', systemStatus: 'indexed', type: 'timeline', title: 'Build Log', kicker: custom.timeline?.section_label || 'BUILD LOG', railLabel: 'timeline', heading: custom.timeline?.title || 'Recent build trace.', visible: true, order: 7, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+    { id: 'open-channel', sectionId: 'open_channel', signal: 'contact', proofLevel: 'direct', systemStatus: 'listening', type: 'contact', title: 'Contact', kicker: custom.contact?.section_label || 'CONTACT', heading: custom.contact?.description || 'Need an AI media system that has to work in production?', visible: true, order: 8, animationStyle: 'reveal', backgroundIntensity: 1.0 },
   ];
 
   if (custom.meta) {
     partial.seo = {
-      pageTitle: custom.meta.title || 'Aryan Sharma | Proof of Work Interface',
-      metaDescription: custom.hero?.subheadline || 'Aryan Sharma Portfolio',
-      ogTitle: custom.meta.title || 'Aryan Sharma | Proof of Work Interface',
-      ogDescription: custom.hero?.subheadline || '',
+      pageTitle: custom.meta.title || 'Aryan Sharma | AI-Native Media Systems',
+      metaDescription: custom.hero?.subheadline || 'Aryan Sharma builds AI-native media systems, full-stack cloud automation, and proof-first production interfaces.',
+      ogTitle: custom.meta.title || 'Aryan Sharma | AI-Native Media Systems',
+      ogDescription: custom.hero?.subheadline || 'AI-native media systems, full-stack cloud automation, and proof-first production interfaces.',
       ogImage: '',
       favicon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2305070D'/%3E%3Crect x='8' y='8' width='48' height='48' fill='%23101826' stroke='%235DEBFF' stroke-width='2'/%3E%3Ctext x='32' y='38' text-anchor='middle' font-family='monospace' font-size='18' font-weight='700' fill='%235DEBFF'%3EAS%3C/text%3E%3C/svg%3E",
       themeColor: '#05070d',

@@ -78,10 +78,11 @@ export default function Header({ config, onOpenCommand }: Props) {
             className="mode-toggle"
             type="button"
             aria-pressed={isNoFluff}
+            aria-label="Toggle cinematic or direct copy"
             onClick={toggleNoFluff}
           >
-            <span className={`mode-option${!isNoFluff ? ' is-active' : ''}`} data-mode-label="cinematic">cinematic</span>
-            <span className={`mode-option${isNoFluff ? ' is-active' : ''}`} data-mode-label="no-fluff">no-fluff</span>
+            <span className={`mode-option${!isNoFluff ? ' is-active' : ''}`} data-mode-label="cinema">cinema</span>
+            <span className={`mode-option${isNoFluff ? ' is-active' : ''}`} data-mode-label="direct">direct</span>
           </button>
           <button
             className="command-trigger"

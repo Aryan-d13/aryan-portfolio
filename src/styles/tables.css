@@ -25,7 +25,7 @@
   border-radius: var(--table-radius);
   border: 1px solid var(--table-border);
   background: var(--table-bg);
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--table-bg) 60%, transparent);
+  box-shadow: none;
 }
 
 /* Scrollbars for technical tables */
@@ -227,7 +227,7 @@
 }
 
 .cr-table tr .cr-row-actions-secondary {
-  opacity: 0.15;
+  opacity: 0.55;
   transition: opacity var(--table-transition);
 }
 

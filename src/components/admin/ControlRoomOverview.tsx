@@ -24,7 +24,7 @@ export default function ControlRoomOverview({ config, onSelect }: Props) {
         {modules.map(module => {
           const content = (
             <>
-              <span className="cr-overview-module-icon"><Icon name={resolveIconName(module.icon, 'settings')} size="md" tone="accent" /></span>
+              <span className="cr-overview-module-icon"><Icon name={resolveIconName(module.icon, 'settings')} size="sm" tone="muted" /></span>
               <span className="cr-overview-module-status">{module.status}</span>
               <h2>{module.title}</h2>
               <p>{module.description}</p>

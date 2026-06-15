@@ -10,18 +10,22 @@ interface Props {
 
 export default function PortraitFrame({ portrait }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
   const { activeThemeId } = useThemeEngine();
+  const shouldScrollReveal = portrait.effects.scrollReveal && portrait.placement !== 'hero';
+  const isDefaultPortrait = portrait.src === 'assets/aryan-profile.png' || portrait.src === '/assets/aryan-profile.png';
 
   // Resolve target source from theme or fallback
-  const targetSrc = getPortraitForTheme(activeThemeId) || portrait.src || fallbackPortrait;
+  const targetSrc = portrait.src && !isDefaultPortrait
+    ? portrait.src
+    : getPortraitForTheme(activeThemeId) || portrait.src || fallbackPortrait;
 
+  const [isVisible, setIsVisible] = useState(!shouldScrollReveal);
   const [displayedSrc, setDisplayedSrc] = useState(targetSrc);
   const [prevSrc, setPrevSrc] = useState<string | null>(null);
   const [isEntering, setIsEntering] = useState(false);
 
   useEffect(() => {
-    if (!portrait.effects.scrollReveal) {
+    if (!shouldScrollReveal) {
       setIsVisible(true);
       return;
     }
@@ -38,7 +42,7 @@ export default function PortraitFrame({ portrait }: Props) {
       observer.observe(containerRef.current);
     }
     return () => observer.disconnect();
-  }, [portrait.effects.scrollReveal]);
+  }, [shouldScrollReveal]);
 
   // Handle preloading and image swapping on theme change
   useEffect(() => {
@@ -91,9 +95,10 @@ export default function PortraitFrame({ portrait }: Props) {
     'portrait-frame-container',
     portrait.effects.hoverLift ? 'portrait-hover-lift' : '',
     portrait.effects.glow > 0 ? 'portrait-glow-shadow' : '',
-    portrait.effects.scrollReveal ? 'portrait-scroll-reveal' : '',
+    shouldScrollReveal ? 'portrait-scroll-reveal' : '',
     isVisible ? 'is-visible' : '',
   ].filter(Boolean).join(' ');
+  const isHeroPortrait = portrait.placement === 'hero';
 
   return (
     <div ref={containerRef} className={containerClass} style={inlineStyles}>
@@ -101,8 +106,9 @@ export default function PortraitFrame({ portrait }: Props) {
       <img
         src={displayedSrc}
         alt={portrait.alt || 'Aryan Sharma Portrait'}
-        loading="lazy"
-        decoding="async"
+        loading={isHeroPortrait ? 'eager' : 'lazy'}
+        decoding={isHeroPortrait ? 'sync' : 'async'}
+        fetchPriority={isHeroPortrait ? 'high' : 'auto'}
         className={`portrait-img-current ${isEntering ? 'is-entering' : ''}`}
         style={{ objectPosition: portrait.objectPosition || '52% 50%' }}
       />

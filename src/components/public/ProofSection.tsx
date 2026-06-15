@@ -3,13 +3,16 @@ import Icon from '../icons/Icon';
 import { proofIconMap } from '../icons/iconRegistry';
 import MetadataText from '../typography/MetadataText';
 import SectionHeading from '../typography/SectionHeading';
+import { useInView } from '../../hooks/useInView';
 
 interface Props { config: SiteConfig; section: SectionConfig; }
 
 export default function ProofSection({ config, section }: Props) {
+  const ref = useInView<HTMLElement>({ threshold: 0.1, once: true });
   const cards = [...(config.proofCards || [])].filter(c => c.visible !== false).sort((a, b) => a.order - b.order);
   return (
-    <section className="section-shell section-frame" id={section.id} data-section-id={section.sectionId} data-signal={section.signal} data-proof-level={section.proofLevel} data-system-status={section.systemStatus}>
+    <section ref={ref} className="section-shell section-frame" id={section.id} data-section-id={section.sectionId} data-signal={section.signal} data-proof-level={section.proofLevel} data-system-status={section.systemStatus}>
+      <span className="section-atmospheric-label" aria-hidden="true">PROOF</span>
       <div className="trace-label" aria-hidden="true"><MetadataText config={config.typographySystem}>section_id: {section.sectionId} / signal: {section.signal} / proof_level: {section.proofLevel} / system_status: {section.systemStatus}</MetadataText></div>
       <div className="section-rail"><p className="section-kicker"><MetadataText config={config.typographySystem}>{section.kicker}</MetadataText></p>{section.railLabel && <span><MetadataText config={config.typographySystem}>{section.railLabel}</MetadataText></span>}</div>
       <div className="section-main">
@@ -20,8 +23,8 @@ export default function ProofSection({ config, section }: Props) {
           </div>
         </SectionHeading>
         <div className="proof-grid">
-          {cards.map(card => (
-            <article key={card.id} className="proof-item">
+          {cards.map((card, index) => (
+            <article key={card.id} className="proof-item" style={{ '--stagger-index': index } as React.CSSProperties}>
               <span className="proof-index icon-align-status">
                 <Icon name={proofIconMap[card.id] ?? 'proof'} size="sm" tone="accent" />
                 <MetadataText config={config.typographySystem}>{card.index}</MetadataText>
@@ -35,3 +38,4 @@ export default function ProofSection({ config, section }: Props) {
     </section>
   );
 }
+

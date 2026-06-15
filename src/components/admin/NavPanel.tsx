@@ -6,21 +6,21 @@ import { controlGroupIconMap, controlNavIconMap } from '../icons/iconRegistry';
 const NAV_GROUPS: NavGroup[] = [
   {
     label: 'Lab', items: [
-      { id: 'overview', label: 'Basement Lab Index', index: '00' },
+      { id: 'overview', label: 'Overview', index: '00' },
     ],
   },
   {
     label: 'Content', items: [
       { id: 'identity', label: 'Global Identity', index: '01' },
-      { id: 'identity-layer', label: 'Identity Mechanics', index: '02' },
+      { id: 'identity-layer', label: 'Working Style', index: '02' },
       { id: 'sections', label: 'Sections', index: '03' },
-      { id: 'projects', label: 'Projects / Case Files', index: '04' },
+      { id: 'projects', label: 'Project Case Files', index: '04' },
       { id: 'proof', label: 'Proof Cards', index: '05' },
-      { id: 'skills', label: 'Skills / Stack', index: '06' },
+      { id: 'skills', label: 'Stack', index: '06' },
       { id: 'philosophy', label: 'Philosophy', index: '07' },
       { id: 'human', label: 'Human Layer', index: '08' },
-      { id: 'timeline', label: 'Timeline / Build Log', index: '09' },
-      { id: 'contact', label: 'Contact / Links', index: '10' },
+      { id: 'timeline', label: 'Build Log', index: '09' },
+      { id: 'contact', label: 'Contact', index: '10' },
     ],
   },
   {
@@ -29,15 +29,15 @@ const NAV_GROUPS: NavGroup[] = [
       { id: 'portrait', label: 'Portrait System', index: '12' },
       { id: 'typography', label: 'Typography Lab', index: '13' },
       { id: 'colors', label: 'Colors', index: '14' },
-      { id: 'background', label: 'Background / Trace Grid', index: '15' },
-      { id: 'motion', label: 'Motion / Animation', index: '16' },
-      { id: 'layout', label: 'Layout / Spacing', index: '17' },
+      { id: 'background', label: 'Background', index: '15' },
+      { id: 'motion', label: 'Motion', index: '16' },
+      { id: 'layout', label: 'Layout', index: '17' },
     ],
   },
   {
     label: 'System', items: [
       { id: 'lab-modules', label: 'Lab Modules', index: '18' },
-      { id: 'seo', label: 'SEO / Meta', index: '19' },
+      { id: 'seo', label: 'SEO Metadata', index: '19' },
       { id: 'assets', label: 'Assets', index: '20' },
       { id: 'json', label: 'Advanced JSON', index: '21' },
     ],

@@ -26,8 +26,10 @@ export default function BackgroundSystem({ config }: Props) {
     <div className="background-system" style={backgroundVars} aria-hidden="true">
       <div className="dot-field" />
       <div className="dot-reveal" />
+      <div className="dot-reveal-secondary" />
       <div className="radial-glow" />
       <div className="vignette-layer" />
     </div>
   );
 }
+

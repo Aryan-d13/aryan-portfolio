@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { Unsubscribe } from 'firebase/firestore';
 import type { ThemeDefinition } from '../themes/themeTypes';
 import type { SiteConfig } from '../types/siteConfig';
 import { getThemeById } from '../themes/themeRegistry';
@@ -17,11 +16,13 @@ import {
   type RemoteThemeState,
   type ThemeSyncSource,
   type ThemeSyncStatus,
+  type Unsubscribe,
 } from '../services/themeService';
-import { firebaseConfigured } from '../lib/firebase';
 
 interface UseRemoteThemeOptions {
   onRemoteState: (state: RemoteThemeState, source: ThemeSyncSource) => void;
+  initialState?: RemoteThemeState | null;
+  skipInitialCache?: boolean;
 }
 
 export interface UseRemoteThemeResult {
@@ -49,13 +50,17 @@ function isNewer(next: RemoteThemeState, current: RemoteThemeState | null): bool
   return new Date(next.updatedAt).getTime() >= new Date(current.updatedAt).getTime();
 }
 
-export function useRemoteTheme({ onRemoteState }: UseRemoteThemeOptions): UseRemoteThemeResult {
-  const [syncStatus, setSyncStatus] = useState<ThemeSyncStatus>('offline-cache');
-  const [syncSource, setSyncSource] = useState<ThemeSyncSource>('default');
-  const [lastSyncedAt, setLastSyncedAt] = useState<string | null>(null);
+export function useRemoteTheme({
+  onRemoteState,
+  initialState = null,
+  skipInitialCache = false,
+}: UseRemoteThemeOptions): UseRemoteThemeResult {
+  const [syncStatus, setSyncStatus] = useState<ThemeSyncStatus>(() => initialState ? 'synced' : 'offline-cache');
+  const [syncSource, setSyncSource] = useState<ThemeSyncSource>(() => initialState ? 'cloud' : 'default');
+  const [lastSyncedAt, setLastSyncedAt] = useState<string | null>(() => initialState?.updatedAt ?? null);
   const [remoteError, setRemoteError] = useState<string | null>(null);
-  const [remoteState, setRemoteState] = useState<RemoteThemeState | null>(null);
-  const remoteStateRef = useRef<RemoteThemeState | null>(null);
+  const [remoteState, setRemoteState] = useState<RemoteThemeState | null>(() => initialState);
+  const remoteStateRef = useRef<RemoteThemeState | null>(initialState);
   const onRemoteStateRef = useRef(onRemoteState);
 
   useEffect(() => {
@@ -77,20 +82,15 @@ export function useRemoteTheme({ onRemoteState }: UseRemoteThemeOptions): UseRem
   }, []);
 
   useEffect(() => {
-    const cached = loadCachedRemoteTheme();
-    if (cached) applyRemote(cached.state, 'cache');
+    const cached = skipInitialCache ? null : loadCachedRemoteTheme();
+    if (cached) {
+      applyRemote(cached.state, 'cache');
+    }
 
     let cancelled = false;
     let unsub: Unsubscribe | null = null;
 
     const connect = async () => {
-      if (!firebaseConfigured) {
-        setSyncStatus('offline-cache');
-        setSyncSource(cached ? 'cache' : 'default');
-        setRemoteError('Firebase environment variables are not configured');
-        return;
-      }
-
       try {
         let isFirstEmit = true;
         unsub = await subscribeRemoteThemeState(
@@ -100,27 +100,15 @@ export function useRemoteTheme({ onRemoteState }: UseRemoteThemeOptions): UseRem
               applyRemote(state, 'cloud');
             } else if (isFirstEmit) {
               isFirstEmit = false;
-              const localActiveThemeId = loadActiveThemeId();
-              const localCustomThemes = loadCustomThemes();
-              const localActiveTheme = getThemeById(localActiveThemeId, localCustomThemes);
-              if (localActiveTheme || localCustomThemes.length) {
-                const migrated = await saveRemoteThemeState(createRemoteThemeState({
-                  activeThemeId: localActiveThemeId,
-                  customThemes: localCustomThemes,
-                  activeTheme: localActiveTheme,
-                }));
-                if (!cancelled) applyRemote(migrated, 'cloud');
-              } else {
-                setSyncStatus(cached ? 'offline-cache' : 'synced');
-                setSyncSource(cached ? 'cache' : 'default');
-              }
+              setSyncStatus(initialState ? 'synced' : cached ? 'offline-cache' : 'synced');
+              setSyncSource(initialState ? 'cloud' : cached ? 'cache' : 'default');
             }
           },
           error => {
             if (cancelled) return;
             setRemoteError(error.message);
             setSyncStatus('failed');
-            setSyncSource(cached ? 'cache' : 'default');
+            setSyncSource(initialState ? 'cloud' : cached ? 'cache' : 'default');
           },
         );
 
@@ -130,14 +118,14 @@ export function useRemoteTheme({ onRemoteState }: UseRemoteThemeOptions): UseRem
         }
 
         if (!unsub && !cached) {
-          setSyncStatus('offline-cache');
-          setSyncSource('default');
+          setSyncStatus(initialState ? 'synced' : 'offline-cache');
+          setSyncSource(initialState ? 'cloud' : 'default');
         }
       } catch (error) {
         if (cancelled) return;
         setRemoteError((error as Error).message);
-        setSyncStatus(cached ? 'offline-cache' : 'failed');
-        setSyncSource(cached ? 'cache' : 'default');
+        setSyncStatus(initialState ? 'failed' : cached ? 'offline-cache' : 'failed');
+        setSyncSource(initialState ? 'cloud' : cached ? 'cache' : 'default');
       }
     };
 
@@ -146,7 +134,7 @@ export function useRemoteTheme({ onRemoteState }: UseRemoteThemeOptions): UseRem
       cancelled = true;
       unsub?.();
     };
-  }, [applyRemote]);
+  }, [applyRemote, initialState, skipInitialCache]);
 
   const saveThemeGlobally = useCallback<UseRemoteThemeResult['saveThemeGlobally']>(async ({ activeThemeId, customThemes, activeTheme, updatedBy }) => {
     setSyncStatus('saving');
@@ -174,7 +162,7 @@ export function useRemoteTheme({ onRemoteState }: UseRemoteThemeOptions): UseRem
       });
       saveCachedRemoteTheme(fallback);
       setRemoteError((error as Error).message);
-      setSyncStatus(firebaseConfigured ? 'failed' : 'offline-cache');
+      setSyncStatus('failed');
       setSyncSource('cache');
       return false;
     }
@@ -200,7 +188,7 @@ export function useRemoteTheme({ onRemoteState }: UseRemoteThemeOptions): UseRem
       return true;
     } catch (error) {
       setRemoteError((error as Error).message);
-      setSyncStatus(firebaseConfigured ? 'failed' : 'offline-cache');
+      setSyncStatus('failed');
       return false;
     }
   }, [applyRemote]);

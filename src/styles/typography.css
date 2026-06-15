@@ -66,16 +66,15 @@ body {
 }
 
 .hero-headline {
-  display: inline-grid;
-  gap: 0.015em;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0 0.22em;
   transform: translateZ(0);
 }
 
-.hero-headline .type-line {
+.hero-headline .type-word {
   position: relative;
-  display: block;
-  width: max-content;
-  max-width: 100%;
+  display: inline-block;
   color: var(--text-primary);
 }
 
@@ -122,7 +121,7 @@ body {
     color: transparent;
   }
 
-  .hero-headline .type-line {
+  .hero-headline .type-word {
     background:
       linear-gradient(102deg, var(--text-primary) 0 32%, color-mix(in srgb, var(--type-gradient-mid) 74%, var(--text-primary)) 54%, var(--text-primary) 96%),
       repeating-linear-gradient(110deg, transparent 0 8px, color-mix(in srgb, var(--text-primary) 18%, transparent) 9px, transparent 14px);
@@ -237,11 +236,15 @@ body {
 .text-motion-terminal-reveal {
   animation-duration: var(--type-reveal-duration);
   animation-fill-mode: both;
-  animation-timing-function: var(--ease-standard);
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.text-motion-stagger-reveal .type-line,
 .text-motion-stagger-reveal .type-word {
+  animation-name: typeWordReveal;
+  animation-delay: calc(var(--type-index) * 50ms);
+}
+
+.text-motion-stagger-reveal .type-line {
   animation-name: typeKineticReveal;
   animation-delay: calc(var(--type-index) * var(--type-stagger-delay));
 }
@@ -307,12 +310,12 @@ body {
   position: absolute;
   right: clamp(0px, 8vw, 96px);
   bottom: clamp(16px, 9vh, 92px);
-  width: 112px;
-  height: 112px;
+  width: 84px;
+  height: 84px;
   color: var(--accent-secondary);
-  opacity: 0.42;
+  opacity: 0.14;
   transform: rotate(-10deg);
-  z-index: 10;
+  z-index: 0;
   pointer-events: none;
 }
 
@@ -354,8 +357,8 @@ body {
   display: none !important;
 }
 
-:root[data-theme-id="soft-trace-luxury"] .hero-headline .type-line,
-:root[data-theme-id="blue-hour-cinema"] .hero-headline .type-line {
+:root[data-theme-id="soft-trace-luxury"] .hero-headline .type-word,
+:root[data-theme-id="blue-hour-cinema"] .hero-headline .type-word {
   font-weight: 600;
 }
 
@@ -379,6 +382,69 @@ body {
   display: none;
 }
 
+/* ─── ROTATING WORD ────────────────────────────── */
+.rotating-word-container {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  vertical-align: baseline;
+  height: 1.15em;
+  min-width: 3.5em;
+}
+
+.rotating-word {
+  display: inline-block;
+  color: var(--accent-secondary);
+  transition: opacity 400ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.rotating-word.is-entering {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.rotating-word.is-exiting {
+  opacity: 0;
+  transform: translateY(-0.25em);
+}
+
+/* ─── THEME-AWARE TYPOGRAPHY BEHAVIOR ──────────── */
+
+/* Noir: slower reveals, heavier composition */
+:root[data-theme-id="noir-operating-system"] {
+  --type-reveal-duration: 680ms;
+  --type-stagger-delay: 72ms;
+}
+
+:root[data-theme-id="noir-operating-system"] .section-atmospheric-label {
+  opacity: 0.03;
+}
+
+/* Editorial: cleaner mask reveals */
+:root[data-theme-id="editorial-cybernetic"] {
+  --type-reveal-duration: 520ms;
+}
+
+/* Minimal/luxury: calmer, reduced atmospheric */
+:root[data-theme-id="obsidian-lab"] .section-atmospheric-label,
+:root[data-theme-id="soft-trace-luxury"] .section-atmospheric-label {
+  opacity: 0.015;
+}
+
+:root[data-theme-id="obsidian-lab"] .rotating-word,
+:root[data-theme-id="soft-trace-luxury"] .rotating-word {
+  transition-duration: 500ms;
+}
+
+/* Futuristic: precise environmental typography */
+:root[data-theme-id="skyline-terminal"] .rotating-word {
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+  transition-duration: 320ms;
+}
+
 @keyframes typeKineticReveal {
   from {
     opacity: 0;
@@ -390,6 +456,24 @@ body {
     opacity: 1;
     clip-path: inset(0 0 0 0);
     transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes typeWordReveal {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.35em, 0);
+    filter: blur(2px);
+  }
+
+  60% {
+    filter: blur(0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
   }
 }
 
@@ -503,6 +587,11 @@ body {
     opacity: 1;
     clip-path: none;
     transform: none;
+    filter: none;
+  }
+
+  .rotating-word {
+    transition: none !important;
   }
 }
 
@@ -522,4 +611,9 @@ body {
   opacity: 1;
   clip-path: none;
   transform: none;
+  filter: none;
+}
+
+:root[data-type-reduced-motion="force-reduced"] .rotating-word {
+  transition: none !important;
 }

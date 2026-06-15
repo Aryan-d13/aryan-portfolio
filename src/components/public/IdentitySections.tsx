@@ -4,6 +4,7 @@ import Icon from '../icons/Icon';
 import { resolveIconName } from '../icons/iconRegistry';
 import MetadataText from '../typography/MetadataText';
 import SectionHeading from '../typography/SectionHeading';
+import { useInView } from '../../hooks/useInView';
 
 interface Props {
   config: SiteConfig;
@@ -16,10 +17,11 @@ interface FrameProps extends Props {
 }
 
 function ModuleFrame({ config, section, module, children }: FrameProps) {
+  const ref = useInView<HTMLElement>({ threshold: 0.1, once: true });
   if (!module.enabled) return null;
 
   return (
-    <section className="section-shell section-frame identity-module-shell" id={section.id} data-section-id={section.sectionId} data-signal={section.signal} data-proof-level={section.proofLevel} data-system-status={section.systemStatus}>
+    <section ref={ref} className="section-shell section-frame identity-module-shell" id={section.id} data-section-id={section.sectionId} data-signal={section.signal} data-proof-level={section.proofLevel} data-system-status={section.systemStatus}>
       <div className="trace-label" aria-hidden="true">
         <MetadataText config={config.typographySystem}>section_id: {section.sectionId} / signal: {section.signal} / proof_level: {section.proofLevel} / system_status: {section.systemStatus}</MetadataText>
       </div>
@@ -37,6 +39,7 @@ function ModuleFrame({ config, section, module, children }: FrameProps) {
   );
 }
 
+
 function visibleItems(module: IdentityModuleConfig) {
   return [...module.items].filter(item => item.visible !== false).sort((a, b) => a.order - b.order);
 }
@@ -47,7 +50,7 @@ function SignalProfileGrid({ config, module }: { config: SiteConfig; module: Ide
   return (
     <div className="signal-profile-grid" aria-label="Signal profile diagnostics">
       {items.map((item, index) => (
-        <article className="signal-profile-item" key={item.id}>
+        <article className="signal-profile-item" key={item.id} style={{ '--stagger-index': index } as React.CSSProperties}>
           <span className="identity-item-index icon-align-status">
             <Icon name={resolveIconName(item.icon, 'signal')} size="xs" tone="accent" />
             <MetadataText config={config.typographySystem}>{String(index + 1).padStart(2, '0')}</MetadataText>
@@ -65,8 +68,8 @@ function AntiPatternGrid({ module }: { module: IdentityModuleConfig }) {
 
   return (
     <div className="anti-pattern-grid" aria-label="Professional anti-patterns">
-      {items.map(item => (
-        <article className="anti-pattern-item" key={item.id}>
+      {items.map((item, index) => (
+        <article className="anti-pattern-item" key={item.id} style={{ '--stagger-index': index } as React.CSSProperties}>
           <Icon name={resolveIconName(item.icon, 'warning')} size="sm" tone="muted" />
           <div>
             <h3>{item.label}</h3>
@@ -84,7 +87,7 @@ function FieldNotesGrid({ config, module }: { config: SiteConfig; module: Identi
   return (
     <div className="field-notes-grid" aria-label="Builder field notes">
       {items.map((item, index) => (
-        <article className="field-note" key={item.id}>
+        <article className="field-note" key={item.id} style={{ '--stagger-index': index } as React.CSSProperties}>
           <span className="field-note-meta icon-align-status">
             <Icon name={resolveIconName(item.icon, 'log')} size="xs" tone="accent" />
             <MetadataText config={config.typographySystem}>{item.label || `note_${String(index + 1).padStart(2, '0')}`}</MetadataText>
@@ -102,7 +105,7 @@ function OperatingManualList({ config, module }: { config: SiteConfig; module: I
   return (
     <ol className="operating-manual" aria-label="Working style defaults">
       {items.map((item, index) => (
-        <li key={item.id}>
+        <li key={item.id} style={{ '--stagger-index': index } as React.CSSProperties}>
           <span className="manual-index"><MetadataText config={config.typographySystem}>{String(index + 1).padStart(2, '0')}</MetadataText></span>
           <Icon name={resolveIconName(item.icon, 'trace')} size="sm" tone="muted" />
           <span className="manual-label"><MetadataText config={config.typographySystem}>{item.label}</MetadataText></span>
@@ -112,6 +115,7 @@ function OperatingManualList({ config, module }: { config: SiteConfig; module: I
     </ol>
   );
 }
+
 
 export function SignalProfileSection({ config, section }: Props) {
   const module = config.signalProfile;

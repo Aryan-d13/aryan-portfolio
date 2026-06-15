@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
 import type { SiteConfig } from '../types/siteConfig';
 import { loadConfig, applyConfigToCSS, normalizeSiteConfig } from '../config/configManager';
+import { getThemeBootstrapSnapshot } from '../utils/themeBootstrap';
 
 interface ConfigContextValue {
   config: SiteConfig;
@@ -10,7 +11,10 @@ interface ConfigContextValue {
 const ConfigContext = createContext<ConfigContextValue | null>(null);
 
 export function ConfigProvider({ children }: { children: ReactNode }) {
-  const [config, setConfigState] = useState<SiteConfig>(() => loadConfig());
+  const [bootstrappedConfig] = useState(() => getThemeBootstrapSnapshot()?.siteConfig ?? null);
+  const [config, setConfigState] = useState<SiteConfig>(() => (
+    bootstrappedConfig ? normalizeSiteConfig(bootstrappedConfig) : loadConfig()
+  ));
 
   const setConfig = useCallback((newConfig: SiteConfig) => {
     const normalized = normalizeSiteConfig(newConfig);
@@ -19,6 +23,7 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    if (bootstrappedConfig) return;
     applyConfigToCSS(config);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 

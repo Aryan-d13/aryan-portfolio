@@ -12,9 +12,9 @@ import StackSection from '../components/public/StackSection';
 import { PhilosophySection, HumanSection, TimelineSection, ContactSection } from '../components/public/Sections';
 import { AntiPatternsSection, FieldNotesSection, OperatingManualSection, SignalProfileSection } from '../components/public/IdentitySections';
 import type { SectionConfig, SiteConfig } from '../types/siteConfig';
-import { applyConfigToCSS } from '../config/configManager';
 import { applyTheme } from '../themes/utils/applyThemeTokens';
 import { validateTheme } from '../themes/utils/themeValidation';
+import { useBoot } from '../components/boot/BootProvider';
 
 const SECTION_COMPONENTS: Record<string, React.FC<{ config: SiteConfig; section: SectionConfig; openProjectId: string | null }>> = {
   hero: ({ config, section }) => <HeroSection config={config} section={section} />,
@@ -34,6 +34,7 @@ const SECTION_COMPONENTS: Record<string, React.FC<{ config: SiteConfig; section:
 
 export default function HomePage() {
   const { config, setConfig } = useSiteConfig();
+  const { isReady: bootReady } = useBoot();
   const [commandOpen, setCommandOpen] = useState(false);
   const [openProjectId, setOpenProjectId] = useState<string | null>(null);
 
@@ -46,7 +47,6 @@ export default function HomePage() {
             applyTheme(event.data.theme, { transition: true });
           }
           setConfig(event.data.config);
-          applyConfigToCSS(event.data.config);
         } catch (e) { console.warn('[HomePage] Bad config update:', e); }
       }
     };
@@ -74,7 +74,7 @@ export default function HomePage() {
 
   const sections = [...config.sections].filter(s => s.visible !== false).sort((a, b) => a.order - b.order);
 
-  const isSmoothScrollDisabled = config.motion.reducedMotion || !config.motion.enabled;
+  const isSmoothScrollDisabled = config.motion.reducedMotion || !config.motion.enabled || !bootReady;
 
   const content = (
     <>
@@ -90,7 +90,7 @@ export default function HomePage() {
       </main>
       <footer className="site-footer" style={{ padding: '40px 24px', borderTop: '1px solid var(--line-subtle)', textAlign: 'center', opacity: 0.8 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: 'var(--container)', margin: '0 auto', fontSize: 'var(--type-xs)', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
-          <span>© {new Date().getFullYear()} ARYAN SHARMA. ALL RIGHTS RESERVED.</span>
+          <span>Copyright {new Date().getFullYear()} Aryan Sharma.</span>
           <a href="/control-room" className="footer-admin-link" style={{ color: 'var(--text-muted)', textDecoration: 'none', borderBottom: '1px dotted var(--text-muted)', paddingBottom: '2px' }}>[system_control]</a>
         </div>
       </footer>

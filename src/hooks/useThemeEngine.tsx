@@ -1,11 +1,13 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { SiteConfig } from '../types/siteConfig';
 import type { ThemeDefinition, ThemeValidationResult } from '../themes/themeTypes';
-import { DEFAULT_THEME_ID, builtInThemes, cloneTheme, getBuiltInTheme, getDefaultTheme, getThemeById } from '../themes/themeRegistry';
+import { DEFAULT_THEME_ID, builtInThemes, builtInThemeIds, cloneTheme, getBuiltInTheme, getDefaultTheme, getThemeById } from '../themes/themeRegistry';
 import { applyTheme } from '../themes/utils/applyThemeTokens';
 import { mergeThemeIntoConfig, deriveThemeFromConfig } from '../themes/utils/themeConfigBridge';
 import { useRemoteTheme } from './useRemoteTheme';
-import type { RemoteThemeState, ThemeSyncSource, ThemeSyncStatus } from '../services/themeService';
+import { saveCachedRemoteTheme, type RemoteThemeState, type ThemeSyncSource, type ThemeSyncStatus } from '../services/themeService';
+import type { ThemeBootstrapSnapshot } from '../types/themeBootstrap';
+import { getThemeBootstrapSnapshot } from '../utils/themeBootstrap';
 import {
   createThemeExport,
   downloadThemeJson,
@@ -79,24 +81,61 @@ function replaceTheme(themes: ThemeDefinition[], theme: ThemeDefinition): ThemeD
   return exists ? themes.map(item => (item.id === theme.id ? theme : item)) : [...themes, theme];
 }
 
+function getBootstrapCustomThemes(snapshot: ThemeBootstrapSnapshot): ThemeDefinition[] {
+  const remoteCustomThemes = snapshot.customThemes.filter(theme => validateTheme(theme).valid);
+  const localBuiltIn = getBuiltInTheme(snapshot.activeTheme.id);
+  const activeMatchesLocalBuiltIn = localBuiltIn
+    ? JSON.stringify(localBuiltIn) === JSON.stringify(snapshot.activeTheme)
+    : false;
+
+  if (activeMatchesLocalBuiltIn && builtInThemeIds.has(snapshot.activeTheme.id)) {
+    return remoteCustomThemes.filter(theme => !builtInThemeIds.has(theme.id));
+  }
+
+  const activeTheme = builtInThemeIds.has(snapshot.activeTheme.id)
+    ? {
+        ...snapshot.activeTheme,
+        source: 'custom' as const,
+        sourceThemeId: snapshot.activeTheme.sourceThemeId ?? snapshot.activeTheme.id,
+      }
+    : snapshot.activeTheme;
+
+  return replaceTheme(
+    remoteCustomThemes.filter(theme => theme.id !== activeTheme.id),
+    activeTheme,
+  );
+}
+
 export function ThemeEngineProvider({ children }: { children: ReactNode }) {
   const { config, setConfig } = useSiteConfig();
+  const [bootstrapSnapshot] = useState(() => getThemeBootstrapSnapshot());
   const configRef = useRef(config);
-  const [customThemes, setCustomThemes] = useState<ThemeDefinition[]>(() => loadCustomThemes());
+  const [customThemes, setCustomThemes] = useState<ThemeDefinition[]>(() => (
+    bootstrapSnapshot ? getBootstrapCustomThemes(bootstrapSnapshot) : loadCustomThemes()
+  ));
   const [activeThemeId, setActiveThemeIdState] = useState(() => {
+    if (bootstrapSnapshot) return bootstrapSnapshot.activeThemeId;
     const storedId = loadActiveThemeId();
-    return getThemeById(storedId, loadCustomThemes()) ? storedId : DEFAULT_THEME_ID;
+    return getThemeById(storedId, customThemes) ? storedId : DEFAULT_THEME_ID;
   });
   const [draftTheme, setDraftTheme] = useState<ThemeDefinition | null>(() => {
+    if (bootstrapSnapshot) return null;
     const draft = loadDraftTheme();
-    const activeId = loadActiveThemeId();
-    return draft?.id === activeId ? draft : null;
+    return draft?.id === activeThemeId ? draft : null;
   });
   const [unsavedChanges, setUnsavedChanges] = useState(() => {
+    if (bootstrapSnapshot) return false;
     const draft = loadDraftTheme();
-    return !!draft && draft.id === loadActiveThemeId();
+    return !!draft && draft.id === activeThemeId;
   });
-  const hasAppliedTheme = useRef(false);
+  const hasAppliedTheme = useRef(!!bootstrapSnapshot);
+  const suppressNextThemeTransition = useRef(!!bootstrapSnapshot);
+  const skipInitialBootstrapApply = useRef(!!bootstrapSnapshot);
+  const bootPrimedRemoteKey = useRef<string | null>(
+    bootstrapSnapshot
+      ? `${bootstrapSnapshot.remoteState.version}:${bootstrapSnapshot.remoteState.updatedAt}:${bootstrapSnapshot.remoteState.activeThemeId}`
+      : null,
+  );
 
   useEffect(() => {
     configRef.current = config;
@@ -115,9 +154,27 @@ export function ThemeEngineProvider({ children }: { children: ReactNode }) {
   const allThemes = useMemo(() => [...builtInThemes, ...customThemes], [customThemes]);
   const validation = useMemo(() => validateTheme(activeTheme), [activeTheme]);
 
-  const applyRemoteState = useCallback((state: RemoteThemeState) => {
+  const remoteStateKey = useCallback((state: RemoteThemeState) => (
+    `${state.version}:${state.updatedAt}:${state.activeThemeId}`
+  ), []);
+
+  const applyRemoteState = useCallback((state: RemoteThemeState, options: { transition?: boolean; primeBoot?: boolean } = {}) => {
     const remoteTheme = getThemeById(state.activeThemeId, state.customThemes);
-    if (!remoteTheme) return;
+    if (!remoteTheme) return null;
+
+    saveActiveThemeId(state.activeThemeId);
+    saveCustomThemes(state.customThemes);
+    saveCachedRemoteTheme(state);
+
+    if (options.primeBoot) {
+      bootPrimedRemoteKey.current = remoteStateKey(state);
+    }
+
+    if (options.transition === false || bootPrimedRemoteKey.current === remoteStateKey(state)) {
+      suppressNextThemeTransition.current = true;
+      applyTheme(remoteTheme, { transition: false });
+      hasAppliedTheme.current = true;
+    }
 
     if (state.siteConfig) {
       localStorage.setItem('aryan_identity_site_config', JSON.stringify(state.siteConfig));
@@ -128,9 +185,16 @@ export function ThemeEngineProvider({ children }: { children: ReactNode }) {
     setActiveThemeIdState(state.activeThemeId);
     setDraftTheme(null);
     setUnsavedChanges(false);
-  }, [setConfig]);
+    return remoteTheme;
+  }, [remoteStateKey, setConfig]);
 
-  const remoteTheme = useRemoteTheme({ onRemoteState: applyRemoteState });
+  const remoteTheme = useRemoteTheme({
+    initialState: bootstrapSnapshot?.remoteState ?? null,
+    skipInitialCache: !!bootstrapSnapshot,
+    onRemoteState: (state) => {
+      applyRemoteState(state);
+    },
+  });
 
   useEffect(() => {
     saveCustomThemes(customThemes);
@@ -145,8 +209,15 @@ export function ThemeEngineProvider({ children }: { children: ReactNode }) {
   }, [draftTheme, unsavedChanges]);
 
   useEffect(() => {
+    if (skipInitialBootstrapApply.current) {
+      skipInitialBootstrapApply.current = false;
+      return;
+    }
+
     const theme = validation.valid ? activeTheme : getDefaultTheme();
-    applyTheme(theme, { transition: hasAppliedTheme.current });
+    const transition = hasAppliedTheme.current && !suppressNextThemeTransition.current;
+    applyTheme(theme, { transition });
+    suppressNextThemeTransition.current = false;
     hasAppliedTheme.current = true;
     const themedConfig = mergeThemeIntoConfig(configRef.current, theme);
     configRef.current = themedConfig;

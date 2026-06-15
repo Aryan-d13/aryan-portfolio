@@ -13,7 +13,7 @@ export function HeroHeadline({ children, config, className = '' }: DisplayTextPr
       as="span"
       slot="heroHeadline"
       config={config}
-      split="lines"
+      split="words"
       className={`hero-headline ${className}`.trim()}
     >
       {children}

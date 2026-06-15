@@ -215,8 +215,8 @@ export function IdentityEditor({ config, onChange }: EditorProps) {
       <Field label="Location"><TextInput config={config} path="identity.location" onChange={onChange} /></Field>
       <Field label="Email"><TextInput config={config} path="identity.email" onChange={onChange} /></Field>
       <Field label="Short Bio"><TextArea config={config} path="identity.shortBio" rows={2} onChange={onChange} /></Field>
-      <Field label="Hero Statement (Cinematic)"><TextArea config={config} path="identity.heroStatement" rows={2} onChange={onChange} /></Field>
-      <Field label="Hero Statement (No-Fluff)"><TextArea config={config} path="identity.heroStatementDirect" rows={2} onChange={onChange} /></Field>
+      <Field label="Hero Statement (Cinema)"><TextArea config={config} path="identity.heroStatement" rows={2} onChange={onChange} /></Field>
+      <Field label="Hero Statement (Direct)"><TextArea config={config} path="identity.heroStatementDirect" rows={2} onChange={onChange} /></Field>
       <Field label="Hero Kicker"><TextInput config={config} path="identity.heroKicker" onChange={onChange} /></Field>
       <Field label="Brand Subtitle"><TextInput config={config} path="identity.brandSubtitle" onChange={onChange} /></Field>
       <Field label="Brand Glyph"><TextInput config={config} path="identity.brandGlyph" onChange={onChange} /></Field>
@@ -280,10 +280,10 @@ export function SectionsEditor({ config, onChange }: EditorProps) {
             <Field label="Kicker"><TextInput config={config} path={`sections.${si}.kicker`} onChange={onChange} /></Field>
             <Field label="Icon" hint="Optional icon registry key"><TextInput config={config} path={`sections.${si}.icon`} onChange={onChange} /></Field>
             {sec.heading !== undefined && <Field label="Heading"><TextInput config={config} path={`sections.${si}.heading`} onChange={onChange} /></Field>}
-            {sec.descriptionAtmospheric !== undefined && <Field label="Description (Cinematic)"><TextArea config={config} path={`sections.${si}.descriptionAtmospheric`} rows={2} onChange={onChange} /></Field>}
-            {sec.descriptionDirect !== undefined && <Field label="Description (No-Fluff)"><TextArea config={config} path={`sections.${si}.descriptionDirect`} rows={2} onChange={onChange} /></Field>}
-            {sec.bodyAtmospheric !== undefined && <Field label="Body (Cinematic)"><TextArea config={config} path={`sections.${si}.bodyAtmospheric`} rows={3} onChange={onChange} /></Field>}
-            {sec.bodyDirect !== undefined && <Field label="Body (No-Fluff)"><TextArea config={config} path={`sections.${si}.bodyDirect`} rows={3} onChange={onChange} /></Field>}
+            {sec.descriptionAtmospheric !== undefined && <Field label="Description (Cinema)"><TextArea config={config} path={`sections.${si}.descriptionAtmospheric`} rows={2} onChange={onChange} /></Field>}
+            {sec.descriptionDirect !== undefined && <Field label="Description (Direct)"><TextArea config={config} path={`sections.${si}.descriptionDirect`} rows={2} onChange={onChange} /></Field>}
+            {sec.bodyAtmospheric !== undefined && <Field label="Body (Cinema)"><TextArea config={config} path={`sections.${si}.bodyAtmospheric`} rows={3} onChange={onChange} /></Field>}
+            {sec.bodyDirect !== undefined && <Field label="Body (Direct)"><TextArea config={config} path={`sections.${si}.bodyDirect`} rows={3} onChange={onChange} /></Field>}
             <div className="cr-section-label">Section Metadata</div>
             <Field label="Section ID"><TextInput config={config} path={`sections.${si}.sectionId`} onChange={onChange} /></Field>
             <Field label="Signal"><TextInput config={config} path={`sections.${si}.signal`} onChange={onChange} /></Field>
@@ -1236,15 +1236,15 @@ export function PortraitEditor({ config, onChange }: EditorProps) {
     src: 'assets/aryan-profile.png',
     alt: '',
     placement: 'hero',
-    variant: 'identity-card',
+    variant: 'cinematic-panel',
     aspectRatio: '4 / 5',
     objectPosition: '52% 50%',
-    showMetadata: true,
+    showMetadata: false,
     metadata: [],
-    effects: { vignette: 0.45, glow: 0.25, grain: 0.08, hoverLift: true, scrollReveal: true }
+    effects: { vignette: 0.34, glow: 0.14, grain: 0.04, hoverLift: false, scrollReveal: true }
   };
   config.portrait.metadata = config.portrait.metadata || [];
-  config.portrait.effects = config.portrait.effects || { vignette: 0.45, glow: 0.25, grain: 0.08, hoverLift: true, scrollReveal: true };
+  config.portrait.effects = config.portrait.effects || { vignette: 0.34, glow: 0.14, grain: 0.04, hoverLift: false, scrollReveal: true };
 
   return (
     <div>
@@ -1256,14 +1256,14 @@ export function PortraitEditor({ config, onChange }: EditorProps) {
       <Field label="Section Placement"><Select config={config} path="portrait.placement" options={[
         { value: 'hero', label: 'Hero Section (Console Column)' },
         { value: 'human-layer', label: 'Human Layer (Dossier Layout)' },
-        { value: 'floating-card', label: 'Floating Interactive HUD' },
-        { value: 'cinematic-panel', label: 'Cinematic Overlay Sidebar' },
+        { value: 'floating-card', label: 'Floating Picture Panel' },
+        { value: 'cinematic-panel', label: 'Cinematic Sidebar' },
         { value: 'hidden', label: 'Hidden / Off' }
       ]} onChange={onChange} /></Field>
 
       <Field label="Design Variant"><Select config={config} path="portrait.variant" options={[
         { value: 'editorial', label: 'Editorial (Asymmetric Frame)' },
-        { value: 'identity-card', label: 'Identity Card (Dossier HUD)' },
+        { value: 'identity-card', label: 'Identity Card' },
         { value: 'bento', label: 'Bento Grid (Scrolling Logs + Stats)' },
         { value: 'archive', label: 'Archive (Classified File Stamp)' },
         { value: 'cinematic-panel', label: 'Cinematic Panel' }
@@ -1288,12 +1288,12 @@ export function PortraitEditor({ config, onChange }: EditorProps) {
       </div>
 
       <div className="cr-divider" />
-      <Field label="Show HUD Metadata"><Toggle config={config} path="portrait.showMetadata" label="Display parameter tags" onChange={onChange} /></Field>
+      <Field label="Show Metadata Overlay"><Toggle config={config} path="portrait.showMetadata" label="Display parameter tags" onChange={onChange} /></Field>
 
-      <div className="cr-section-label">HUD Metadata Tags</div>
+      <div className="cr-section-label">Metadata Tags</div>
       {config.portrait.metadata.length === 0 ? (
         <div style={{ padding: '16px', textAlign: 'center', color: 'var(--cr-text-3)', fontFamily: 'var(--cr-font-mono)', fontSize: '11px' }}>
-          No HUD metadata tags defined. Add one below.
+          No metadata tags defined. Add one below.
         </div>
       ) : (
         <div className="cr-table-container" style={{ marginTop: '12px', marginBottom: '12px' }}>

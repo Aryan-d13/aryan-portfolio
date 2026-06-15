@@ -18,7 +18,7 @@ export default function SectionHeading({ config, section, heading, children }: S
     <div className="section-heading type-section-heading">
       <div className="section-heading-title">
         <span className="section-heading-icon icon-align-heading" aria-hidden="true">
-          <Icon name={resolveIconName(section.icon, sectionIconMap[section.type] ?? 'trace')} size="md" tone="accent" />
+          <Icon name={resolveIconName(section.icon, sectionIconMap[section.type] ?? 'trace')} size="sm" tone="muted" />
         </span>
         <TextTreatment as="h2" slot="sectionTitle" config={config.typographySystem}>
           {heading}

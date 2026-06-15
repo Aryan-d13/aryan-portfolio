@@ -31,7 +31,7 @@ function CaseFile({ config, project, isOpen: defaultOpen }: { config: SiteConfig
     { key: 'system', label: 'System', content: project.system },
     { key: 'stack', label: 'Stack', content: project.stack },
     { key: 'proof', label: 'Proof', content: project.proofThemes },
-    { key: 'shows', label: 'Shows', content: project.shows },
+    { key: 'shows', label: 'Demonstrates', content: project.shows },
   ];
 
   return (
@@ -61,7 +61,7 @@ function CaseFile({ config, project, isOpen: defaultOpen }: { config: SiteConfig
             <div className="project-mode" role="group" aria-label={`${project.name} project mode`}>
               {builderModes.map(mode => (
                 <button key={mode.id} className={`icon-align-inline${storyMode === mode.id ? ' is-active' : ''}`} type="button" aria-pressed={storyMode === mode.id} onClick={() => setStoryMode(mode.id)}>
-                  <Icon name={resolveIconName(mode.icon, mode.id === 'story' ? 'story' : 'system')} size="xs" tone={storyMode === mode.id ? 'accent' : 'muted'} />
+            <Icon name={resolveIconName(mode.icon, mode.id === 'story' ? 'story' : 'system')} size="xs" tone={storyMode === mode.id ? 'accent' : 'muted'} />
                   {mode.label}
                 </button>
               ))}
@@ -175,6 +175,7 @@ export default function ProjectsSection({ config, section, openProjectId }: Prop
       data-proof-level={section.proofLevel}
       data-system-status={section.systemStatus}
     >
+      <span className="section-atmospheric-label" aria-hidden="true">BUILD</span>
       <div className="trace-label" aria-hidden="true">
         <MetadataText config={config.typographySystem}>
           section_id: {section.sectionId} / signal: {section.signal} / proof_level: {section.proofLevel} / system_status: {section.systemStatus}
