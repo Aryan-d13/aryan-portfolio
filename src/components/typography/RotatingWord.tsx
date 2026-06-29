@@ -10,22 +10,21 @@ interface RotatingWordProps {
 /**
  * RotatingWord — Layer 3 (Signature)
  * 
- * Cycles through a list of words with a controlled crossfade.
- * Only the word itself changes; surrounding sentence stays static.
+ * Cycles through a list of words with a controlled typewriter effect.
  * 
  * Rules:
  * - Maximum ONE instance on the entire homepage
- * - Slow transitions (crossfade with subtle translateY)
- * - Respects prefers-reduced-motion (shows first word, no animation)
- * - Adapts timing via CSS custom property --rotating-word-interval
+ * - Smooth typing and deleting lifecycle
+ * - Respects prefers-reduced-motion
+ * - Aligns perfectly on the parent line baseline
  */
 export default function RotatingWord({
   words,
-  interval = 2400,
   className = '',
 }: RotatingWordProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [wordIndex, setWordIndex] = useState(0);
+  const [displayText, setDisplayText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
   const reducedMotion = useRef(false);
 
   useEffect(() => {
@@ -35,24 +34,37 @@ export default function RotatingWord({
   }, []);
 
   useEffect(() => {
-    if (reducedMotion.current || words.length <= 1) return;
+    if (reducedMotion.current || words.length === 0) {
+      if (words.length > 0) setDisplayText(words[0]);
+      return;
+    }
 
-    const timer = setInterval(() => {
-      setIsTransitioning(true);
+    let timer: number;
+    const currentWord = words[wordIndex] || '';
 
-      // After exit animation completes, switch word and enter
-      const switchTimer = setTimeout(() => {
-        setCurrentIndex((prev) => (prev + 1) % words.length);
-        setIsTransitioning(false);
-      }, 400); // match CSS transition duration
+    if (!isDeleting) {
+      if (displayText !== currentWord) {
+        timer = window.setTimeout(() => {
+          setDisplayText(currentWord.slice(0, displayText.length + 1));
+        }, 85); // typing speed
+      } else {
+        timer = window.setTimeout(() => {
+          setIsDeleting(true);
+        }, 1800); // hold word when typed
+      }
+    } else {
+      if (displayText !== '') {
+        timer = window.setTimeout(() => {
+          setDisplayText(currentWord.slice(0, displayText.length - 1));
+        }, 45); // deleting speed
+      } else {
+        setIsDeleting(false);
+        setWordIndex((prev) => (prev + 1) % words.length);
+      }
+    }
 
-      return () => clearTimeout(switchTimer);
-    }, interval);
-
-    return () => clearInterval(timer);
-  }, [words, interval]);
-
-  const word = words[currentIndex] || words[0];
+    return () => clearTimeout(timer);
+  }, [displayText, isDeleting, wordIndex, words]);
 
   return (
     <span
@@ -61,12 +73,10 @@ export default function RotatingWord({
       aria-live="polite"
       aria-atomic="true"
     >
-      <span
-        className={`rotating-word ${isTransitioning ? 'is-exiting' : 'is-entering'}`}
-        aria-hidden="true"
-      >
-        {word}
+      <span className="rotating-word typewriter-text" aria-hidden="true">
+        {displayText}
       </span>
+      {!reducedMotion.current && <span className="typewriter-cursor" aria-hidden="true" />}
     </span>
   );
 }

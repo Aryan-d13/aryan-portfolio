@@ -27,7 +27,9 @@ function ModuleFrame({ config, section, module, children }: FrameProps) {
       </div>
       <div className="section-rail">
         <p className="section-kicker"><MetadataText config={config.typographySystem}>{section.kicker}</MetadataText></p>
-        <span><MetadataText config={config.typographySystem}>{module.sectionLabel || section.railLabel}</MetadataText></span>
+        {(module.sectionLabel || section.railLabel) && (module.sectionLabel || section.railLabel)?.toLowerCase() !== section.kicker?.toLowerCase() && (
+          <span><MetadataText config={config.typographySystem}>{module.sectionLabel || section.railLabel}</MetadataText></span>
+        )}
       </div>
       <div className="section-main">
         <SectionHeading config={config} section={section} heading={module.title || section.heading}>

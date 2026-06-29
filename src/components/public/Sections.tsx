@@ -1,4 +1,4 @@
-import type { SiteConfig, SectionConfig } from '../../types/siteConfig';
+import type { SiteConfig, SectionConfig, TimelineEntry } from '../../types/siteConfig';
 import Icon, { type IconName } from '../icons/Icon';
 import { resolveIconName, timelineIconMap } from '../icons/iconRegistry';
 import PortraitSelector from '../portrait/PortraitSelector';
@@ -22,7 +22,7 @@ export function PhilosophySection({ config, section }: Props) {
   return (
     <section ref={ref} className="principle-shell section-frame" id={section.id} data-section-id={section.sectionId} data-signal={section.signal} data-proof-level={section.proofLevel} data-system-status={section.systemStatus}>
       <div className="trace-label" aria-hidden="true"><MetadataText config={config.typographySystem}>section_id: {section.sectionId} / signal: {section.signal} / proof_level: {section.proofLevel} / system_status: {section.systemStatus}</MetadataText></div>
-      <div className="section-rail"><p className="section-kicker icon-align-inline"><Icon name="spark" size="xs" tone="accent" /><MetadataText config={config.typographySystem}>{section.kicker}</MetadataText></p>{section.railLabel && <span><MetadataText config={config.typographySystem}>{section.railLabel}</MetadataText></span>}</div>
+      <div className="section-rail"><p className="section-kicker icon-align-inline"><Icon name="spark" size="xs" tone="accent" /><MetadataText config={config.typographySystem}>{section.kicker}</MetadataText></p>{section.railLabel && section.railLabel.toLowerCase() !== section.kicker.toLowerCase() && <span><MetadataText config={config.typographySystem}>{section.railLabel}</MetadataText></span>}</div>
       <ul className="principles" aria-label="Operating principles">
         {lines.map((l, index) => <ManifestoLine key={l.id} config={config} line={l} index={index} />)}
       </ul>
@@ -39,7 +39,7 @@ export function HumanSection({ config, section }: Props) {
   return (
     <section ref={ref} className="section-shell section-frame" id={section.id} data-section-id={section.sectionId} data-signal={section.signal} data-proof-level={section.proofLevel} data-system-status={section.systemStatus}>
       <div className="trace-label" aria-hidden="true"><MetadataText config={config.typographySystem}>section_id: {section.sectionId} / signal: {section.signal} / proof_level: {section.proofLevel} / system_status: {section.systemStatus}</MetadataText></div>
-      <div className="section-rail"><p className="section-kicker"><MetadataText config={config.typographySystem}>{section.kicker}</MetadataText></p>{section.railLabel && <span><MetadataText config={config.typographySystem}>{section.railLabel}</MetadataText></span>}</div>
+      <div className="section-rail"><p className="section-kicker"><MetadataText config={config.typographySystem}>{section.kicker}</MetadataText></p>{section.railLabel && section.railLabel.toLowerCase() !== section.kicker.toLowerCase() && <span><MetadataText config={config.typographySystem}>{section.railLabel}</MetadataText></span>}</div>
       <div className="section-main">
         <SectionHeading config={config} section={section} heading={section.heading}>
           <div>
@@ -93,11 +93,19 @@ export function HumanSection({ config, section }: Props) {
 
 export function TimelineSection({ config, section }: Props) {
   const ref = useInView<HTMLElement>({ threshold: 0.1, once: true });
-  const entries = [...(config.timeline || [])].filter(t => t.visible !== false).sort((a, b) => a.order - b.order);
+  const defaultTimeline: TimelineEntry[] = [
+    { id: 't1', date: '2023.03 -> 2023.06', title: 'Completed the IBM Full Stack Software Developer Certificate', description: '', tags: ['education'], visible: true, order: 0 },
+    { id: 't2', date: '2025.11', title: 'Joined Creativefuel as a Full Stack Developer', description: '', tags: ['work'], visible: true, order: 1 },
+    { id: 't3', date: '2025.11 -> 2026.04', title: 'Worked across AI automation, media systems, cloud infrastructure, frontend tooling, and observability', description: '', tags: ['work', 'systems'], visible: true, order: 2 },
+    { id: 't4', date: '2026', title: 'Rebuilding my public identity around proof, systems, and taste', description: '', tags: ['identity'], visible: true, order: 3 },
+  ];
+  const rawTimeline = config.timeline && config.timeline.length > 0 ? config.timeline : defaultTimeline;
+  const entries = [...rawTimeline].filter(t => t.visible !== false).sort((a, b) => a.order - b.order);
+
   return (
     <section ref={ref} className="section-shell section-frame" id={section.id} data-section-id={section.sectionId} data-signal={section.signal} data-proof-level={section.proofLevel} data-system-status={section.systemStatus}>
       <div className="trace-label" aria-hidden="true"><MetadataText config={config.typographySystem}>section_id: {section.sectionId} / signal: {section.signal} / proof_level: {section.proofLevel} / system_status: {section.systemStatus}</MetadataText></div>
-      <div className="section-rail"><p className="section-kicker"><MetadataText config={config.typographySystem}>{section.kicker}</MetadataText></p>{section.railLabel && <span><MetadataText config={config.typographySystem}>{section.railLabel}</MetadataText></span>}</div>
+      <div className="section-rail"><p className="section-kicker"><MetadataText config={config.typographySystem}>{section.kicker}</MetadataText></p>{section.railLabel && section.railLabel.toLowerCase() !== section.kicker.toLowerCase() && <span><MetadataText config={config.typographySystem}>{section.railLabel}</MetadataText></span>}</div>
       <div className="section-main">
         <SectionHeading config={config} section={section} heading={section.heading} />
         <ol className="timeline">

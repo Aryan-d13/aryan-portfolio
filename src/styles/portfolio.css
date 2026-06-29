@@ -46,12 +46,12 @@
   --font-body: "Inter", "Geist", "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
 
-  --type-xs: 0.75rem;
-  --type-sm: 0.875rem;
-  --type-base: 1rem;
-  --type-md: 1.125rem;
-  --type-lg: 1.5rem;
-  --type-xl: 2rem;
+  --type-xs: clamp(0.6875rem, 0.6rem + 0.35vw, 0.75rem);
+  --type-sm: clamp(0.8125rem, 0.75rem + 0.25vw, 0.875rem);
+  --type-base: clamp(0.9375rem, 0.85rem + 0.35vw, 1rem);
+  --type-md: clamp(1.0625rem, 0.95rem + 0.45vw, 1.125rem);
+  --type-lg: clamp(1.25rem, 1.1rem + 0.8vw, 1.5rem);
+  --type-xl: clamp(1.75rem, 1.5rem + 1vw, 2rem);
   --type-2xl: clamp(2.5rem, 5vw, 4.5rem);
   --type-display: clamp(4rem, 10.5vw, 8.5rem);
 
@@ -1098,7 +1098,7 @@ main {
   color: var(--text-muted);
   font-size: var(--type-xs);
   line-height: 1.5;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
 }
 
 .statement-panel {
