@@ -94,10 +94,52 @@ export function HumanSection({ config, section }: Props) {
 export function TimelineSection({ config, section }: Props) {
   const ref = useInView<HTMLElement>({ threshold: 0.1, once: true });
   const defaultTimeline: TimelineEntry[] = [
-    { id: 't1', date: '2023.03 -> 2023.06', title: 'Completed the IBM Full Stack Software Developer Certificate', description: '', tags: ['education'], visible: true, order: 0 },
-    { id: 't2', date: '2025.11', title: 'Joined Creativefuel as a Full Stack Developer', description: '', tags: ['work'], visible: true, order: 1 },
-    { id: 't3', date: '2025.11 -> 2026.04', title: 'Worked across AI automation, media systems, cloud infrastructure, frontend tooling, and observability', description: '', tags: ['work', 'systems'], visible: true, order: 2 },
-    { id: 't4', date: '2026', title: 'Rebuilding my public identity around proof, systems, and taste', description: '', tags: ['identity'], visible: true, order: 3 },
+    {
+      id: 't1',
+      date: 'Mar 2023 -> June 2023',
+      title: 'IBM Full Stack Software Developer Professional Certificate',
+      description: 'Professional certification path covering full-stack systems engineering, APIs, cloud deployments, and devops.',
+      tags: ['certification'],
+      visible: true,
+      order: 0,
+      link: 'https://www.credly.com/badges/e5943dbe-2559-4902-abd2-42469465bb04/public_url'
+    },
+    {
+      id: 't2',
+      date: 'June 2021 -> June 2025',
+      title: 'B.Tech Computer Science specialisation AI, Medi-Caps University',
+      description: 'Undergraduate degree focusing on software engineering foundations, data structures, algorithms, and artificial intelligence.',
+      tags: ['education'],
+      visible: true,
+      order: 1
+    },
+    {
+      id: 't3',
+      date: 'Aug 2025 -> Oct 2025',
+      title: 'Freelance Social Media Executive',
+      description: 'Managed social media pages with cumulative following of 1M+. This also gave me exposure into automation world and the subsequent job role I got was thanks to this.',
+      tags: ['work', 'automation'],
+      visible: true,
+      order: 2
+    },
+    {
+      id: 't4',
+      date: 'Oct 2025 -> April 2026',
+      title: 'Full Stack Engineer at Creativefuel',
+      description: 'Built Julius and July, implementing high-performance clipping automation and AI-driven creator systems.',
+      tags: ['work', 'systems'],
+      visible: true,
+      order: 3
+    },
+    {
+      id: 't5',
+      date: 'May 2026 -> Present',
+      title: 'Lead Full-Stack Systems Engineer (Contract / Freelance) at Maa Pitambara Automobiles',
+      description: 'Orchestrated the complete digital transition of a legacy automotive dealership into a high-visibility, automation-driven online operation. Owned the end-to-end architecture, deployment, and management of the central web platform, structuring reliable core database schemas and automated data pipelines. Programmed custom automated CRM bot to handle real-time client interaction loops, asynchronous webhooks, and state synchronization.',
+      tags: ['work', 'systems', 'automation'],
+      visible: true,
+      order: 4
+    }
   ];
   const rawTimeline = config.timeline && config.timeline.length > 0 ? config.timeline : defaultTimeline;
   const entries = [...rawTimeline].filter(t => t.visible !== false).sort((a, b) => a.order - b.order);
@@ -115,7 +157,20 @@ export function TimelineSection({ config, section }: Props) {
                 <Icon name={timelineIcon(e.tags)} size="sm" tone="accent" />
               </span>
               <time>{e.date}</time>
-              <span>{e.title}</span>
+              <span>
+                {e.link ? (
+                  <a href={e.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline', color: 'var(--accent-secondary)' }}>
+                    {e.title}
+                  </a>
+                ) : (
+                  e.title
+                )}
+                {e.description && (
+                  <span style={{ display: 'block', fontSize: 'var(--type-xs)', color: 'var(--text-muted)', marginTop: 'var(--space-2)', lineHeight: 1.4 }}>
+                    {e.description}
+                  </span>
+                )}
+              </span>
             </li>
           ))}
         </ol>

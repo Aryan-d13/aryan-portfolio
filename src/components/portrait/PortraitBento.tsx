@@ -15,7 +15,7 @@ const MOCK_LOGS = [
   'HMR: hot reload daemon initialized',
   'SYS: nocturnal_engine is running',
   'RECV: pipeline signal: proof_over_vibes',
-  'JOB: seone distributed queue initialized',
+  'JOB: julius distributed queue initialized',
   'LEAS: token active - heartbeat stable',
   'WARN: rain noise threshold set to cinematic',
   'COMP: css variables successfully applied',

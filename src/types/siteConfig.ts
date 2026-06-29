@@ -192,6 +192,7 @@ export interface TimelineEntry {
   tags: string[];
   visible: boolean;
   order: number;
+  link?: string;
 }
 
 export interface CustomLink {

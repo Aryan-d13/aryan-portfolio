@@ -20,7 +20,7 @@ function getProofDrawerDefaults(): ProofDrawerConfig {
 
 export function getDefaultConfig(): SiteConfig {
   return {
-    _version: 4,
+    _version: 5,
     _lastModified: null,
 
     identity: {
@@ -140,8 +140,8 @@ export function getDefaultConfig(): SiteConfig {
 
     projects: [
       {
-        id: 'seone', name: 'SEONE', caseNumber: '01', type: 'AI-native media automation pipeline', featured: true, status: 'active', confidenceLabel: 'high',
-        storyDescription: ['SEONE turns long-form video into short-form, social-ready output through a proper pipeline instead of treating media automation like a single prompt and a loading bar.', 'It connects download, transcription, analysis, rendering, queues, workers, storage, and final assets into one traceable workflow.'],
+        id: 'julius', name: 'JULIUS', caseNumber: '01', type: 'AI-native media automation pipeline', featured: true, status: 'active', confidenceLabel: 'high',
+        storyDescription: ['JULIUS turns long-form video into short-form, social-ready output through a proper pipeline instead of treating media automation like a single prompt and a loading bar.', 'It connects download, transcription, analysis, rendering, queues, workers, storage, and final assets into one traceable workflow.'],
         systemDescription: 'Distributed workers, queues, leases, heartbeats, golden-thread job IDs, render parity, structured logs, health probes, and observable execution.',
         systemFlow: ['ingest', 'transcribe', 'analyze', 'render'],
         problem: 'Long-form video workflows break when every step is a manual edit instead of a traceable, recoverable pipeline.',
@@ -149,12 +149,12 @@ export function getDefaultConfig(): SiteConfig {
         stack: 'Azure Container Apps, KEDA, Azure Blob Storage, Redis, serverless GPUs, T4 GPUs, FFmpeg, Vercel, structured logging, Prometheus, health probes.',
         proofThemes: 'Distributed workers, queue systems, lease tokens, heartbeats, golden-thread job IDs, render parity, observability.',
         shows: 'Aryan can reason across media, backend orchestration, infra, state, and the reliability work that makes automation credible.',
-        links: {},
+        links: { "github": "https://github.com/Aryan-d13/Julia-Clipping-Automation" },
         proofDrawer: getProofDrawerDefaults(),
       },
       {
-        id: 'content-lab', name: 'CONTENT LAB', caseNumber: '02', type: 'AI-native creative production system', featured: true, status: 'active', confidenceLabel: 'high',
-        storyDescription: ['Content Lab treats AI creative generation like a production system. It plans, follows brand constraints, checks output quality, and prepares assets for review and export.', 'The goal is not just to generate images. The goal is controlled variation, consistent layouts, brand safety, and repeatable creative output.'],
+        id: 'july', name: 'JULY', caseNumber: '02', type: 'AI-native creative production system', featured: true, status: 'active', confidenceLabel: 'high',
+        storyDescription: ['July treats AI creative generation like a production system. It plans, follows brand constraints, checks output quality, and prepares assets for review and export.', 'The goal is not just to generate images. The goal is controlled variation, consistent layouts, brand safety, and repeatable creative output.'],
         systemDescription: 'Provider abstraction, state-machine validation, idempotency, sequential carousel generation, outbox reliability, and brand consistency contracts.',
         systemFlow: ['intent', 'planning', 'brand contract', 'generation', 'verification', 'review/export'],
         problem: 'AI creative output often collapses under brand consistency, multi-page sequencing, and production review.',
@@ -162,7 +162,7 @@ export function getDefaultConfig(): SiteConfig {
         stack: 'Gemini-family models, Google Nano Banana Pro, provider abstraction, Pydantic, Firestore, Pub/Sub, outbox pattern, state-machine validation.',
         proofThemes: 'Idempotency, state transitions, sequential carousel generation, brand consistency, provider abstraction.',
         shows: 'Aryan can turn AI generation into a governed product workflow with contracts, state, review surfaces, and production semantics.',
-        links: {},
+        links: { "github": "https://github.com/Aryan-d13/July-Creator" },
         proofDrawer: getProofDrawerDefaults(),
       },
     ],
@@ -242,10 +242,52 @@ export function getDefaultConfig(): SiteConfig {
     },
 
     timeline: [
-      { id: 't1', date: '2023.03 -> 2023.06', title: 'IBM Full Stack Software Developer Certificate', description: '', tags: ['certification'], visible: true, order: 0 },
-      { id: 't2', date: '2025.11', title: 'Joined Creativefuel as Full Stack Developer', description: '', tags: ['work'], visible: true, order: 1 },
-      { id: 't3', date: '2025.11 -> 2026.04', title: 'Built across AI automation, media systems, cloud infra, frontend tooling, and observability', description: '', tags: ['work', 'systems'], visible: true, order: 2 },
-      { id: 't4', date: '2026', title: 'Rebuilding public identity around proof, systems, and taste', description: '', tags: ['identity'], visible: true, order: 3 },
+      {
+        id: 't1',
+        date: 'Mar 2023 -> June 2023',
+        title: 'IBM Full Stack Software Developer Professional Certificate',
+        description: 'Professional certification path covering full-stack systems engineering, APIs, cloud deployments, and devops.',
+        tags: ['certification'],
+        visible: true,
+        order: 0,
+        link: 'https://www.credly.com/badges/e5943dbe-2559-4902-abd2-42469465bb04/public_url'
+      },
+      {
+        id: 't2',
+        date: 'June 2021 -> June 2025',
+        title: 'B.Tech Computer Science specialisation AI, Medi-Caps University',
+        description: 'Undergraduate degree focusing on software engineering foundations, data structures, algorithms, and artificial intelligence.',
+        tags: ['education'],
+        visible: true,
+        order: 1
+      },
+      {
+        id: 't3',
+        date: 'Aug 2025 -> Oct 2025',
+        title: 'Freelance Social Media Executive',
+        description: 'Managed social media pages with cumulative following of 1M+. This also gave me exposure into automation world and the subsequent job role I got was thanks to this.',
+        tags: ['work', 'automation'],
+        visible: true,
+        order: 2
+      },
+      {
+        id: 't4',
+        date: 'Oct 2025 -> April 2026',
+        title: 'Full Stack Engineer at Creativefuel',
+        description: 'Built Julius and July, implementing high-performance clipping automation and AI-driven creator systems.',
+        tags: ['work', 'systems'],
+        visible: true,
+        order: 3
+      },
+      {
+        id: 't5',
+        date: 'May 2026 -> Present',
+        title: 'Lead Full-Stack Systems Engineer (Contract / Freelance) at Maa Pitambara Automobiles',
+        description: 'Orchestrated the complete digital transition of a legacy automotive dealership into a high-visibility, automation-driven online operation. Owned the end-to-end architecture, deployment, and management of the central web platform, structuring reliable core database schemas and automated data pipelines. Programmed custom automated CRM bot to handle real-time client interaction loops, asynchronous webhooks, and state synchronization.',
+        tags: ['work', 'systems', 'automation'],
+        visible: true,
+        order: 4
+      }
     ],
 
     contact: {
@@ -317,8 +359,8 @@ export function getDefaultConfig(): SiteConfig {
     commandPalette: {
       title: 'Command channel', description: 'Jump to the useful parts.',
       commands: [
-        { label: 'View Seone', target: '#systems-built', openProject: 'seone', kbd: '01' },
-        { label: 'View Content Lab', target: '#systems-built', openProject: 'content-lab', kbd: '02' },
+        { label: 'View Julius', target: '#systems-built', openProject: 'julius', kbd: '01' },
+        { label: 'View July', target: '#systems-built', openProject: 'july', kbd: '02' },
         { label: 'Show Stack', target: '#stack', openProject: null, kbd: '03' },
         { label: 'Read Philosophy', target: '#philosophy', openProject: null, kbd: '04' },
         { label: 'Contact Aryan', target: '#open-channel', openProject: null, kbd: '05' },

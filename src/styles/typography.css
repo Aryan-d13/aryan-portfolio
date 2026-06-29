@@ -384,18 +384,16 @@ body {
 
 /* ─── ROTATING WORD (TYPEWRITER MOD) ───────────── */
 .rotating-word-container {
-  display: inline-flex;
-  align-items: center;
+  display: inline-block;
   position: relative;
-  overflow: hidden;
-  vertical-align: -0.11em;
-  height: 1.15em;
+  vertical-align: baseline;
   min-width: 6.5em;
 }
 
 .rotating-word {
   display: inline-block;
   color: var(--accent-secondary);
+  vertical-align: baseline;
 }
 
 .typewriter-text {
