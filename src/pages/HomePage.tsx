@@ -72,7 +72,20 @@ export default function HomePage() {
     setOpenProjectId(projectId);
   }, []);
 
-  const sections = [...config.sections].filter(s => s.visible !== false).sort((a, b) => a.order - b.order);
+  const isSignalProfileActive = config.signalProfile.enabled && config.sections.some(s => s.id === 'signal-profile' && s.visible !== false);
+
+  const sections = [...config.sections]
+    .filter(s => s.visible !== false)
+    .filter(s => {
+      // Suppress standalone sections that are already embedded as tabs inside signal-profile
+      if (isSignalProfileActive) {
+        if (s.type === 'anti-patterns' || s.type === 'field-notes' || s.type === 'operating-manual') {
+          return false;
+        }
+      }
+      return true;
+    })
+    .sort((a, b) => a.order - b.order);
 
   const isSmoothScrollDisabled = config.motion.reducedMotion || !config.motion.enabled || !bootReady;
 

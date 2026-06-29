@@ -47,7 +47,7 @@ export interface UseRemoteThemeResult {
 function isNewer(next: RemoteThemeState, current: RemoteThemeState | null): boolean {
   if (!current) return true;
   if (next.version !== current.version) return next.version > current.version;
-  return new Date(next.updatedAt).getTime() >= new Date(current.updatedAt).getTime();
+  return true;
 }
 
 export function useRemoteTheme({

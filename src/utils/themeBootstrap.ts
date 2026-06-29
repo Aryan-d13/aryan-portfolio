@@ -1,5 +1,4 @@
 import type { ThemeBootstrapSnapshot } from '../types/themeBootstrap';
-import { validateTheme } from '../themes/utils/themeValidation';
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return !!value && typeof value === 'object' && !Array.isArray(value);
@@ -10,7 +9,9 @@ export function isThemeBootstrapSnapshot(value: unknown): value is ThemeBootstra
   if (typeof value.activeThemeId !== 'string') return false;
   if (!isObject(value.remoteState)) return false;
   const activeTheme = value.activeTheme;
-  if (!isObject(activeTheme) || !validateTheme(activeTheme).valid) return false;
+  if (!isObject(activeTheme)) return false;
+  if (typeof activeTheme.id !== 'string' || typeof activeTheme.name !== 'string') return false;
+  if (!isObject(activeTheme.colors)) return false;
   return activeTheme.id === value.activeThemeId;
 }
 

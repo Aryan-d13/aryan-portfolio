@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { SiteConfig } from '../../types/siteConfig';
 import Icon, { type IconName } from '../icons/Icon';
 
@@ -11,6 +12,72 @@ interface Props {
 
 export default function CommandPalette({ config, isOpen, onClose, onOpenProject }: Props) {
   const firstBtnRef = useRef<HTMLButtonElement>(null);
+  const navigate = useNavigate();
+  const bufferRef = useRef<string>('');
+  const timeoutRef = useRef<number | null>(null);
+
+  const cp = config.commandPalette;
+
+  const handleCommand = useCallback((target: string, openProject: string | null) => {
+    onClose();
+    if (target.startsWith('/')) {
+      navigate(target);
+      return;
+    }
+    if (openProject) onOpenProject(openProject);
+    const el = document.querySelector(target);
+    el?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  }, [navigate, onClose, onOpenProject]);
+
+  // Esc key down handler
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    if (isOpen) window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [isOpen, onClose]);
+
+  // Global keyboard shortcuts sequence handler
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      if (
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        target instanceof HTMLSelectElement ||
+        target?.isContentEditable
+      ) {
+        return;
+      }
+
+      if (e.key.length !== 1) return;
+
+      bufferRef.current = (bufferRef.current + e.key).toUpperCase();
+
+      if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+      timeoutRef.current = window.setTimeout(() => {
+        bufferRef.current = '';
+      }, 1000);
+
+      const matchedCommand = cp.commands.find(
+        cmd => bufferRef.current.endsWith(cmd.kbd.toUpperCase())
+      );
+
+      if (matchedCommand) {
+        bufferRef.current = '';
+        if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+        handleCommand(matchedCommand.target, matchedCommand.openProject);
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleGlobalKeyDown);
+      if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+    };
+  }, [cp.commands, handleCommand]);
 
   useEffect(() => {
     if (isOpen) {
@@ -22,17 +89,7 @@ export default function CommandPalette({ config, isOpen, onClose, onOpenProject 
     return () => { document.body.style.overflow = ''; };
   }, [isOpen]);
 
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    if (isOpen) window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [isOpen, onClose]);
-
   if (!isOpen) return null;
-
-  const cp = config.commandPalette;
 
   const commandIcon = (target: string, openProject: string | null): IconName => {
     if (openProject) return 'archive';
@@ -40,17 +97,6 @@ export default function CommandPalette({ config, isOpen, onClose, onOpenProject 
     if (target.includes('open-channel')) return 'mail';
     if (target.includes('stack')) return 'stack';
     return 'command';
-  };
-
-  const handleCommand = (target: string, openProject: string | null) => {
-    onClose();
-    if (target.startsWith('/')) {
-      window.location.href = target;
-      return;
-    }
-    if (openProject) onOpenProject(openProject);
-    const el = document.querySelector(target);
-    el?.scrollIntoView({ block: 'start', behavior: 'smooth' });
   };
 
   return (

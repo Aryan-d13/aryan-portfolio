@@ -55,28 +55,6 @@ function stripUndefined(value) {
   return value;
 }
 
-function firestoreValueToJs(value) {
-  if (!isObject(value)) return null;
-  if ('stringValue' in value) return value.stringValue;
-  if ('integerValue' in value) return Number(value.integerValue);
-  if ('doubleValue' in value) return Number(value.doubleValue);
-  if ('booleanValue' in value) return Boolean(value.booleanValue);
-  if ('timestampValue' in value) return value.timestampValue;
-  if ('nullValue' in value) return null;
-  if ('arrayValue' in value) {
-    const entries = value.arrayValue?.values;
-    return Array.isArray(entries) ? entries.map(firestoreValueToJs) : [];
-  }
-  if ('mapValue' in value) return firestoreFieldsToJs(value.mapValue?.fields ?? {});
-  return null;
-}
-
-function firestoreFieldsToJs(fields) {
-  return Object.fromEntries(
-    Object.entries(fields ?? {}).map(([key, value]) => [key, firestoreValueToJs(value)]),
-  );
-}
-
 async function getRedisValue(key, env = process.env) {
   const url = envValue(env, 'UPSTASH_REDIS_REST_URL', 'KV_REST_API_URL', 'VITE_UPSTASH_REDIS_REST_URL');
   const token = envValue(env, 'UPSTASH_REDIS_REST_TOKEN', 'KV_REST_API_TOKEN', 'VITE_UPSTASH_REDIS_REST_TOKEN');
@@ -631,9 +609,22 @@ export function buildThemeBootstrapScript(snapshot, errorMessage = '') {
   }
 
   function fail(reason) {
-    root.dataset.themeReady = 'error';
-    root.dataset.themeSource = 'error';
     window.__ARYAN_THEME_BOOTSTRAP_ERROR__ = reason || SERVER_ERROR || 'Theme bootstrap failed';
+    try {
+      const cached = snapshotFromCache();
+      if (cached && validSnapshot(cached)) {
+        applyTheme(cached.activeTheme);
+        window.__ARYAN_THEME_BOOTSTRAP__ = cached;
+        writeStorage(cached);
+        root.dataset.themeReady = 'true';
+        root.dataset.themeSource = 'cache-fallback';
+        return;
+      }
+    } catch (e) {
+      /* Fallback failed, continue to basic recovery */
+    }
+    root.dataset.themeReady = 'true';
+    root.dataset.themeSource = 'fallback';
   }
 
   function getNewerSnapshot(server, cache) {
@@ -645,9 +636,7 @@ export function buildThemeBootstrapScript(snapshot, errorMessage = '') {
     if (cacheVer !== serverVer) {
       return cacheVer > serverVer ? cache : server;
     }
-    const serverTime = new Date(server.updatedAt || 0).getTime();
-    const cacheTime = new Date(cache.updatedAt || 0).getTime();
-    return cacheTime > serverTime ? cache : server;
+    return server;
   }
 
   try {

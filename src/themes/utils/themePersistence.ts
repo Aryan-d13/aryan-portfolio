@@ -1,5 +1,5 @@
 import type { ThemeDefinition, ThemeExportPayload } from '../themeTypes';
-import { DEFAULT_THEME_ID, builtInThemeIds, builtInThemes, cloneTheme, getDefaultTheme, getThemeById } from '../themeRegistry';
+import { DEFAULT_THEME_ID, builtInThemeIds, builtInThemes, cloneTheme, getDefaultTheme, getThemeById, getBuiltInTheme } from '../themeRegistry';
 import { validateTheme, validateThemes } from './themeValidation';
 
 export const ACTIVE_THEME_KEY = 'aryan_theme_engine_active_theme_id';
@@ -67,8 +67,33 @@ export function saveDraftTheme(theme: ThemeDefinition | null): void {
 }
 
 export function resolveActiveTheme(activeThemeId: string, customThemes: ThemeDefinition[], draftTheme?: ThemeDefinition | null): ThemeDefinition {
-  if (draftTheme?.id === activeThemeId && validateTheme(draftTheme).valid) return draftTheme;
-  return getThemeById(activeThemeId, customThemes) ?? getDefaultTheme();
+  let theme: ThemeDefinition;
+  if (draftTheme?.id === activeThemeId && validateTheme(draftTheme).valid) {
+    theme = draftTheme;
+  } else {
+    theme = getThemeById(activeThemeId, customThemes) ?? getDefaultTheme();
+  }
+
+  const builtIn = getBuiltInTheme(theme.id) ?? (theme.sourceThemeId ? getBuiltInTheme(theme.sourceThemeId) : undefined);
+  if (builtIn) {
+    return {
+      ...builtIn,
+      ...theme,
+      colors: { ...builtIn.colors, ...theme.colors },
+      typography: { ...builtIn.typography, ...theme.typography },
+      spacing: { ...builtIn.spacing, ...theme.spacing },
+      radius: { ...builtIn.radius, ...theme.radius },
+      borders: { ...builtIn.borders, ...theme.borders },
+      elevation: { ...builtIn.elevation, ...theme.elevation },
+      background: { ...builtIn.background, ...theme.background },
+      glow: { ...builtIn.glow, ...theme.glow },
+      motion: { ...builtIn.motion, ...theme.motion },
+      components: { ...builtIn.components, ...theme.components },
+      layout: { ...builtIn.layout, ...theme.layout },
+    };
+  }
+
+  return theme;
 }
 
 export function createThemeExport(activeThemeId: string, customThemes: ThemeDefinition[]): ThemeExportPayload {

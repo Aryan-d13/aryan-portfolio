@@ -11,10 +11,11 @@ interface ConfigContextValue {
 const ConfigContext = createContext<ConfigContextValue | null>(null);
 
 export function ConfigProvider({ children }: { children: ReactNode }) {
-  const [bootstrappedConfig] = useState(() => getThemeBootstrapSnapshot()?.siteConfig ?? null);
-  const [config, setConfigState] = useState<SiteConfig>(() => (
-    bootstrappedConfig ? normalizeSiteConfig(bootstrappedConfig) : loadConfig()
-  ));
+  const [bootstrapSnapshot] = useState(() => getThemeBootstrapSnapshot());
+  const [config, setConfigState] = useState<SiteConfig>(() => {
+    const bootstrappedConfig = bootstrapSnapshot?.siteConfig ?? null;
+    return bootstrappedConfig ? normalizeSiteConfig(bootstrappedConfig) : loadConfig();
+  });
 
   const setConfig = useCallback((newConfig: SiteConfig) => {
     const normalized = normalizeSiteConfig(newConfig);
@@ -23,9 +24,9 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (bootstrappedConfig) return;
+    if (bootstrapSnapshot) return;
     applyConfigToCSS(config);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [bootstrapSnapshot]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <ConfigContext.Provider value={{ config, setConfig }}>

@@ -20,42 +20,42 @@ function getProofDrawerDefaults(): ProofDrawerConfig {
 
 export function getDefaultConfig(): SiteConfig {
   return {
-    _version: 1,
+    _version: 4,
     _lastModified: null,
 
     identity: {
       name: 'Aryan Sharma',
       handle: '@aryanteddys',
       roleLines: [
-        'AI-native media systems',
-        'Full-stack cloud + automation',
-        'Proof-first production systems',
+        'AI-native media systems builder',
+        'Full Stack Developer',
+        'AI & Automation Engineer',
       ],
       location: 'India',
       email: 'aryanteddys@gmail.com',
       shortBio: 'I build AI-native media systems that are cinematic on the surface and traceable underneath.',
-      heroStatement: 'AI-native media systems, built like production infrastructure and directed with taste.',
-      heroStatementDirect: 'Full-stack engineering for media automation, AI workflows, cloud infra, observability, rendering, and review surfaces.',
-      heroKicker: 'PROOF-FIRST MEDIA SYSTEMS',
-      brandSubtitle: 'systems / media / AI',
+      heroStatement: 'My work sits at the intersection of AI, media, infrastructure, and product taste. I care about things that survive real production pressure, not just things that look impressive in a demo.',
+      heroStatementDirect: 'I build systems that turn messy ideas into working products.',
+      heroKicker: 'PROOF OF WORK',
+      brandSubtitle: 'proof.interface',
       brandGlyph: 'AS',
-      ctaPrimary: { text: 'Inspect Case Files', href: '#systems-built' },
-      ctaSecondary: { text: 'Email Aryan', href: '#open-channel' },
+      ctaPrimary: { text: 'SEE THE WORK', href: '#systems-built' },
+      ctaSecondary: { text: 'GET IN TOUCH', href: '#open-channel' },
       metadata: {
         trace_id: 'aryan.sharma',
-        mode: 'nocturnal_builder',
+        mode: 'builder',
         origin: 'India',
         handle: '@aryanteddys',
         stack: 'full-stack / cloud / ai / media',
-        signal: 'proof_over_vibes',
+        signal: 'proof over noise',
       },
       portraitCaption: { label: 'visual_id', value: 'cold_light / field_signal' },
       portraitAlt: 'Aryan Sharma in cold outdoor light wearing winter layers and sunglasses.',
     },
 
     sections: [
-      { id: 'trace-begins', sectionId: 'trace_begins', signal: 'cold_boot', proofLevel: 'identity', systemStatus: 'awake', type: 'hero', title: 'Hero', kicker: 'PROOF-FIRST MEDIA SYSTEMS', visible: true, order: 0, animationStyle: 'reveal', backgroundIntensity: 1.0 },
-      { id: 'identity', sectionId: 'not_template_developer', signal: 'anti_template', proofLevel: 'positioning', systemStatus: 'clear', type: 'statement', title: 'Identity Statement', kicker: 'IDENTITY', railLabel: 'not_a_template_developer', visible: true, order: 1, animationStyle: 'reveal', backgroundIntensity: 1.0, bodyAtmospheric: 'I build AI-native media systems that can be inspected, operated, and trusted. The mood is cinematic; the work is traceable.', bodyDirect: 'Full-stack engineering for media automation, AI workflows, cloud infrastructure, observability, and production-grade interfaces.' },
+      { id: 'trace-begins', sectionId: 'trace_begins', signal: 'cold_boot', proofLevel: 'identity', systemStatus: 'awake', type: 'hero', title: 'Hero', kicker: 'PROOF OF WORK', visible: true, order: 0, animationStyle: 'reveal', backgroundIntensity: 1.0 },
+      { id: 'identity', sectionId: 'not_template_developer', signal: 'anti_template', proofLevel: 'positioning', systemStatus: 'clear', type: 'statement', title: 'Identity Statement', kicker: 'IDENTITY', railLabel: 'not_a_template_developer', visible: true, order: 1, animationStyle: 'reveal', backgroundIntensity: 1.0, bodyAtmospheric: 'I do not like building things that only look finished. I like going deep into how a system behaves, where it breaks, how it recovers, and whether the final experience actually feels right to use.', bodyDirect: 'Full-stack engineering for media automation, AI workflows, cloud infrastructure, observability, and production-grade interfaces.' },
       { id: 'signal-profile', sectionId: 'signal_profile', signal: 'identity_diagnostic', proofLevel: 'personal', systemStatus: 'calibrated', type: 'signal-profile', title: 'Signal Profile', kicker: 'WORKING STYLE', icon: 'signal', railLabel: 'diagnostic', heading: 'How I work when the problem is still unclear.', visible: true, order: 2, animationStyle: 'reveal', backgroundIntensity: 1.0 },
       { id: 'systems-built', sectionId: 'systems_built', signal: 'case_files', proofLevel: 'high', systemStatus: 'inspectable', type: 'projects', title: 'Systems Built', kicker: 'SYSTEMS BUILT', railLabel: 'case_files', heading: 'Inspectable systems, not project tiles.', descriptionAtmospheric: 'Each case file shows the problem, system shape, stack, proof themes, and what the build proves.', descriptionDirect: 'Case files for AI media automation and controlled AI creative production.', visible: true, order: 3, animationStyle: 'reveal', backgroundIntensity: 1.0 },
       { id: 'proof-layer', sectionId: 'proof_layer', signal: 'receipts_not_vibes', proofLevel: 'black_box', systemStatus: 'recording', type: 'proof', title: 'Proof Layer', kicker: 'PROOF LAYER', railLabel: 'receipts_not_vibes', heading: 'Reliability rules I build around.', descriptionAtmospheric: 'The principles that keep media and AI systems useful when jobs fail, retry, render, or drift.', descriptionDirect: 'Idempotency, observability, render parity, state machines, golden-thread tracing, and tests.', visible: true, order: 4, animationStyle: 'reveal', backgroundIntensity: 1.0 },
@@ -141,7 +141,7 @@ export function getDefaultConfig(): SiteConfig {
     projects: [
       {
         id: 'seone', name: 'SEONE', caseNumber: '01', type: 'AI-native media automation pipeline', featured: true, status: 'active', confidenceLabel: 'high',
-        storyDescription: ['SEONE turns long-form video into social-ready assets without treating media automation like a prompt and a spinner.', 'The important part is the trace: every download, transcript, analysis, render, worker, queue, and asset keeps a job trail.'],
+        storyDescription: ['SEONE turns long-form video into short-form, social-ready output through a proper pipeline instead of treating media automation like a single prompt and a loading bar.', 'It connects download, transcription, analysis, rendering, queues, workers, storage, and final assets into one traceable workflow.'],
         systemDescription: 'Distributed workers, queues, leases, heartbeats, golden-thread job IDs, render parity, structured logs, health probes, and observable execution.',
         systemFlow: ['ingest', 'transcribe', 'analyze', 'render'],
         problem: 'Long-form video workflows break when every step is a manual edit instead of a traceable, recoverable pipeline.',
@@ -154,7 +154,7 @@ export function getDefaultConfig(): SiteConfig {
       },
       {
         id: 'content-lab', name: 'CONTENT LAB', caseNumber: '02', type: 'AI-native creative production system', featured: true, status: 'active', confidenceLabel: 'high',
-        storyDescription: ['Content Lab treats creative generation like a production system, not a prompt window.', 'It plans, respects brand constraints, verifies output, and prepares assets for review and export.'],
+        storyDescription: ['Content Lab treats AI creative generation like a production system. It plans, follows brand constraints, checks output quality, and prepares assets for review and export.', 'The goal is not just to generate images. The goal is controlled variation, consistent layouts, brand safety, and repeatable creative output.'],
         systemDescription: 'Provider abstraction, state-machine validation, idempotency, sequential carousel generation, outbox reliability, and brand consistency contracts.',
         systemFlow: ['intent', 'planning', 'brand contract', 'generation', 'verification', 'review/export'],
         problem: 'AI creative output often collapses under brand consistency, multi-page sequencing, and production review.',
@@ -212,11 +212,13 @@ export function getDefaultConfig(): SiteConfig {
     ],
 
     philosophy: [
-      { id: 'p1', text: 'Proof over vibes.', intensity: 'sharp', largeType: true, order: 0 },
-      { id: 'p2', text: 'First principles before frameworks.', intensity: 'sharp', largeType: true, order: 1 },
-      { id: 'p3', text: 'Systems should be traceable, editable, recoverable.', intensity: 'quiet', largeType: true, order: 2 },
-      { id: 'p4', text: 'Products win on stage. Agents stay backstage.', intensity: 'quiet', largeType: true, order: 3 },
-      { id: 'p5', text: 'No corporate fog. No fake certainty.', intensity: 'loud', largeType: true, order: 4 },
+      { id: 'p1', text: 'Build things that can be inspected.', intensity: 'sharp', largeType: true, order: 0 },
+      { id: 'p2', text: 'Start from the problem, not the framework.', intensity: 'sharp', largeType: true, order: 1 },
+      { id: 'p3', text: 'Make systems traceable, editable, and recoverable.', intensity: 'quiet', largeType: true, order: 2 },
+      { id: 'p4', text: 'Use tests when guessing would be expensive.', intensity: 'quiet', largeType: true, order: 3 },
+      { id: 'p5', text: 'Keep the clever parts backstage. Let the product feel simple.', intensity: 'quiet', largeType: true, order: 4 },
+      { id: 'p6', text: 'Use cloud for leverage, but understand what it is doing.', intensity: 'quiet', largeType: true, order: 5 },
+      { id: 'p7', text: 'Say what is true. Avoid fake certainty.', intensity: 'loud', largeType: true, order: 6 },
     ],
 
     humanLayer: {
@@ -248,54 +250,54 @@ export function getDefaultConfig(): SiteConfig {
 
     contact: {
       email: 'aryanteddys@gmail.com', handle: '@aryanteddys', location: 'India',
-      ctaText: 'Email Aryan', ctaLink: 'mailto:aryanteddys@gmail.com',
+      ctaText: 'GET IN TOUCH', ctaLink: 'mailto:aryanteddys@gmail.com',
       resumeLink: 'Aryan_Sharma_Resume.pdf', resumeLabel: 'View Resume',
       githubLink: '', linkedinLink: '', socialLinks: [],
-      customLinks: [{ label: 'Inspect Case Files', href: '#systems-built' }],
+      customLinks: [{ label: 'SEE THE WORK', href: '#systems-built' }],
     },
 
     typography: {
       displayFont: '"Space Grotesk", "Inter", "Segoe UI", sans-serif',
       bodyFont: '"Inter", "Geist", "Segoe UI", sans-serif',
       monoFont: '"JetBrains Mono", "IBM Plex Mono", "SFMono-Regular", Consolas, monospace',
-      baseFontSize: '16px', headingScale: 1.0, lineHeight: 1.6, letterSpacing: '0',
-      headingWeight: 700, bodyWeight: 400, sectionLabelStyle: 'uppercase',
+      baseFontSize: '16px', headingScale: 1.0, lineHeight: 1.68, letterSpacing: '0',
+      headingWeight: 650, bodyWeight: 400, sectionLabelStyle: 'uppercase',
       typeXs: '0.75rem', typeSm: '0.875rem', typeBase: '1rem', typeMd: '1.125rem',
-      typeLg: '1.5rem', typeXl: '2rem', type2xl: 'clamp(2.5rem, 5vw, 4.5rem)',
-      typeDisplay: 'clamp(4rem, 10.5vw, 8.5rem)',
+      typeLg: '1.5rem', typeXl: '2rem', type2xl: 'clamp(2.3rem, 4.8vw, 4.2rem)',
+      typeDisplay: 'clamp(3.6rem, 9.5vw, 7.6rem)',
     },
 
-    typographySystem: getTypographySystemForTheme('nocturnal-signal'),
+    typographySystem: getTypographySystemForTheme('proof-archive'),
 
     colors: {
-      bg: '#05070d', bgSecondary: '#0b111c', panel: '#101826',
-      text: '#eaf0ff', textSecondary: '#aab4c8', textMuted: '#758197',
-      accent: '#2f6bff', accentSecondary: '#5debff', accentEmotional: '#8b5cf6', accentProof: '#ff3b5c',
-      border: '#1e2a3d', borderSubtle: '#142033', borderStrong: '#2e3f5c',
-      glow: '#5debff', selection: '#5debff',
+      bg: '#070b10', bgSecondary: '#10161e', panel: '#1c2630',
+      text: '#eef1e9', textSecondary: '#c4c7bd', textMuted: '#8a9187',
+      accent: '#8db3d9', accentSecondary: '#d7e6ee', accentEmotional: '#a9b7d8', accentProof: '#e06a5f',
+      border: '#303a43', borderSubtle: '#202932', borderStrong: '#52606a',
+      glow: '#d7e6ee', selection: '#d7e6ee',
     },
 
     background: {
-      enabled: true, dotSize: 1, dotSpacing: 34, dotOpacity: 0.045, dotRevealOpacity: 0.11,
-      dotFieldOpacity: 0.52, radialGlowColor: '#5debff', radialGlowOpacity: 0.055,
-      radialGlowSize: 28, radialGlowBlur: 44, radialGlowColor2: '#2f6bff',
-      radialGlowOpacity2: 0.08, animationSpeed: 56, animationIntensity: 0.55,
-      vignetteOpacity: 0.88, noiseOpacity: 0,
+      enabled: true, dotSize: 0.75, dotSpacing: 38, dotOpacity: 0.04, dotRevealOpacity: 0.06,
+      dotFieldOpacity: 0.3, radialGlowColor: '#d7e6ee', radialGlowOpacity: 0.035,
+      radialGlowSize: 24, radialGlowBlur: 42, radialGlowColor2: '#8db3d9',
+      radialGlowOpacity2: 0.05, animationSpeed: 72, animationIntensity: 0.26,
+      vignetteOpacity: 0.8, noiseOpacity: 0.04,
     },
 
     motion: {
-      enabled: true, reducedMotion: false, revealType: 'translateY',
-      revealDuration: 480, revealDelay: 60, hoverGlowIntensity: 0.55,
-      projectExpansionSpeed: 300, commandPaletteEnabled: true,
-      scrollParallaxIntensity: 0, cursorBlinkEnabled: true, rainNoiseEnabled: false,
-      durationFast: 140, durationStandard: 220, durationSlow: 360,
+      enabled: true, reducedMotion: false, revealType: 'fadeIn',
+      revealDuration: 440, revealDelay: 60, hoverGlowIntensity: 0.42,
+      projectExpansionSpeed: 330, commandPaletteEnabled: true,
+      scrollParallaxIntensity: 0, cursorBlinkEnabled: false, rainNoiseEnabled: true,
+      durationFast: 110, durationStandard: 210, durationSlow: 330,
     },
 
     layout: {
-      maxContentWidth: '1248px', sectionPaddingTop: '112px', sectionPaddingBottom: '112px',
-      cardPadding: '24px', gridGap: '16px', borderRadius: '2px', panelBlur: 16,
+      maxContentWidth: '1168px', sectionPaddingTop: '112px', sectionPaddingBottom: '112px',
+      cardPadding: '24px', gridGap: '14px', borderRadius: '2px', panelBlur: 8,
       navPosition: 'sticky', heroHeight: 'auto', sectionAlignment: 'left',
-      densityMode: 'cinematic', headerHeight: '80px',
+      densityMode: 'balanced', headerHeight: '74px',
     },
 
     seo: {
@@ -340,15 +342,15 @@ export function getDefaultConfig(): SiteConfig {
       src: 'assets/aryan-profile.png',
       alt: 'Aryan Sharma in cold outdoor light wearing winter layers and sunglasses.',
       placement: 'hero',
-      variant: 'cinematic-panel',
+      variant: 'identity-card',
       aspectRatio: '4 / 5',
       objectPosition: '52% 50%',
-      showMetadata: false,
+      showMetadata: true,
       metadata: [
         { label: 'trace_id', value: 'aryan.sharma' },
-        { label: 'mode', value: 'nocturnal_builder' },
-        { label: 'origin', value: 'india' },
-        { label: 'signal', value: 'proof_over_vibes' },
+        { label: 'mode', value: 'builder' },
+        { label: 'origin', value: 'India' },
+        { label: 'signal', value: 'proof over noise' },
       ],
       effects: {
         vignette: 0.34,

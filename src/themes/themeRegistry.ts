@@ -10,7 +10,7 @@ import { quantumRain } from './themes/quantumRain';
 import { skylineTerminal } from './themes/skylineTerminal';
 import { softTraceLuxury } from './themes/softTraceLuxury';
 
-export const DEFAULT_THEME_ID = 'nocturnal-signal';
+export const DEFAULT_THEME_ID = 'proof-archive';
 
 export const builtInThemes: ThemeDefinition[] = Object.freeze([
   nocturnalSignal,

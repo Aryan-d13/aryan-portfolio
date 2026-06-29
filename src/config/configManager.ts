@@ -44,13 +44,25 @@ export function normalizeSiteConfig(config: SiteConfig): SiteConfig {
 }
 
 export function loadConfig(): SiteConfig {
+  const defaults = getDefaultConfig();
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
-      return normalizeSiteConfig(JSON.parse(raw) as SiteConfig);
+      const parsed = JSON.parse(raw) as SiteConfig;
+      if (parsed && typeof parsed === 'object') {
+        const cachedVersion = parsed._version || 0;
+        const defaultVersion = defaults._version || 1;
+        if (cachedVersion < defaultVersion) {
+          console.log('[configManager] Stale config version detected. Clearing cache.');
+          localStorage.removeItem(STORAGE_KEY);
+          localStorage.removeItem(DRAFT_KEY);
+          return defaults;
+        }
+        return normalizeSiteConfig(parsed);
+      }
     }
   } catch (e) { console.warn('[configManager] Failed to load config:', e); }
-  return getDefaultConfig();
+  return defaults;
 }
 
 export function saveConfig(config: SiteConfig): { success: boolean; errors: string[] } {
