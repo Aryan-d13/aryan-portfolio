@@ -2158,6 +2158,11 @@ section[data-in-view="true"] .section-heading h2::after {
   max-width: 860px;
 }
 
+.contact-copy .section-kicker {
+  display: flex;
+  margin-bottom: var(--space-3);
+}
+
 .contact-copy h2 {
   margin-top: var(--space-4);
 }
