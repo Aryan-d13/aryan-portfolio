@@ -74,26 +74,25 @@ export function resolveActiveTheme(activeThemeId: string, customThemes: ThemeDef
     theme = getThemeById(activeThemeId, customThemes) ?? getDefaultTheme();
   }
 
-  const builtIn = getBuiltInTheme(theme.id) ?? (theme.sourceThemeId ? getBuiltInTheme(theme.sourceThemeId) : undefined);
-  if (builtIn) {
-    return {
-      ...builtIn,
-      ...theme,
-      colors: { ...builtIn.colors, ...theme.colors },
-      typography: { ...builtIn.typography, ...theme.typography },
-      spacing: { ...builtIn.spacing, ...theme.spacing },
-      radius: { ...builtIn.radius, ...theme.radius },
-      borders: { ...builtIn.borders, ...theme.borders },
-      elevation: { ...builtIn.elevation, ...theme.elevation },
-      background: { ...builtIn.background, ...theme.background },
-      glow: { ...builtIn.glow, ...theme.glow },
-      motion: { ...builtIn.motion, ...theme.motion },
-      components: { ...builtIn.components, ...theme.components },
-      layout: { ...builtIn.layout, ...theme.layout },
-    };
-  }
+  const base = getBuiltInTheme(theme.id)
+    ?? (theme.sourceThemeId ? getBuiltInTheme(theme.sourceThemeId) : undefined)
+    ?? getDefaultTheme();
 
-  return theme;
+  return {
+    ...base,
+    ...theme,
+    colors: { ...base.colors, ...theme.colors },
+    typography: { ...base.typography, ...theme.typography },
+    spacing: { ...base.spacing, ...theme.spacing },
+    radius: { ...base.radius, ...theme.radius },
+    borders: { ...base.borders, ...theme.borders },
+    elevation: { ...base.elevation, ...theme.elevation },
+    background: { ...base.background, ...theme.background },
+    glow: { ...base.glow, ...theme.glow },
+    motion: { ...base.motion, ...theme.motion },
+    components: { ...base.components, ...theme.components },
+    layout: { ...base.layout, ...theme.layout },
+  };
 }
 
 export function createThemeExport(activeThemeId: string, customThemes: ThemeDefinition[]): ThemeExportPayload {
