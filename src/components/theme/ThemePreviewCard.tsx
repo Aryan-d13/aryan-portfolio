@@ -16,7 +16,7 @@ export default function ThemePreviewCard({ theme, active, dirty, onSelect }: Pro
       onClick={() => onSelect(theme.id)}
       aria-pressed={active}
     >
-      <span className="theme-preview-art" style={{ background: theme.preview.gradient }}>
+      <span className="theme-preview-art" style={{ background: theme.preview?.gradient ?? 'transparent' }}>
         <span
           className="theme-preview-dots"
           style={{
@@ -42,12 +42,12 @@ export default function ThemePreviewCard({ theme, active, dirty, onSelect }: Pro
       </span>
 
       <span className="theme-preview-swatches" aria-hidden="true">
-        {theme.preview.swatches.map(color => <span key={color} style={{ background: color }} />)}
+        {(theme.preview?.swatches ?? []).map(color => <span key={color} style={{ background: color }} />)}
       </span>
 
       <span className="theme-preview-tags">
-        <span className="icon-align-status"><Icon name="layout" size="xs" tone="muted" />{theme.preview.densityLabel}</span>
-        <span className="icon-align-status"><Icon name="motion" size="xs" tone="muted" />{theme.preview.motionLabel}</span>
+        <span className="icon-align-status"><Icon name="layout" size="xs" tone="muted" />{theme.preview?.densityLabel ?? 'balanced'}</span>
+        <span className="icon-align-status"><Icon name="motion" size="xs" tone="muted" />{theme.preview?.motionLabel ?? 'restrained'}</span>
         {active && <span className="icon-align-status is-synced"><Icon name="success" size="xs" tone="success" />active</span>}
         {dirty && <span className="icon-align-status is-dirty"><Icon name="warning" size="xs" tone="warning" />unsaved</span>}
       </span>

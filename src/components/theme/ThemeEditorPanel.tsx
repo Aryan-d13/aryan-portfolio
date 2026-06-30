@@ -329,7 +329,7 @@ export default function ThemeEditorPanel({ config, onConfigChange, onThemeChange
           <ThemeField label="Active theme">
             <select className="cr-select" value={activeThemeId} onChange={event => applySelectedTheme(event.target.value)}>
               {allThemes.map(theme => (
-                <option key={theme.id} value={theme.id}>{theme.name} - {theme.preview.vibeLabel}</option>
+                <option key={theme.id} value={theme.id}>{theme.name} - {theme.preview?.vibeLabel ?? 'Custom theme'}</option>
               ))}
             </select>
           </ThemeField>
