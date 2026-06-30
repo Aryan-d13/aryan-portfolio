@@ -46,8 +46,11 @@ export interface UseRemoteThemeResult {
 
 function isNewer(next: RemoteThemeState, current: RemoteThemeState | null): boolean {
   if (!current) return true;
-  if (next.version !== current.version) return next.version > current.version;
-  return true;
+  if (next.version !== current.version) {
+    return next.version > current.version;
+  }
+  // Secure version tie-breaker by validating transaction timestamps
+  return new Date(next.updatedAt).getTime() > new Date(current.updatedAt).getTime();
 }
 
 export function useRemoteTheme({
