@@ -57,7 +57,7 @@ export default function ThemeEditorPanel({ config, onConfigChange, onThemeChange
   const themeEngine = useThemeEngine();
   const {
     allThemes,
-    activeTheme,
+    activeTheme: rawActiveTheme,
     activeThemeId,
     unsavedChanges,
     validation,
@@ -81,6 +81,24 @@ export default function ThemeEditorPanel({ config, onConfigChange, onThemeChange
     importThemes,
     getTheme,
   } = themeEngine;
+
+  // Defensive fallback / default theme guard to protect from schema discrepancies
+  const fallbackTheme = allThemes.find(t => t.id === 'proof-archive') || allThemes[0];
+  const activeTheme = {
+    ...fallbackTheme,
+    ...rawActiveTheme,
+    colors: rawActiveTheme?.colors ? { ...fallbackTheme?.colors, ...rawActiveTheme.colors } : fallbackTheme?.colors,
+    typography: rawActiveTheme?.typography ? { ...fallbackTheme?.typography, ...rawActiveTheme.typography } : fallbackTheme?.typography,
+    spacing: rawActiveTheme?.spacing ? { ...fallbackTheme?.spacing, ...rawActiveTheme.spacing } : fallbackTheme?.spacing,
+    radius: rawActiveTheme?.radius ? { ...fallbackTheme?.radius, ...rawActiveTheme.radius } : fallbackTheme?.radius,
+    borders: rawActiveTheme?.borders ? { ...fallbackTheme?.borders, ...rawActiveTheme.borders } : fallbackTheme?.borders,
+    elevation: rawActiveTheme?.elevation ? { ...fallbackTheme?.elevation, ...rawActiveTheme.elevation } : fallbackTheme?.elevation,
+    background: rawActiveTheme?.background ? { ...fallbackTheme?.background, ...rawActiveTheme.background } : fallbackTheme?.background,
+    glow: rawActiveTheme?.glow ? { ...fallbackTheme?.glow, ...rawActiveTheme.glow } : fallbackTheme?.glow,
+    motion: rawActiveTheme?.motion ? { ...fallbackTheme?.motion, ...rawActiveTheme.motion } : fallbackTheme?.motion,
+    components: rawActiveTheme?.components ? { ...fallbackTheme?.components, ...rawActiveTheme.components } : fallbackTheme?.components,
+    layout: rawActiveTheme?.layout ? { ...fallbackTheme?.layout, ...rawActiveTheme.layout } : fallbackTheme?.layout,
+  } as ThemeDefinition;
 
   const importRef = useRef<HTMLInputElement>(null);
   const cloudImportRef = useRef<HTMLInputElement>(null);
@@ -388,10 +406,10 @@ export default function ThemeEditorPanel({ config, onConfigChange, onThemeChange
         <div className="theme-token-section">
           <h3>Identity</h3>
           <ThemeField label="Short description">
-            <input className="cr-input" value={activeTheme.shortDescription} onChange={event => updateTheme(theme => ({ ...theme, shortDescription: event.target.value }))} />
+            <input className="cr-input" value={activeTheme.shortDescription ?? ''} onChange={event => updateTheme(theme => ({ ...theme, shortDescription: event.target.value }))} />
           </ThemeField>
           <ThemeField label="Emotional tone">
-            <textarea className="cr-textarea" rows={2} value={activeTheme.emotionalTone} onChange={event => updateTheme(theme => ({ ...theme, emotionalTone: event.target.value }))} />
+            <textarea className="cr-textarea" rows={2} value={activeTheme.emotionalTone ?? ''} onChange={event => updateTheme(theme => ({ ...theme, emotionalTone: event.target.value }))} />
           </ThemeField>
         </div>
 
@@ -400,7 +418,7 @@ export default function ThemeEditorPanel({ config, onConfigChange, onThemeChange
           <div className="theme-token-grid">
             {(['bg', 'bgSecondary', 'surface', 'surfaceElevated', 'text', 'textSecondary', 'textMuted', 'accent', 'accentSecondary', 'accentEmotional', 'accentProof', 'border', 'borderSubtle', 'borderStrong', 'glow'] as const).map(key => (
               <ThemeField key={key} label={key}>
-                <input type="color" className="cr-color-swatch" value={activeTheme.colors[key]} onChange={event => updateTheme(theme => ({ ...theme, colors: { ...theme.colors, [key]: event.target.value } }))} />
+                <input type="color" className="cr-color-swatch" value={activeTheme.colors?.[key] ?? '#000000'} onChange={event => updateTheme(theme => ({ ...theme, colors: { ...theme.colors, [key]: event.target.value } }))} />
               </ThemeField>
             ))}
           </div>
@@ -409,20 +427,20 @@ export default function ThemeEditorPanel({ config, onConfigChange, onThemeChange
         <div className="theme-token-section">
           <h3>Typography</h3>
           <ThemeField label="Display font">
-            <input className="cr-input" value={activeTheme.typography.displayFont} onChange={event => updateTheme(theme => ({ ...theme, typography: { ...theme.typography, displayFont: event.target.value } }))} />
+            <input className="cr-input" value={activeTheme.typography?.displayFont ?? ''} onChange={event => updateTheme(theme => ({ ...theme, typography: { ...theme.typography, displayFont: event.target.value } }))} />
           </ThemeField>
           <ThemeField label="Body font">
-            <input className="cr-input" value={activeTheme.typography.bodyFont} onChange={event => updateTheme(theme => ({ ...theme, typography: { ...theme.typography, bodyFont: event.target.value } }))} />
+            <input className="cr-input" value={activeTheme.typography?.bodyFont ?? ''} onChange={event => updateTheme(theme => ({ ...theme, typography: { ...theme.typography, bodyFont: event.target.value } }))} />
           </ThemeField>
           <div className="theme-token-grid">
             <ThemeField label="Heading weight">
-              <input className="cr-input" type="number" min={100} max={900} step={50} value={activeTheme.typography.headingWeight} onChange={event => updateTheme(theme => ({ ...theme, typography: { ...theme.typography, headingWeight: Number(event.target.value) } }))} />
+              <input className="cr-input" type="number" min={100} max={900} step={50} value={activeTheme.typography?.headingWeight ?? 400} onChange={event => updateTheme(theme => ({ ...theme, typography: { ...theme.typography, headingWeight: Number(event.target.value) } }))} />
             </ThemeField>
             <ThemeField label="Line height">
-              <input className="cr-input" type="number" min={1} max={2.5} step={0.05} value={activeTheme.typography.lineHeight} onChange={event => updateTheme(theme => ({ ...theme, typography: { ...theme.typography, lineHeight: Number(event.target.value) } }))} />
+              <input className="cr-input" type="number" min={1} max={2.5} step={0.05} value={activeTheme.typography?.lineHeight ?? 1.5} onChange={event => updateTheme(theme => ({ ...theme, typography: { ...theme.typography, lineHeight: Number(event.target.value) } }))} />
             </ThemeField>
             <ThemeField label="Display size">
-              <input className="cr-input" value={activeTheme.typography.typeDisplay} onChange={event => updateTheme(theme => ({ ...theme, typography: { ...theme.typography, typeDisplay: event.target.value } }))} />
+              <input className="cr-input" value={activeTheme.typography?.typeDisplay ?? ''} onChange={event => updateTheme(theme => ({ ...theme, typography: { ...theme.typography, typeDisplay: event.target.value } }))} />
             </ThemeField>
           </div>
         </div>
@@ -431,18 +449,18 @@ export default function ThemeEditorPanel({ config, onConfigChange, onThemeChange
           <h3>Atmosphere</h3>
           <div className="theme-token-grid">
             <ThemeField label="Background type">
-              <select className="cr-select" value={activeTheme.background.type} onChange={event => updateTheme(theme => ({ ...theme, background: { ...theme.background, type: event.target.value as ThemeBackgroundType } }))}>
+              <select className="cr-select" value={activeTheme.background?.type ?? 'trace-grid'} onChange={event => updateTheme(theme => ({ ...theme, background: { ...theme.background, type: event.target.value as ThemeBackgroundType } }))}>
                 {backgroundTypes.map(type => <option key={type} value={type}>{type}</option>)}
               </select>
             </ThemeField>
             <ThemeField label="Dot spacing">
-              <input className="cr-input" type="number" min={12} max={96} value={activeTheme.background.dotSpacing} onChange={event => updateTheme(theme => ({ ...theme, background: { ...theme.background, dotSpacing: Number(event.target.value) } }))} />
+              <input className="cr-input" type="number" min={12} max={96} value={activeTheme.background?.dotSpacing ?? 24} onChange={event => updateTheme(theme => ({ ...theme, background: { ...theme.background, dotSpacing: Number(event.target.value) } }))} />
             </ThemeField>
             <ThemeField label="Dot opacity">
-              <input className="cr-input" type="number" min={0} max={0.3} step={0.01} value={activeTheme.background.dotOpacity} onChange={event => updateTheme(theme => ({ ...theme, background: { ...theme.background, dotOpacity: Number(event.target.value) } }))} />
+              <input className="cr-input" type="number" min={0} max={0.3} step={0.01} value={activeTheme.background?.dotOpacity ?? 0.1} onChange={event => updateTheme(theme => ({ ...theme, background: { ...theme.background, dotOpacity: Number(event.target.value) } }))} />
             </ThemeField>
             <ThemeField label="Vignette">
-              <input className="cr-input" type="number" min={0} max={1} step={0.01} value={activeTheme.background.vignetteOpacity} onChange={event => updateTheme(theme => ({ ...theme, background: { ...theme.background, vignetteOpacity: Number(event.target.value) } }))} />
+              <input className="cr-input" type="number" min={0} max={1} step={0.01} value={activeTheme.background?.vignetteOpacity ?? 0.5} onChange={event => updateTheme(theme => ({ ...theme, background: { ...theme.background, vignetteOpacity: Number(event.target.value) } }))} />
             </ThemeField>
           </div>
         </div>
@@ -451,28 +469,28 @@ export default function ThemeEditorPanel({ config, onConfigChange, onThemeChange
           <h3>Motion and Layout</h3>
           <div className="theme-token-grid">
             <ThemeField label="Motion personality">
-              <select className="cr-select" value={activeTheme.motion.personality} onChange={event => updateTheme(theme => ({ ...theme, motion: { ...theme.motion, personality: event.target.value as ThemeMotionPersonality } }))}>
+              <select className="cr-select" value={activeTheme.motion?.personality ?? 'restrained'} onChange={event => updateTheme(theme => ({ ...theme, motion: { ...theme.motion, personality: event.target.value as ThemeMotionPersonality } }))}>
                 {motionPersonalities.map(type => <option key={type} value={type}>{type}</option>)}
               </select>
             </ThemeField>
             <ThemeField label="Transition style">
-              <select className="cr-select" value={activeTheme.motion.transitionStyle ?? defaultTransitionStyle(activeTheme.motion.personality)} onChange={event => updateTheme(theme => ({ ...theme, motion: { ...theme.motion, transitionStyle: event.target.value as ThemeTransitionStyle } }))}>
+              <select className="cr-select" value={activeTheme.motion?.transitionStyle ?? defaultTransitionStyle(activeTheme.motion?.personality ?? 'restrained')} onChange={event => updateTheme(theme => ({ ...theme, motion: { ...theme.motion, transitionStyle: event.target.value as ThemeTransitionStyle } }))}>
                 {transitionStyles.map(type => <option key={type} value={type}>{type}</option>)}
               </select>
             </ThemeField>
             <ThemeField label="Transition ms">
-              <input className="cr-input" type="number" min={100} max={500} value={activeTheme.motion.transitionDuration} onChange={event => updateTheme(theme => ({ ...theme, motion: { ...theme.motion, transitionDuration: Number(event.target.value) } }))} />
+              <input className="cr-input" type="number" min={100} max={500} value={activeTheme.motion?.transitionDuration ?? 300} onChange={event => updateTheme(theme => ({ ...theme, motion: { ...theme.motion, transitionDuration: Number(event.target.value) } }))} />
             </ThemeField>
             <ThemeField label="Density">
-              <select className="cr-select" value={activeTheme.layout.density} onChange={event => updateTheme(theme => ({ ...theme, spacing: { ...theme.spacing, density: event.target.value as ThemeDensity }, layout: { ...theme.layout, density: event.target.value as ThemeDensity } }))}>
+              <select className="cr-select" value={activeTheme.layout?.density ?? 'comfortable'} onChange={event => updateTheme(theme => ({ ...theme, spacing: { ...theme.spacing, density: event.target.value as ThemeDensity }, layout: { ...theme.layout, density: event.target.value as ThemeDensity } }))}>
                 {densities.map(density => <option key={density} value={density}>{density}</option>)}
               </select>
             </ThemeField>
             <ThemeField label="Section Y">
-              <input className="cr-input" value={activeTheme.layout.sectionPaddingTop} onChange={event => updateTheme(theme => ({ ...theme, spacing: { ...theme.spacing, sectionY: event.target.value }, layout: { ...theme.layout, sectionPaddingTop: event.target.value, sectionPaddingBottom: event.target.value } }))} />
+              <input className="cr-input" value={activeTheme.layout?.sectionPaddingTop ?? ''} onChange={event => updateTheme(theme => ({ ...theme, spacing: { ...theme.spacing, sectionY: event.target.value }, layout: { ...theme.layout, sectionPaddingTop: event.target.value, sectionPaddingBottom: event.target.value } }))} />
             </ThemeField>
             <ThemeField label="Card radius">
-              <input className="cr-input" value={activeTheme.radius.card} onChange={event => updateTheme(theme => ({ ...theme, radius: { ...theme.radius, card: event.target.value, button: event.target.value }, layout: { ...theme.layout, borderRadius: event.target.value } }))} />
+              <input className="cr-input" value={activeTheme.radius?.card ?? ''} onChange={event => updateTheme(theme => ({ ...theme, radius: { ...theme.radius, card: event.target.value, button: event.target.value }, layout: { ...theme.layout, borderRadius: event.target.value } }))} />
             </ThemeField>
           </div>
         </div>
