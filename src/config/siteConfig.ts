@@ -188,7 +188,7 @@ export function getDefaultConfig(): SiteConfig {
         { id: 'proof-files', title: 'Proof drawers', description: 'Attach real artifacts and keep missing evidence clearly marked.', status: 'ready', targetPanel: 'projects', href: '', visible: true, order: 1, icon: 'proof' },
         { id: 'identity-layer', title: 'Working style', description: 'Edit diagnostics, refusals, field notes, collaboration defaults, and taste.', status: 'ready', targetPanel: 'identity-layer', href: '', visible: true, order: 2, icon: 'signal' },
         { id: 'site-settings', title: 'Site structure', description: 'Control section order, visibility, metadata, and navigation.', status: 'online', targetPanel: 'sections', href: '', visible: true, order: 3, icon: 'settings' },
-        { id: 'resume', title: 'Resume', description: 'Open the current resume asset.', status: 'attached', targetPanel: '', href: '/Aryan_Sharma_Resume.pdf', visible: true, order: 4, icon: 'resume' },
+        { id: 'resume', title: 'Resume', description: 'Open the current resume asset.', status: 'attached', targetPanel: '', href: '/aryan_sharma_ats_7.pdf', visible: true, order: 4, icon: 'resume' },
         { id: 'now-building', title: 'Now building', description: 'Proof-first identity systems, AI-native workflows, and calmer interfaces.', status: 'current', targetPanel: '', href: '', visible: true, order: 5, icon: 'current' },
       ],
     },
@@ -293,7 +293,7 @@ export function getDefaultConfig(): SiteConfig {
     contact: {
       email: 'aryanteddys@gmail.com', handle: '@aryanteddys', location: 'India',
       ctaText: 'GET IN TOUCH', ctaLink: 'mailto:aryanteddys@gmail.com',
-      resumeLink: 'Aryan_Sharma_Resume.pdf', resumeLabel: 'View Resume',
+      resumeLink: 'aryan_sharma_ats_7.pdf', resumeLabel: 'View Resume',
       githubLink: '', linkedinLink: '', socialLinks: [],
       customLinks: [{ label: 'SEE THE WORK', href: '#systems-built' }],
     },
@@ -352,7 +352,7 @@ export function getDefaultConfig(): SiteConfig {
     },
 
     assets: {
-      profileImage: 'assets/aryan-profile.png', resumeFile: 'Aryan_Sharma_Resume.pdf',
+      profileImage: 'assets/aryan-profile.png', resumeFile: 'aryan_sharma_ats_7.pdf',
       ogImage: '', customLogo: '', projectImages: {}, backgroundTextures: {},
     },
 

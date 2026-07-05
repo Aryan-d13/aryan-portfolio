@@ -405,7 +405,7 @@ function mapCustomToSiteConfig(custom: any): Partial<SiteConfig> {
       location: custom.contact.location || 'India',
       ctaText: 'Email Aryan',
       ctaLink: custom.contact.links?.[0]?.href || `mailto:${custom.contact.email || 'aryanteddys@gmail.com'}`,
-      resumeLink: custom.contact.links?.[1]?.href || 'Aryan_Sharma_Resume.pdf',
+      resumeLink: custom.contact.links?.[1]?.href || 'aryan_sharma_ats_7.pdf',
       resumeLabel: custom.contact.links?.[1]?.label || 'View Resume',
       githubLink: '',
       linkedinLink: '',

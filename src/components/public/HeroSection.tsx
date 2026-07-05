@@ -37,6 +37,7 @@ export default function HeroSection({ config, section }: Props) {
 
   const primaryBtnRef = useMagneticHover<HTMLAnchorElement>({ radius: 75, strength: 0.3 });
   const secondaryBtnRef = useMagneticHover<HTMLAnchorElement>({ radius: 75, strength: 0.3 });
+  const resumeBtnRef = useMagneticHover<HTMLAnchorElement>({ radius: 75, strength: 0.3 });
 
   return (
     <section
@@ -75,6 +76,12 @@ export default function HeroSection({ config, section }: Props) {
             <Icon name="mail" size="sm" tone="muted" />
             {id.ctaSecondary.text}
           </a>
+          {config.contact.resumeLink && (
+            <a ref={resumeBtnRef} className="button button-secondary icon-align-inline" href={config.contact.resumeLink} download>
+              <Icon name="resume" size="sm" tone="muted" />
+              {config.contact.resumeLabel || 'Resume'}
+            </a>
+          )}
         </div>
       </div>
 
